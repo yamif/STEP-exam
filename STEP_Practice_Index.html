@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>نماذج اختبار STEP - الصفحة الرئيسية</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+    color: #1f2937;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  header h1 {
+    font-size: 36px;
+    color: #006c35;
+    margin-bottom: 10px;
+  }
+  header p {
+    font-size: 18px;
+    color: #6b7280;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+  .stats-bar {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin: 32px 0;
+  }
+  .stat-card {
+    background: white;
+    border-radius: 14px;
+    padding: 22px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  .stat-card .icon { font-size: 32px; margin-bottom: 8px; }
+  .stat-card .num { font-size: 28px; font-weight: 700; color: #006c35; }
+  .stat-card .label { font-size: 14px; color: #6b7280; }
+
+  .tests-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin: 40px 0;
+  }
+  .test-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+  }
+  .test-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  }
+  .test-card .banner {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 56px;
+    position: relative;
+  }
+  .test-card.t1 { border-color: #006c35; }
+  .test-card.t1 .banner { background: linear-gradient(135deg, #006c35, #004d26); }
+  .test-card.t2 { border-color: #1d4ed8; }
+  .test-card.t2 .banner { background: linear-gradient(135deg, #1d4ed8, #1e3a8a); }
+  .test-card.t3 { border-color: #7c3aed; }
+  .test-card.t3 .banner { background: linear-gradient(135deg, #7c3aed, #5b21b6); }
+
+  .test-card .body { padding: 22px; }
+  .test-card h3 { font-size: 22px; margin-bottom: 8px; color: #1f2937; }
+  .test-card .level {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .level-easy { background: #d1fae5; color: #047857; }
+  .level-med { background: #dbeafe; color: #1e40af; }
+  .level-hard { background: #fce7f3; color: #be185d; }
+
+  .test-card p { color: #6b7280; font-size: 14px; margin-bottom: 14px; }
+  .test-card .topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+  .topic {
+    background: #f3f4f6;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: #4b5563;
+  }
+  .test-card .stats {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #6b7280;
+  }
+  .test-card .stats span { display: flex; align-items: center; gap: 4px; }
+
+  .start-btn {
+    display: block;
+    width: 100%;
+    background: #006c35;
+    color: white;
+    text-decoration: none;
+    text-align: center;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .test-card.t1 .start-btn { background: #006c35; }
+  .test-card.t1 .start-btn:hover { background: #004d26; }
+  .test-card.t2 .start-btn { background: #1d4ed8; }
+  .test-card.t2 .start-btn:hover { background: #1e3a8a; }
+  .test-card.t3 .start-btn { background: #7c3aed; }
+  .test-card.t3 .start-btn:hover { background: #5b21b6; }
+
+  .tips-section {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin: 40px 0;
+  }
+  .tips-section h2 {
+    color: #006c35;
+    margin-bottom: 18px;
+    font-size: 24px;
+    text-align: center;
+  }
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 18px;
+  }
+  .tip-card {
+    background: #f9fafb;
+    padding: 18px;
+    border-radius: 12px;
+    border-right: 4px solid #c8a951;
+  }
+  .tip-card h4 { color: #006c35; margin-bottom: 8px; font-size: 16px; }
+  .tip-card p { font-size: 14px; color: #4b5563; }
+
+  .roadmap {
+    background: linear-gradient(135deg, #006c35, #004d26);
+    color: white;
+    border-radius: 18px;
+    padding: 30px;
+    margin: 40px 0;
+  }
+  .roadmap h2 {
+    margin-bottom: 18px;
+    text-align: center;
+    font-size: 24px;
+  }
+  .roadmap-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .roadmap-step {
+    background: rgba(255,255,255,0.12);
+    border-radius: 12px;
+    padding: 18px;
+    backdrop-filter: blur(8px);
+  }
+  .roadmap-step .step-num {
+    background: #c8a951;
+    color: #1f2937;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .roadmap-step h4 { margin-bottom: 6px; font-size: 16px; }
+  .roadmap-step p { font-size: 13px; opacity: 0.9; }
+
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  @media (max-width: 640px) {
+    header h1 { font-size: 28px; }
+    header p { font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📚 نماذج اختبار STEP</h1>
+    <p>ثلاثة نماذج تدريبية كاملة، كل واحد بـ 100 سؤال - استعدي للاختبار بثقة وكفاءة</p>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="icon">📝</div>
+      <div class="num">300</div>
+      <div class="label">سؤال إجمالي</div>
+    </div>
+    <div class="stat-card">
+      <div class="icon">📖</div>
+      <div class="num">15</div>
+      <div class="label">قطعة قراءة</div>
+    </div>
+    <div class="stat-card">
+      <div class="icon">⏱</div>
+      <div class="num">9</div>
+      <div class="label">ساعات تدريب</div>
+    </div>
+    <div class="stat-card">
+      <div class="icon">💡</div>
+      <div class="num">300</div>
+      <div class="label">شرح مفصل</div>
+    </div>
+  </div>
+
+  <div class="tests-grid">
+    <!-- Test 1 -->
+    <div class="test-card t1">
+      <div class="banner">📘</div>
+      <div class="body">
+        <span class="level level-easy">مستوى متوسط</span>
+        <h3>النموذج الأول</h3>
+        <p>ابدئي من هنا. أسئلة متوازنة تغطي جميع المهارات الأساسية مع قطع قراءة مهمة.</p>
+        <div class="topics">
+          <span class="topic">النوم والصحة</span>
+          <span class="topic">المدن والمناخ</span>
+          <span class="topic">الذكاء الاصطناعي</span>
+          <span class="topic">التسويف</span>
+          <span class="topic">المادة المظلمة</span>
+        </div>
+        <div class="stats">
+          <span>📝 100 سؤال</span>
+          <span>⏱ 3 ساعات</span>
+        </div>
+        <a href="STEP_Practice_Test.html" class="start-btn">ابدئي النموذج الأول ←</a>
+      </div>
+    </div>
+
+    <!-- Test 2 -->
+    <div class="test-card t2">
+      <div class="banner">📗</div>
+      <div class="body">
+        <span class="level level-med">مستوى متقدم</span>
+        <h3>النموذج الثاني</h3>
+        <p>قطع وأسئلة جديدة بمستوى أعلى قليلاً، تركّز على المهارات النقدية والتحليلية.</p>
+        <div class="topics">
+          <span class="topic">عادة القراءة</span>
+          <span class="topic">الطاقة المتجددة</span>
+          <span class="topic">التواصل الاجتماعي</span>
+          <span class="topic">علم السعادة</span>
+          <span class="topic">استكشاف الفضاء</span>
+        </div>
+        <div class="stats">
+          <span>📝 100 سؤال</span>
+          <span>⏱ 3 ساعات</span>
+        </div>
+        <a href="STEP_Practice_Test_2.html" class="start-btn">ابدئي النموذج الثاني ←</a>
+      </div>
+    </div>
+
+    <!-- Test 3 -->
+    <div class="test-card t3">
+      <div class="banner">📕</div>
+      <div class="body">
+        <span class="level level-hard">مستوى صعب</span>
+        <h3>النموذج الثالث</h3>
+        <p>الأكثر تحدّياً. مفردات متقدمة وأسئلة قواعد دقيقة - الاختبار النهائي لجاهزيتك.</p>
+        <div class="topics">
+          <span class="topic">قصة القهوة</span>
+          <span class="topic">الدماغ ثنائي اللغة</span>
+          <span class="topic">الحياة الحضرية</span>
+          <span class="topic">علم العادات</span>
+          <span class="topic">حماية المحيطات</span>
+        </div>
+        <div class="stats">
+          <span>📝 100 سؤال</span>
+          <span>⏱ 3 ساعات</span>
+        </div>
+        <a href="STEP_Practice_Test_3.html" class="start-btn">ابدئي النموذج الثالث ←</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="roadmap">
+    <h2>🗺️ خطة التدريب الموصى بها</h2>
+    <div class="roadmap-steps">
+      <div class="roadmap-step">
+        <div class="step-num">1</div>
+        <h4>ابدئي بالنموذج الأول</h4>
+        <p>لقياس مستواكِ الحالي ومعرفة نقاط القوة والضعف.</p>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-num">2</div>
+        <h4>راجعي الشرح المفصل</h4>
+        <p>افهمي الأخطاء جيداً قبل الانتقال للنموذج التالي.</p>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-num">3</div>
+        <h4>النموذج الثاني بعد أسبوع</h4>
+        <p>اتركي وقتاً لاستيعاب الدروس قبل النموذج التالي.</p>
+      </div>
+      <div class="roadmap-step">
+        <div class="step-num">4</div>
+        <h4>النموذج الثالث قبل الاختبار</h4>
+        <p>الأصعب - يكون قبل أيام قليلة من اختبارك الفعلي.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="tips-section">
+    <h2>💡 نصائح ذهبية للاختبار</h2>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <h4>⏰ إدارة الوقت</h4>
+        <p>لا تقضي أكثر من دقيقتين على أي سؤال. علّمي عليه وارجعي إليه في النهاية.</p>
+      </div>
+      <div class="tip-card">
+        <h4>📖 الفهم القرائي</h4>
+        <p>اقرئي الأسئلة قبل القطعة، ثم ابحثي عن الإجابات بدلاً من قراءة القطعة كاملةً.</p>
+      </div>
+      <div class="tip-card">
+        <h4>📝 القواعد</h4>
+        <p>ركّزي على الأزمنة، الضمائر، تطابق الفاعل والفعل، وحروف الجر - الأكثر تكراراً.</p>
+      </div>
+      <div class="tip-card">
+        <h4>🎯 الإلغاء بالاستبعاد</h4>
+        <p>إذا ما عرفتِ الإجابة، استبعدي الخيارات الخاطئة، فيرتفع احتمال التخمين الصحيح.</p>
+      </div>
+      <div class="tip-card">
+        <h4>💪 لا تتركي سؤالاً</h4>
+        <p>اختبار STEP لا يخصم على الإجابة الخاطئة، فأجيبي على كل الأسئلة حتى لو تخميناً.</p>
+      </div>
+      <div class="tip-card">
+        <h4>🧘 الهدوء أولاً</h4>
+        <p>نامي جيداً ليلة الاختبار، وأفطري إفطاراً متكاملاً. التركيز يحتاج طاقة.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>🌟 بالتوفيق إن شاء الله! ركّزي، تدربي، وثقي بنفسك.</p>
+  </footer>
+</div>
+</body>
+</html>

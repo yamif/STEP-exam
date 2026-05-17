@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>نموذج اختبار STEP رقم 2 - 100 سؤال</title>
+<style>
+  :root {
+    --primary: #1d4ed8;
+    --primary-dark: #1e3a8a;
+    --accent: #f59e0b;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --correct: #10b981;
+    --wrong: #ef4444;
+    --warn: #f59e0b;
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+  .ltr { direction: ltr; text-align: left; font-family: Georgia, 'Times New Roman', serif; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .top-bar { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 18px 28px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+  .top-bar h1 { font-size: 22px; font-weight: 700; }
+  .top-bar h1 small { font-weight: 400; font-size: 14px; opacity: 0.85; display: block; }
+  .timer-box { background: rgba(255,255,255,0.18); padding: 8px 18px; border-radius: 10px; font-size: 18px; font-weight: 700; letter-spacing: 1px; backdrop-filter: blur(4px); }
+  .timer-box.warn { background: var(--warn); }
+  .timer-box.danger { background: var(--wrong); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .welcome { background: var(--card); border-radius: 16px; padding: 40px; box-shadow: var(--shadow); text-align: center; }
+  .welcome h2 { color: var(--primary); font-size: 28px; margin-bottom: 14px; }
+  .welcome p { color: var(--muted); margin-bottom: 24px; font-size: 16px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 28px 0; }
+  .info-card { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+  .info-card .num { font-size: 28px; font-weight: 700; color: var(--primary); }
+  .info-card .label { color: var(--muted); font-size: 14px; }
+  .instructions { background: #fff8e6; border-right: 4px solid var(--accent); padding: 18px 22px; border-radius: 8px; text-align: right; margin: 24px 0; }
+  .instructions h3 { color: var(--primary-dark); margin-bottom: 8px; }
+  .instructions ul { padding-right: 22px; color: #4b5563; }
+  .instructions li { margin-bottom: 6px; }
+  .btn { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-danger { background: var(--wrong); }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-secondary { background: #6b7280; }
+  .btn-secondary:hover { background: #4b5563; }
+  .test-area { display: none; }
+  .test-area.active { display: block; }
+  .progress-bar { background: var(--card); border-radius: 12px; padding: 14px 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+  .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+  .progress-track { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); height: 100%; transition: width 0.3s; }
+  .question-card { background: var(--card); border-radius: 16px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .section-tag { display: inline-block; background: var(--primary); color: white; padding: 4px 14px; border-radius: 999px; font-size: 13px; margin-bottom: 14px; }
+  .question-num { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  .passage { background: #f9fafb; border-right: 3px solid var(--primary); padding: 18px 22px; border-radius: 8px; margin-bottom: 20px; font-size: 15px; line-height: 1.85; }
+  .passage p { margin-bottom: 10px; }
+  .question-text { font-size: 17px; margin-bottom: 18px; font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { background: #f9fafb; border: 2px solid var(--border); padding: 14px 18px; border-radius: 10px; cursor: pointer; transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px; }
+  .option:hover { border-color: var(--primary); background: #eff6ff; }
+  .option.selected { border-color: var(--primary); background: #dbeafe; }
+  .option-letter { background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; font-size: 13px; }
+  .option.selected .option-letter { background: var(--primary-dark); }
+  .option.correct { border-color: var(--correct); background: #ecfdf5; }
+  .option.correct .option-letter { background: var(--correct); }
+  .option.wrong { border-color: var(--wrong); background: #fef2f2; }
+  .option.wrong .option-letter { background: var(--wrong); }
+  .explanation { background: #eff6ff; border-right: 4px solid #3b82f6; padding: 16px 20px; border-radius: 8px; margin-top: 16px; font-size: 15px; }
+  .explanation strong { color: #1e40af; }
+  .nav-controls { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .question-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; margin-top: 16px; }
+  .grid-btn { background: #f3f4f6; border: 2px solid transparent; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; font-family: inherit; }
+  .grid-btn:hover { border-color: var(--primary); }
+  .grid-btn.answered { background: #dbeafe; color: var(--primary-dark); }
+  .grid-btn.current { border-color: var(--primary); background: var(--primary); color: white; }
+  .grid-btn.review-correct { background: #d1fae5; color: var(--correct); }
+  .grid-btn.review-wrong { background: #fee2e2; color: var(--wrong); }
+  .results { background: var(--card); border-radius: 16px; padding: 36px; box-shadow: var(--shadow); text-align: center; }
+  .score-circle { width: 180px; height: 180px; margin: 20px auto; position: relative; }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-circle .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+  .score-circle .score-num { font-size: 44px; font-weight: 700; color: var(--primary); }
+  .score-circle .score-label { font-size: 13px; color: var(--muted); }
+  .breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 28px 0; }
+  .break-card { background: #f9fafb; border-radius: 12px; padding: 18px; border: 1px solid var(--border); }
+  .break-card h4 { color: var(--primary); margin-bottom: 8px; font-size: 15px; }
+  .break-bar { background: var(--border); height: 8px; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+  .break-bar-fill { background: var(--primary); height: 100%; transition: width 0.6s; }
+  .break-stats { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+  .level-badge { display: inline-block; padding: 8px 24px; border-radius: 999px; font-weight: 700; margin: 14px 0; }
+  .level-excellent { background: #d1fae5; color: var(--correct); }
+  .level-good { background: #dbeafe; color: #1e40af; }
+  .level-pass { background: #fef3c7; color: #92400e; }
+  .level-low { background: #fee2e2; color: var(--wrong); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border-radius: 16px; padding: 30px; max-width: 420px; width: 92%; text-align: center; }
+  .modal h3 { margin-bottom: 14px; color: var(--primary); }
+  .modal p { color: var(--muted); margin-bottom: 22px; }
+  .modal-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  @media (max-width: 640px) { .container { padding: 12px; } .top-bar { padding: 14px 18px; } .top-bar h1 { font-size: 18px; } .question-card { padding: 20px; } .welcome { padding: 24px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <h1>📗 نموذج اختبار STEP - رقم 2 <small>100 سؤال • 4 أقسام • مستوى متوسط إلى متقدم</small></h1>
+    <div id="timerBox" class="timer-box" style="display:none;">⏱ <span id="timer">03:00:00</span></div>
+  </div>
+
+  <div id="welcomeScreen">
+    <div class="welcome">
+      <h2>النموذج التدريبي الثاني</h2>
+      <p>قطع جديدة وأسئلة جديدة بمستوى تحدّي أعلى - استعدي ✨</p>
+      <div class="info-grid">
+        <div class="info-card"><div class="num">100</div><div class="label">سؤال جديد</div></div>
+        <div class="info-card"><div class="num">5</div><div class="label">قطع قراءة جديدة</div></div>
+        <div class="info-card"><div class="num">3</div><div class="label">ساعات للاختبار</div></div>
+        <div class="info-card"><div class="num">100%</div><div class="label">شروحات بالعربي</div></div>
+      </div>
+      <div class="instructions">
+        <h3>📋 تعليمات</h3>
+        <ul>
+          <li>هذا النموذج الثاني يحتوي على أسئلة وقطع جديدة كلياً عن النموذج الأول.</li>
+          <li>القطع تتناول: عادة القراءة، الطاقة المتجددة، التواصل الاجتماعي، علم السعادة، استكشاف الفضاء.</li>
+          <li>المؤقت سيبدأ بمجرد ضغط زر "ابدأ الاختبار".</li>
+          <li>بعد التسليم راح تشوفين الشرح المفصل لكل سؤال.</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="startTest()">🚀 ابدأ الاختبار</button>
+    </div>
+  </div>
+
+  <div id="testArea" class="test-area">
+    <div class="progress-bar">
+      <div class="progress-info">
+        <span>التقدّم: <strong id="progressText">0 / 100</strong></span>
+        <span id="sectionLabel">القسم: —</span>
+      </div>
+      <div class="progress-track"><div id="progressFill" class="progress-fill" style="width: 0%;"></div></div>
+    </div>
+    <div id="questionContainer" class="question-card"></div>
+    <div class="question-card" style="padding: 18px 24px;">
+      <div class="nav-controls">
+        <button class="btn btn-outline" onclick="prevQuestion()">⬅ السابق</button>
+        <div>
+          <button class="btn btn-secondary" onclick="toggleGrid()">🗂 جميع الأسئلة</button>
+          <button class="btn" onclick="nextQuestion()">التالي ➡</button>
+        </div>
+        <button class="btn btn-danger" onclick="confirmSubmit()">✅ إنهاء وتسليم</button>
+      </div>
+      <div id="questionGrid" class="question-grid" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div id="resultsScreen" style="display:none;"></div>
+</div>
+
+<div id="submitModal" class="modal-overlay">
+  <div class="modal">
+    <h3>هل أنتِ متأكدة من تسليم الاختبار؟</h3>
+    <p id="submitMsg">سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-outline" onclick="closeModal()">رجوع</button>
+      <button class="btn btn-danger" onclick="submitTest()">نعم، سلّمي</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASSAGES = {
+  p1: `<p><strong>Passage 1: The Vanishing Habit of Reading</strong></p>
+<p>Reading for pleasure has declined dramatically over the past two decades. Surveys in many countries reveal that fewer young adults pick up a book outside of school requirements, and the average time spent reading has dropped sharply. Many blame digital distractions: short-form videos, instant messaging, and social media offer immediate rewards that long-form reading cannot easily match.</p>
+<p>Yet researchers argue that reading provides cognitive benefits no scrolling can replicate. Reading complex texts improves focus, expands vocabulary, and strengthens what scientists call "deep reading"—the ability to follow a long, nuanced argument. Studies even suggest that frequent readers display greater empathy, perhaps because fiction invites them to inhabit other minds.</p>
+<p>Reversing this trend is not impossible, but it requires deliberate effort. Schools can introduce reading as a daily routine rather than a graded assignment. Parents can model reading at home, and adults can replace passive entertainment with even fifteen minutes of focused reading each day. The rewards, though slow to appear, are deeply lasting.</p>`,
+
+  p2: `<p><strong>Passage 2: The Quiet Revolution of Renewable Energy</strong></p>
+<p>For most of the past century, the global economy relied almost entirely on fossil fuels. Today, that picture is changing faster than even optimists predicted. The cost of solar panels has fallen by more than 80 percent in the last decade, and wind turbines now generate electricity more cheaply than coal in many regions. Renewable energy is no longer the expensive alternative—it is becoming the default choice.</p>
+<p>Still, the transition is far from smooth. Solar and wind are intermittent: they produce energy only when the sun shines or the wind blows. To rely on them entirely, countries must invest in massive battery storage and modernize aging electrical grids. Some critics also point to environmental concerns related to mining the rare materials needed for batteries.</p>
+<p>Nevertheless, the long-term trend appears unstoppable. Governments are setting ambitious targets, corporations are signing record renewable contracts, and citizens are increasingly installing solar panels on their own homes. The quiet revolution may be the most important economic shift of our generation, with implications stretching well beyond climate policy.</p>`,
+
+  p3: `<p><strong>Passage 3: Social Media's Double-Edged Influence</strong></p>
+<p>Few inventions have spread as rapidly as social media. In less than two decades, platforms designed to connect old friends have become a daily habit for billions of people worldwide. Their influence touches everything from politics to mental health, often in ways their creators never anticipated.</p>
+<p>The benefits are real. Social media allows isolated communities to find one another, helps small businesses reach customers, and gives ordinary people a voice once reserved for traditional media. During emergencies, it spreads information faster than any official channel.</p>
+<p>However, the drawbacks are equally significant. Algorithms designed to maximize engagement frequently amplify outrage and misinformation. Young users in particular report rising anxiety and lower self-esteem after comparing themselves to carefully curated images. Researchers caution that we are only beginning to understand the long-term psychological consequences.</p>
+<p>Ultimately, social media itself is neither good nor bad—it is a powerful tool whose impact depends entirely on how individuals and societies choose to use it. Greater digital literacy, stronger platform accountability, and mindful personal habits may help us harness its benefits while limiting its harm.</p>`,
+
+  p4: `<p><strong>Passage 4: The Surprising Science of Happiness</strong></p>
+<p>For centuries, people have asked what makes a life happy. Until recently, philosophers carried most of the debate. Today, a growing field known as positive psychology has joined the conversation, using rigorous experiments to test what truly improves human well-being.</p>
+<p>The findings are often counterintuitive. Income, for example, raises happiness only up to a certain threshold; beyond that, additional money brings diminishing returns. Material purchases provide a short-lived boost compared to experiences such as travel or shared meals, which continue to provide joy through memory and storytelling. Surprisingly, acts of generosity—giving small gifts or volunteering—reliably raise the giver's mood more than they raise the receiver's.</p>
+<p>Strong social bonds repeatedly emerge as the single most powerful predictor of long-term happiness. People who feel deeply connected to family, friends, or community report greater life satisfaction even when faced with hardship. The lesson is striking: in a culture that often prizes wealth and individual achievement, the science suggests that relationships, gratitude, and generosity are the most reliable paths to a fulfilling life.</p>`,
+
+  p5: `<p><strong>Passage 5: A New Era of Space Exploration</strong></p>
+<p>The age of space exploration once belonged exclusively to a handful of national governments. Today, the field looks dramatically different. Private companies launch rockets weekly, small countries operate their own satellites, and ambitious plans for lunar bases and even Martian colonies are no longer the stuff of science fiction.</p>
+<p>Several factors are driving this transformation. Reusable rockets have dramatically lowered launch costs, miniaturized electronics have made satellites cheaper, and a generation of entrepreneurs has invested heavily in space ventures. As a result, the number of objects in orbit has multiplied many times over.</p>
+<p>This new era brings opportunities and risks. Improved satellite networks promise faster internet for remote regions and better data for climate monitoring. At the same time, the growing crowd in low Earth orbit raises the danger of collisions and creates massive amounts of debris. International cooperation, once taken for granted, is increasingly strained by commercial competition and geopolitical rivalry. Whether humanity uses this new era wisely will shape the next century of exploration.</p>`
+};
+
+const QUESTIONS = [
+  /* ====== READING - Passage 1: Reading habit (Q1-8) ====== */
+  { section: 'reading', passage: 'p1', text: 'According to the passage, reading for pleasure has:', options: ['Increased steadily', 'Declined dramatically', 'Remained the same', 'Disappeared entirely'], correct: 1, explanation: 'النص يقول صراحة: "Reading for pleasure has declined dramatically over the past two decades".'},
+  { section: 'reading', passage: 'p1', text: 'The main competitor to long-form reading mentioned in the passage is:', options: ['Television only', 'Newspapers', 'Digital distractions', 'Audiobooks'], correct: 2, explanation: 'النص يحدد المنافس بـ"digital distractions" مثل الفيديوهات القصيرة والرسائل الفورية.'},
+  { section: 'reading', passage: 'p1', text: 'The phrase "deep reading" refers to:', options: ['Reading in the dark', 'Following long, nuanced arguments', 'Reading for grades', 'Memorizing texts'], correct: 1, explanation: 'النص عرّفها: "the ability to follow a long, nuanced argument".'},
+  { section: 'reading', passage: 'p1', text: 'Why might frequent readers display greater empathy?', options: ['They are taught to be kind', 'Fiction invites them to inhabit other minds', 'They have more friends', 'They sleep more'], correct: 1, explanation: 'النص يفسر ذلك: "fiction invites them to inhabit other minds".'},
+  { section: 'reading', passage: 'p1', text: 'Which is NOT mentioned as a benefit of reading?', options: ['Improved focus', 'Expanded vocabulary', 'Better eyesight', 'Stronger empathy'], correct: 2, explanation: 'تحسن النظر لم يُذكر في النص. كل الخيارات الأخرى ذُكرت كفوائد.'},
+  { section: 'reading', passage: 'p1', text: 'The word "nuanced" in paragraph 2 most nearly means:', options: ['Loud', 'Simple', 'Subtle', 'False'], correct: 2, explanation: 'nuanced = دقيق، فيه تفاصيل خفية. أقرب مرادف هو subtle.'},
+  { section: 'reading', passage: 'p1', text: 'What does the author suggest schools should do?', options: ['Stop assigning reading', 'Make reading a daily routine', 'Replace books with tablets', 'Test students more often'], correct: 1, explanation: 'النص يقول: "Schools can introduce reading as a daily routine rather than a graded assignment".'},
+  { section: 'reading', passage: 'p1', text: 'The author\'s tone toward the decline in reading is:', options: ['Indifferent', 'Concerned but hopeful', 'Celebratory', 'Mocking'], correct: 1, explanation: 'الكاتب يعبّر عن قلق ("declined dramatically") لكن يقدّم حلولاً عملية ("Reversing this trend is not impossible"), فالنبرة قلقة لكن متفائلة.'},
+
+  /* ====== Passage 2: Renewable Energy (Q9-16) ====== */
+  { section: 'reading', passage: 'p2', text: 'Solar panel costs have fallen by approximately:', options: ['10%', '40%', 'More than 80%', '99%'], correct: 2, explanation: 'النص يحدد بدقة: "The cost of solar panels has fallen by more than 80 percent in the last decade".'},
+  { section: 'reading', passage: 'p2', text: 'According to the passage, renewable energy is now:', options: ['Always more expensive than coal', 'Becoming the default choice', 'Banned in many countries', 'Only used in Europe'], correct: 1, explanation: 'النص يقول: "Renewable energy is no longer the expensive alternative—it is becoming the default choice".'},
+  { section: 'reading', passage: 'p2', text: 'The main challenge of solar and wind is that they are:', options: ['Too expensive', 'Intermittent', 'Toxic', 'Slow to install'], correct: 1, explanation: 'النص يحدد المشكلة: "Solar and wind are intermittent: they produce energy only when the sun shines or the wind blows".'},
+  { section: 'reading', passage: 'p2', text: 'To rely fully on renewables, countries must invest in:', options: ['More coal plants', 'Battery storage and modern grids', 'Nuclear weapons', 'Old infrastructure'], correct: 1, explanation: 'النص يذكر: "countries must invest in massive battery storage and modernize aging electrical grids".'},
+  { section: 'reading', passage: 'p2', text: 'Critics point to environmental concerns about:', options: ['Sunlight pollution', 'Mining rare materials', 'Wind noise', 'Oil leaks'], correct: 1, explanation: 'النص ذكر: "environmental concerns related to mining the rare materials needed for batteries".'},
+  { section: 'reading', passage: 'p2', text: 'The word "intermittent" in paragraph 2 most nearly means:', options: ['Continuous', 'On and off', 'Powerful', 'Cheap'], correct: 1, explanation: 'intermittent = متقطع، يأتي ويذهب. أقرب مرادف on and off.'},
+  { section: 'reading', passage: 'p2', text: 'The author describes the transition as:', options: ['Doomed to fail', 'Quiet but unstoppable', 'Slow and irrelevant', 'A temporary trend'], correct: 1, explanation: 'النص يستخدم العبارة "quiet revolution" ويقول "the long-term trend appears unstoppable".'},
+  { section: 'reading', passage: 'p2', text: 'The author\'s overall view of renewable energy is:', options: ['Skeptical', 'Optimistic', 'Confused', 'Angry'], correct: 1, explanation: 'الكاتب يعرض التحديات لكن ينتهي بنبرة متفائلة ("quiet revolution... most important economic shift").'},
+
+  /* ====== Passage 3: Social Media (Q17-24) ====== */
+  { section: 'reading', passage: 'p3', text: 'According to the passage, social media has spread:', options: ['Very slowly', 'As rapidly as few inventions', 'Only in developed countries', 'Mainly among the elderly'], correct: 1, explanation: 'النص يقول: "Few inventions have spread as rapidly as social media".'},
+  { section: 'reading', passage: 'p3', text: 'Which is NOT mentioned as a benefit of social media?', options: ['Helping small businesses', 'Connecting isolated communities', 'Curing mental illness', 'Spreading emergency information'], correct: 2, explanation: 'علاج الأمراض النفسية لم يُذكر، بل العكس - النص يذكر زيادة القلق بين الشباب.'},
+  { section: 'reading', passage: 'p3', text: 'What do algorithms often amplify, according to the passage?', options: ['Educational content', 'Outrage and misinformation', 'Charity work', 'Boredom'], correct: 1, explanation: 'النص يقول صراحة: "Algorithms designed to maximize engagement frequently amplify outrage and misinformation".'},
+  { section: 'reading', passage: 'p3', text: 'Young users in particular report:', options: ['Better grades', 'Rising anxiety', 'Reduced loneliness', 'More friends'], correct: 1, explanation: 'النص يذكر: "Young users in particular report rising anxiety and lower self-esteem".'},
+  { section: 'reading', passage: 'p3', text: 'The author concludes that social media is:', options: ['Inherently evil', 'Inherently good', 'A neutral tool', 'Useless'], correct: 2, explanation: 'النص يقول: "social media itself is neither good nor bad—it is a powerful tool".'},
+  { section: 'reading', passage: 'p3', text: 'The word "curated" in paragraph 3 most nearly means:', options: ['Random', 'Carefully selected', 'Damaged', 'Old'], correct: 1, explanation: 'curated = منتقاة بعناية. الصور المنتقاة بعناية على وسائل التواصل تخلق مقارنات غير واقعية.'},
+  { section: 'reading', passage: 'p3', text: 'According to the passage, the solution involves:', options: ['Banning all platforms', 'Digital literacy and mindful habits', 'Returning to print media', 'Government takeover'], correct: 1, explanation: 'النص يقترح: "Greater digital literacy, stronger platform accountability, and mindful personal habits".'},
+  { section: 'reading', passage: 'p3', text: 'The structure of this passage can best be described as:', options: ['Chronological narrative', 'Pros, cons, and conclusion', 'Cause and effect only', 'Random anecdotes'], correct: 1, explanation: 'النص يعرض الفوائد ثم الأضرار ثم يصل لاستنتاج متوازن، فالبنية pros, cons, and conclusion.'},
+
+  /* ====== Passage 4: Science of Happiness (Q25-32) ====== */
+  { section: 'reading', passage: 'p4', text: 'The field that uses experiments to study well-being is called:', options: ['Negative psychology', 'Positive psychology', 'Behavioral economics', 'Philosophy of happiness'], correct: 1, explanation: 'النص يحدد: "a growing field known as positive psychology has joined the conversation".'},
+  { section: 'reading', passage: 'p4', text: 'According to the passage, income raises happiness:', options: ['Without limit', 'Only up to a certain threshold', 'Only for the rich', 'Not at all'], correct: 1, explanation: 'النص يقول: "Income raises happiness only up to a certain threshold; beyond that, additional money brings diminishing returns".'},
+  { section: 'reading', passage: 'p4', text: 'Experiences provide more lasting joy than:', options: ['Friends', 'Material purchases', 'Family', 'Memories'], correct: 1, explanation: 'النص يقول: "Material purchases provide a short-lived boost compared to experiences".'},
+  { section: 'reading', passage: 'p4', text: 'Which finding is described as surprising?', options: ['Money buys happiness forever', 'Giving raises the giver\'s mood more than the receiver\'s', 'Loneliness brings joy', 'Travel is depressing'], correct: 1, explanation: 'النص يستخدم "Surprisingly" مع: "acts of generosity reliably raise the giver\'s mood more than they raise the receiver\'s".'},
+  { section: 'reading', passage: 'p4', text: 'The strongest predictor of long-term happiness is:', options: ['Wealth', 'Strong social bonds', 'Fame', 'Education'], correct: 1, explanation: 'النص يقول: "Strong social bonds repeatedly emerge as the single most powerful predictor of long-term happiness".'},
+  { section: 'reading', passage: 'p4', text: 'The phrase "diminishing returns" suggests:', options: ['Constant gains', 'Decreasing benefit as more is added', 'Total loss', 'Sudden growth'], correct: 1, explanation: 'diminishing returns = العائد المتناقص، أي كل وحدة إضافية تعطي فائدة أقل من السابقة.'},
+  { section: 'reading', passage: 'p4', text: 'The author implies that modern culture often:', options: ['Prizes relationships above all', 'Prizes wealth and individual achievement', 'Avoids all generosity', 'Banishes happiness'], correct: 1, explanation: 'النص يقول: "in a culture that often prizes wealth and individual achievement".'},
+  { section: 'reading', passage: 'p4', text: 'The main idea of the passage is:', options: ['Money is everything', 'Science confirms relationships matter more than wealth', 'Happiness is a myth', 'Philosophy is useless'], correct: 1, explanation: 'الفكرة الرئيسية: العلم يؤكد أن العلاقات والكرم والامتنان أهم من المال للسعادة طويلة الأمد.'},
+
+  /* ====== Passage 5: Space Exploration (Q33-40) ====== */
+  { section: 'reading', passage: 'p5', text: 'Space exploration once belonged exclusively to:', options: ['Private companies', 'National governments', 'Small countries', 'Universities'], correct: 1, explanation: 'النص يقول: "The age of space exploration once belonged exclusively to a handful of national governments".'},
+  { section: 'reading', passage: 'p5', text: 'Which factor has dramatically lowered launch costs?', options: ['Cheaper fuel', 'Reusable rockets', 'Government subsidies', 'Smaller crews'], correct: 1, explanation: 'النص يحدد: "Reusable rockets have dramatically lowered launch costs".'},
+  { section: 'reading', passage: 'p5', text: 'Improved satellite networks promise:', options: ['Slower internet', 'Faster internet for remote regions', 'No more communication', 'Higher prices'], correct: 1, explanation: 'النص يقول: "Improved satellite networks promise faster internet for remote regions".'},
+  { section: 'reading', passage: 'p5', text: 'A growing risk in low Earth orbit is:', options: ['Lack of satellites', 'Collisions and debris', 'Too much sunlight', 'Government control'], correct: 1, explanation: 'النص ذكر: "the growing crowd in low Earth orbit raises the danger of collisions and creates massive amounts of debris".'},
+  { section: 'reading', passage: 'p5', text: 'What is straining international cooperation in space?', options: ['Religious differences', 'Commercial competition and geopolitical rivalry', 'Language barriers', 'Lack of interest'], correct: 1, explanation: 'النص يقول: "International cooperation... is increasingly strained by commercial competition and geopolitical rivalry".'},
+  { section: 'reading', passage: 'p5', text: 'The word "ventures" in paragraph 2 most nearly means:', options: ['Vacations', 'Risky business projects', 'Departments', 'Robots'], correct: 1, explanation: 'ventures = مشاريع جريئة أو مخاطر تجارية، خاصةً في سياق ريادة الأعمال.'},
+  { section: 'reading', passage: 'p5', text: 'The phrase "no longer the stuff of science fiction" suggests:', options: ['Science fiction is dead', 'Those ideas have become realistic', 'Fiction is more accurate than fact', 'The plans were never serious'], correct: 1, explanation: 'العبارة تعني أن ما كان خيالاً علمياً صار خططاً حقيقية تُدرس وتُنفّذ.'},
+  { section: 'reading', passage: 'p5', text: 'The author\'s overall stance on the new space era is:', options: ['Purely enthusiastic', 'Purely pessimistic', 'Balanced - opportunities and risks', 'Indifferent'], correct: 2, explanation: 'الكاتب يعرض الفرص (إنترنت، مراقبة المناخ) والمخاطر (تصادمات، خلافات سياسية) بشكل متوازن.'},
+
+  /* ====== STRUCTURE (25 questions) ====== */
+  { section: 'structure', text: 'She _____ to the conference if she had been invited.', options: ['will go', 'would go', 'would have gone', 'goes'], correct: 2, explanation: 'هذه شرطية من النوع الثالث (مستحيلة في الماضي): If + had + p.p., would + have + p.p.'},
+  { section: 'structure', text: 'Not only _____ the report on time, but he also presented it well.', options: ['he submitted', 'did he submit', 'he did submit', 'submitting he'], correct: 1, explanation: 'مع "Not only" في بداية الجملة نستخدم القلب (inversion): did + subject + base verb.'},
+  { section: 'structure', text: 'The students were warned _____ during the exam.', options: ['not to talk', 'to not talking', 'don\'t talk', 'not talking'], correct: 0, explanation: 'الصيغة المنفية للمصدر: not + to + verb. فالصحيح "not to talk".'},
+  { section: 'structure', text: 'Each of the boys _____ a different opinion.', options: ['have', 'has', 'having', 'are having'], correct: 1, explanation: '"Each of" + جمع يأخذ فعلاً مفرداً. الفاعل الحقيقي هو each (مفرد) فالفعل "has".'},
+  { section: 'structure', text: 'The novel, _____ in 1925, is still widely read today.', options: ['publishes', 'publishing', 'published', 'is published'], correct: 2, explanation: 'هذه عبارة participial تصف الرواية بالمبني للمجهول: "published in 1925" = التي نُشرت في 1925.'},
+  { section: 'structure', text: 'Neither answer _____ correct.', options: ['is', 'are', 'were', 'have'], correct: 0, explanation: 'neither يعامل كمفرد، فالفعل "is".'},
+  { section: 'structure', text: 'She speaks English _____ a native speaker.', options: ['as well as', 'so well as', 'better than as', 'too well like'], correct: 0, explanation: 'تركيب المساواة: as + adverb + as. فالصحيح "as well as".'},
+  { section: 'structure', text: 'The meeting was postponed _____ the bad weather.', options: ['because', 'due to', 'although', 'so that'], correct: 1, explanation: 'due to + noun = بسبب. أما because فتأتي مع جملة كاملة (because of + noun).'},
+  { section: 'structure', text: 'I would rather you _____ smoke in the house.', options: ['don\'t', 'didn\'t', 'won\'t', 'haven\'t'], correct: 1, explanation: 'تركيب "I would rather + subject + past simple" للتعبير عن التفضيل في الحاضر.'},
+  { section: 'structure', text: 'It\'s high time we _____ home.', options: ['go', 'went', 'will go', 'going'], correct: 1, explanation: 'بعد "It\'s high time" نستخدم Past Simple للتعبير عن الإلحاح في الحاضر.'},
+  { section: 'structure', text: 'The harder you work, _____.', options: ['more you earn', 'you earn more', 'the more you earn', 'most you earn'], correct: 2, explanation: 'تركيب "the + comparative... the + comparative" لربط فكرتين تتزايدان معاً.'},
+  { section: 'structure', text: 'He insisted that I _____ with him.', options: ['went', 'go', 'gone', 'going'], correct: 1, explanation: 'بعد insist يأتي subjunctive (مصدر مجرد بدون s): فالصحيح "go".'},
+  { section: 'structure', text: 'The car _____ I bought last year is already broken.', options: ['who', 'which', 'whose', 'where'], correct: 1, explanation: 'مع الأشياء غير العاقلة نستخدم which (أو that). فالصحيح "which".'},
+  { section: 'structure', text: 'I haven\'t seen him _____ ages.', options: ['since', 'for', 'from', 'during'], correct: 1, explanation: 'for + period (ages, years, days). since + point in time.'},
+  { section: 'structure', text: 'The book is too difficult _____ children to read.', options: ['from', 'to', 'for', 'with'], correct: 2, explanation: 'تركيب "too + adjective + for + person + to + verb".'},
+  { section: 'structure', text: 'Three quarters of the cake _____ been eaten.', options: ['has', 'have', 'having', 'are'], correct: 0, explanation: 'مع "Three quarters of + اسم غير معدود (the cake)" يكون الفعل مفرداً.'},
+  { section: 'structure', text: 'Rarely _____ such kindness in strangers.', options: ['we see', 'do we see', 'we do see', 'seeing we'], correct: 1, explanation: 'مع negative adverbs في البداية (Rarely, Hardly, Seldom) نستخدم القلب: do + subject + verb.'},
+  { section: 'structure', text: 'Neither of the answers _____ acceptable.', options: ['is', 'are', 'were', 'have'], correct: 0, explanation: 'neither يعامل كمفرد رسمياً، فالفعل "is".'},
+  { section: 'structure', text: 'She is good _____ solving puzzles.', options: ['in', 'on', 'at', 'with'], correct: 2, explanation: 'تعبير ثابت: good at + activity.'},
+  { section: 'structure', text: '_____ being tired, she finished the project.', options: ['Although', 'Despite', 'However', 'Because'], correct: 1, explanation: 'Despite + gerund/noun (بدون "of being"). Although يحتاج جملة كاملة.'},
+  { section: 'structure', text: 'The number of accidents _____ decreasing.', options: ['is', 'are', 'have', 'were'], correct: 0, explanation: '"The number of + جمع" يأخذ فعلاً مفرداً. تختلف عن "A number of" التي تأخذ جمع.'},
+  { section: 'structure', text: 'He acts as if he _____ the boss.', options: ['is', 'was', 'were', 'be'], correct: 2, explanation: 'بعد "as if" في الافتراض غير الواقعي نستخدم were لكل الضمائر (subjunctive).'},
+  { section: 'structure', text: 'They built a school _____ the children could study.', options: ['so that', 'because', 'although', 'in case'], correct: 0, explanation: 'so that + sentence = حتى/لكي. تعبر عن الغرض.'},
+  { section: 'structure', text: 'By next year, I _____ here for ten years.', options: ['will work', 'will have worked', 'work', 'am working'], correct: 1, explanation: 'Future Perfect: مدة تكتمل قبل وقت في المستقبل: will + have + p.p.'},
+  { section: 'structure', text: 'It is essential that everyone _____ on time.', options: ['arrives', 'arrive', 'arrived', 'is arriving'], correct: 1, explanation: 'بعد "It is essential that" يأتي subjunctive (مصدر مجرد).'},
+
+  /* ====== COMPOSITION (15 questions) ====== */
+  { section: 'composition', text: 'Which is the most effective opening sentence?', options: ['This essay is about happiness.', 'I will talk about happiness today.', 'What does it truly mean to live a happy life?', 'Happiness is a word.'], correct: 2, explanation: 'الافتتاحية القوية تجذب القارئ بسؤال أو ادعاء مثير. السؤال يدعو القارئ للتفكير ويبدأ الحوار.'},
+  { section: 'composition', text: 'Choose the sentence with parallel structure:', options: ['He enjoys cooking, painting, and to dance.', 'He enjoys to cook, painting, and dancing.', 'He enjoys cooking, painting, and dancing.', 'He enjoys cook, paint, dance.'], correct: 2, explanation: 'التوازي يتطلب نفس الصيغة (هنا gerund -ing لكل العناصر).'},
+  { section: 'composition', text: 'Which transition shows contrast?', options: ['Furthermore', 'In addition', 'Nevertheless', 'Similarly'], correct: 2, explanation: 'Nevertheless = ومع ذلك، تشير للتباين. الباقي إضافة أو تشابه.'},
+  { section: 'composition', text: 'Identify the run-on sentence:', options: ['The dog barked loudly. The neighbors complained.', 'The dog barked loudly, and the neighbors complained.', 'The dog barked loudly the neighbors complained.', 'Because the dog barked loudly, the neighbors complained.'], correct: 2, explanation: 'الجملة المركّبة المتتالية (run-on) هي جملتان مستقلتان بدون ربط أو ترقيم صحيح.'},
+  { section: 'composition', text: 'Which is the best thesis statement?', options: ['Technology is everywhere.', 'I want to write about technology.', 'Technology has transformed education by enabling personalized learning, but it also raises concerns about screen time.', 'Technology is good and bad.'], correct: 2, explanation: 'الأطروحة (thesis) الجيدة محددة وقابلة للنقاش وتعد القارئ بنقاط المقال. الخيار C يحقق ذلك.'},
+  { section: 'composition', text: 'Choose the most concise version:', options: ['Owing to the fact that he was late, he missed the bus.', 'Because he was late, he missed the bus.', 'Due to the reason of being late, he missed the bus.', 'He, being late as he was, missed the bus.'], correct: 1, explanation: 'الإيجاز قيمة في الكتابة. "Owing to the fact that" و"Due to the reason of" حشو يمكن استبدالهما بـ Because.'},
+  { section: 'composition', text: 'Which sentence avoids passive voice unnecessarily?', options: ['The cake was eaten by John.', 'John ate the cake.', 'The cake, by John, was eaten.', 'It was John by whom the cake was eaten.'], correct: 1, explanation: 'المبني للمعلوم أوضح وأقوى عند معرفة الفاعل. اختاريه ما لم يكن هناك سبب لتسليط الضوء على المفعول.'},
+  { section: 'composition', text: 'Identify the sentence with a dangling modifier:', options: ['After reading the book, she felt inspired.', 'Walking down the street, the trees looked beautiful.', 'Tired and hungry, the children went to bed.', 'Eating slowly, I enjoyed every bite.'], correct: 1, explanation: 'في B لا يوجد فاعل واضح يقوم بـ"walking"، فيبدو أن الأشجار تمشي! يجب أن يكون: "Walking down the street, I saw beautiful trees".'},
+  { section: 'composition', text: 'Which transition signals adding information?', options: ['However', 'Moreover', 'Otherwise', 'Instead'], correct: 1, explanation: 'Moreover = علاوة على ذلك، تشير لإضافة فكرة جديدة.'},
+  { section: 'composition', text: 'Choose the sentence with the clearest meaning:', options: ['She told her sister that she would visit her tomorrow.', 'She informed her sister that she planned to visit her the next day.', 'She and her sister, about visiting, talked.', 'She, her sister, tomorrow, visit.'], correct: 1, explanation: 'الخيار A فيه ضمائر غامضة (مين راح تزور مين؟). الخيار B واضح ودقيق.'},
+  { section: 'composition', text: 'Which conclusion is most effective?', options: ['So that\'s all I had to say.', 'The end.', 'Ultimately, the choice we make today will shape the world our children inherit tomorrow.', 'I hope you enjoyed reading.'], correct: 2, explanation: 'الخاتمة القوية تترك انطباعاً وتربط بالفكرة الأكبر. الخيار C يفعل ذلك ببلاغة.'},
+  { section: 'composition', text: 'Which sentence has the strongest verb?', options: ['She walked into the room quickly.', 'She stormed into the room.', 'She came into the room fast.', 'She was walking quickly into the room.'], correct: 1, explanation: '"stormed" فعل قوي يصور المشهد دون الحاجة لـ adverb. الكتابة الجيدة تختار أفعالاً دقيقة.'},
+  { section: 'composition', text: 'Which sentence shows correct cause and effect order?', options: ['He failed the exam because he had studied.', 'He passed the exam because he had not studied.', 'He passed the exam because he had studied hard.', 'He failed because he had studied a lot.'], correct: 2, explanation: 'الخيار C يقدم علاقة سببية منطقية: الدراسة الجادة → النجاح.'},
+  { section: 'composition', text: 'Which is the best supporting detail for "Exercise improves mental health"?', options: ['Many gyms have showers.', 'Studies show exercise releases endorphins that reduce anxiety.', 'I exercise sometimes.', 'Exercise equipment is expensive.'], correct: 1, explanation: 'الجملة الداعمة الجيدة تقدم دليلاً مرتبطاً بالادعاء. الخيار B يدعم الفكرة بدليل علمي.'},
+  { section: 'composition', text: 'Which sentence is most formal?', options: ['Kids these days don\'t read much.', 'Recent surveys indicate that adolescent reading rates have declined.', 'Young people aren\'t into reading.', 'Reading? Not for young folks anymore.'], correct: 1, explanation: 'اللغة الأكاديمية تتجنب العامية (kids, not into) وتستخدم مفردات دقيقة (adolescent, surveys indicate).'},
+
+  /* ====== VOCABULARY (20 questions) ====== */
+  { section: 'vocabulary', text: 'The witness gave a _____ description of the suspect.', options: ['vague', 'precise', 'foggy', 'unclear'], correct: 1, explanation: 'precise = دقيق، محدد. سياق الشاهد الجيد يتطلب دقة. الباقي يعني غامض.'},
+  { section: 'vocabulary', text: 'After hours of negotiation, they reached a _____ agreement.', options: ['hostile', 'mutual', 'broken', 'forced'], correct: 1, explanation: 'mutual = مشترك، يخدم الطرفين. الاتفاق الناجح بعد التفاوض يكون متبادلاً.'},
+  { section: 'vocabulary', text: 'The professor is known for his _____ knowledge of ancient history.', options: ['shallow', 'profound', 'small', 'trivial'], correct: 1, explanation: 'profound = عميق، واسع. يصف معرفة كبيرة وعميقة.'},
+  { section: 'vocabulary', text: 'The new law will _____ tax penalties for late payments.', options: ['reduce', 'celebrate', 'praise', 'multiply'], correct: 0, explanation: 'reduce = يخفض. القوانين الجديدة الإيجابية تخفّض العقوبات.'},
+  { section: 'vocabulary', text: 'Her _____ approach to problems makes her a great leader.', options: ['hesitant', 'decisive', 'fearful', 'confused'], correct: 1, explanation: 'decisive = حازم، حاسم. صفة قائد ناجح.'},
+  { section: 'vocabulary', text: 'The students were _____ when they heard about the surprise quiz.', options: ['delighted', 'dismayed', 'amused', 'relaxed'], correct: 1, explanation: 'dismayed = منزعجون، محبطون. رد الفعل المتوقع تجاه اختبار مفاجئ.'},
+  { section: 'vocabulary', text: 'The lecture was so _____ that several students fell asleep.', options: ['exciting', 'monotonous', 'thrilling', 'engaging'], correct: 1, explanation: 'monotonous = رتيب، ممل. السياق (الطلاب ناموا) يدل على الملل.'},
+  { section: 'vocabulary', text: 'The doctor _____ that the medicine would have side effects.', options: ['hid', 'concealed', 'cautioned', 'silenced'], correct: 2, explanation: 'cautioned = حذّر. الطبيب الجيد يحذّر مرضاه من الآثار الجانبية.'},
+  { section: 'vocabulary', text: 'His face turned red with _____ when he made the mistake.', options: ['pride', 'embarrassment', 'joy', 'curiosity'], correct: 1, explanation: 'embarrassment = إحراج. السياق (الخطأ + احمرار الوجه) يدل على الإحراج.'},
+  { section: 'vocabulary', text: 'The country\'s economy has been _____ steadily for the past five years.', options: ['plummeting', 'flourishing', 'collapsing', 'stagnating'], correct: 1, explanation: 'flourishing = مزدهر. السياق إيجابي عادةً مع "steadily".'},
+  { section: 'vocabulary', text: 'She gave a _____ answer that left everyone confused.', options: ['clear', 'ambiguous', 'detailed', 'thorough'], correct: 1, explanation: 'ambiguous = غامض، يحتمل أكثر من معنى. السياق (left everyone confused) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The journalist made a _____ effort to verify her sources.', options: ['lazy', 'careless', 'meticulous', 'minimal'], correct: 2, explanation: 'meticulous = دقيق ومتأنٍّ. الصحفي المحترف يبذل جهداً دقيقاً.'},
+  { section: 'vocabulary', text: 'His behavior was so _____ that we couldn\'t predict his next move.', options: ['predictable', 'erratic', 'consistent', 'reliable'], correct: 1, explanation: 'erratic = متقلب، غير متوقع. السياق (couldn\'t predict) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The historian provided a _____ account of the war.', options: ['biased', 'objective', 'one-sided', 'prejudiced'], correct: 1, explanation: 'objective = موضوعي، محايد. المؤرخ الجيد يقدّم رواية موضوعية. باقي الخيارات سلبية.'},
+  { section: 'vocabulary', text: 'The team\'s _____ victory secured their place in the finals.', options: ['narrow', 'decisive', 'disputed', 'embarrassing'], correct: 1, explanation: 'decisive = حاسم. الفوز الذي يضمن المركز في النهائي يكون حاسماً عادةً.'},
+  { section: 'vocabulary', text: 'Despite the setback, the team remained _____.', options: ['discouraged', 'optimistic', 'hopeless', 'pessimistic'], correct: 1, explanation: 'optimistic = متفائل. السياق (Despite + setback) يتطلب صفة إيجابية تظهر الصمود.'},
+  { section: 'vocabulary', text: 'The criminal was _____ for his crimes.', options: ['rewarded', 'punished', 'celebrated', 'praised'], correct: 1, explanation: 'punished = عوقب. المنطقي مع "criminal" و"crimes".'},
+  { section: 'vocabulary', text: 'The scientist\'s theory was eventually _____ by new evidence.', options: ['supported', 'invalidated', 'praised', 'celebrated'], correct: 1, explanation: 'invalidated = أُبطلت. الأدلة الجديدة قد تُبطل النظريات القديمة.'},
+  { section: 'vocabulary', text: 'Her _____ to detail made her an excellent editor.', options: ['indifference', 'attention', 'aversion', 'opposition'], correct: 1, explanation: 'attention to detail = الانتباه للتفاصيل، تعبير ثابت. صفة محرر ممتاز.'},
+  { section: 'vocabulary', text: 'The general atmosphere at the meeting was _____.', options: ['cordial', 'hostile', 'antagonistic', 'aggressive'], correct: 0, explanation: 'cordial = ودي، مليء بالاحترام. صفة إيجابية للأجواء. الباقي سلبي.'}
+];
+
+const SECTION_NAMES = {
+  reading: 'الفهم القرائي - Reading Comprehension',
+  structure: 'القواعد - Sentence Structure',
+  composition: 'تحليل التركيب - Composition Analysis',
+  vocabulary: 'المفردات - Vocabulary'
+};
+
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let timerInterval = null;
+let timeLeft = 180 * 60;
+let testSubmitted = false;
+
+function startTest() {
+  document.getElementById('welcomeScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'inline-block';
+  startTimer();
+  showQuestion(0);
+  buildGrid();
+}
+
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      submitTest();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const h = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+  const m = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+  const box = document.getElementById('timerBox');
+  box.classList.remove('warn', 'danger');
+  if (timeLeft < 600) box.classList.add('danger');
+  else if (timeLeft < 1800) box.classList.add('warn');
+}
+
+function showQuestion(idx) {
+  currentQ = idx;
+  const q = QUESTIONS[idx];
+  const container = document.getElementById('questionContainer');
+  const passageHtml = q.passage ? `<div class="passage ltr">${PASSAGES[q.passage]}</div>` : '';
+  const letters = ['A', 'B', 'C', 'D'];
+  let optionsHtml = '';
+  q.options.forEach((opt, i) => {
+    let cls = 'option';
+    if (testSubmitted) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === answers[idx] && i !== q.correct) cls += ' wrong';
+    } else if (answers[idx] === i) cls += ' selected';
+    optionsHtml += `<div class="${cls}" onclick="selectOption(${i})"><div class="option-letter">${letters[i]}</div><div class="ltr" style="flex:1;">${opt}</div></div>`;
+  });
+  let explainHtml = '';
+  if (testSubmitted) {
+    const userAns = answers[idx];
+    const isCorrect = userAns === q.correct;
+    explainHtml = `<div class="explanation"><strong>${isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة'} • الإجابة الصحيحة: ${letters[q.correct]}</strong><br>${q.explanation}</div>`;
+  }
+  container.innerHTML = `<div class="section-tag">${SECTION_NAMES[q.section]}</div><div class="question-num">السؤال ${idx + 1} من ${QUESTIONS.length}</div>${passageHtml}<div class="question-text ltr">${q.text}</div><div class="options">${optionsHtml}</div>${explainHtml}`;
+  updateProgress();
+  document.getElementById('sectionLabel').textContent = 'القسم: ' + SECTION_NAMES[q.section];
+  if (document.getElementById('questionGrid').style.display !== 'none') buildGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectOption(idx) { if (testSubmitted) return; answers[currentQ] = idx; showQuestion(currentQ); }
+function nextQuestion() { if (currentQ < QUESTIONS.length - 1) showQuestion(currentQ + 1); }
+function prevQuestion() { if (currentQ > 0) showQuestion(currentQ - 1); }
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  document.getElementById('progressText').textContent = `${answered} / ${QUESTIONS.length}`;
+  document.getElementById('progressFill').style.width = `${(answered / QUESTIONS.length) * 100}%`;
+}
+function buildGrid() {
+  const grid = document.getElementById('questionGrid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'grid-btn';
+    btn.textContent = i + 1;
+    if (testSubmitted) {
+      if (answers[i] === q.correct) btn.classList.add('review-correct');
+      else btn.classList.add('review-wrong');
+    } else if (answers[i] !== null) btn.classList.add('answered');
+    if (i === currentQ) btn.classList.add('current');
+    btn.onclick = () => showQuestion(i);
+    grid.appendChild(btn);
+  });
+}
+function toggleGrid() {
+  const g = document.getElementById('questionGrid');
+  g.style.display = g.style.display === 'none' ? 'grid' : 'none';
+  if (g.style.display === 'grid') buildGrid();
+}
+function confirmSubmit() {
+  const unanswered = answers.filter(a => a === null).length;
+  document.getElementById('submitMsg').textContent = unanswered > 0 ? `لديكِ ${unanswered} سؤال بدون إجابة. هل تودين تسليم الاختبار الآن؟` : 'سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.';
+  document.getElementById('submitModal').classList.add('active');
+}
+function closeModal() { document.getElementById('submitModal').classList.remove('active'); }
+function submitTest() { testSubmitted = true; clearInterval(timerInterval); closeModal(); showResults(); }
+
+function showResults() {
+  const sectionStats = {};
+  ['reading', 'structure', 'composition', 'vocabulary'].forEach(s => { sectionStats[s] = { correct: 0, total: 0 }; });
+  let total = 0;
+  QUESTIONS.forEach((q, i) => {
+    sectionStats[q.section].total++;
+    if (answers[i] === q.correct) { sectionStats[q.section].correct++; total++; }
+  });
+  const overall = (total / QUESTIONS.length) * 100;
+  const stepScore = Math.round(36 + (overall / 100) * 64);
+  let level, levelClass;
+  if (overall >= 85) { level = '🌟 ممتاز - مستوى متقدم'; levelClass = 'level-excellent'; }
+  else if (overall >= 70) { level = '👏 جيد جداً - مستوى عالٍ'; levelClass = 'level-good'; }
+  else if (overall >= 50) { level = '👍 جيد - يحتاج تحسين'; levelClass = 'level-pass'; }
+  else { level = '📚 يحتاج مزيداً من المراجعة'; levelClass = 'level-low'; }
+
+  document.getElementById('testArea').classList.remove('active');
+  const r = document.getElementById('resultsScreen');
+  r.style.display = 'block';
+  const circ = 2 * Math.PI * 80;
+  const offset = circ - (overall / 100) * circ;
+
+  let breakdownHtml = '';
+  Object.keys(sectionStats).forEach(s => {
+    const st = sectionStats[s];
+    const pct = (st.correct / st.total) * 100;
+    breakdownHtml += `<div class="break-card"><h4>${SECTION_NAMES[s]}</h4><div class="break-bar"><div class="break-bar-fill" style="width: ${pct}%;"></div></div><div class="break-stats"><span>${st.correct} / ${st.total} صحيحة</span><span>${pct.toFixed(0)}%</span></div></div>`;
+  });
+
+  r.innerHTML = `<div class="results"><h2 style="color: var(--primary); margin-bottom: 4px;">🎉 انتهى الاختبار</h2><p style="color: var(--muted);">إليكِ تحليل أدائك المفصل</p><div class="score-circle"><svg width="180" height="180"><circle cx="90" cy="90" r="80" stroke="#e5e7eb" stroke-width="14" fill="none"/><circle cx="90" cy="90" r="80" stroke="url(#grad)" stroke-width="14" fill="none" stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"/><defs><linearGradient id="grad"><stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs></svg><div class="score-text"><div class="score-num">${total} / 100</div><div class="score-label">${overall.toFixed(0)}% • تقدير STEP ≈ ${stepScore}</div></div></div><div class="level-badge ${levelClass}">${level}</div><h3 style="margin: 24px 0 12px; color: var(--primary-dark);">التحليل حسب القسم</h3><div class="breakdown">${breakdownHtml}</div><p style="color: var(--muted); margin: 16px 0;">💡 يمكنكِ مراجعة جميع الأسئلة مع الشروحات المفصلة من خلال زر المراجعة أدناه.</p><div style="display:flex; gap: 12px; justify-content: center; flex-wrap: wrap;"><button class="btn" onclick="reviewMode()">📖 مراجعة الأسئلة مع الشرح</button><button class="btn btn-outline" onclick="window.location.reload()">🔄 إعادة الاختبار</button></div></div>`;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reviewMode() {
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'none';
+  showQuestion(0);
+  document.getElementById('questionGrid').style.display = 'grid';
+  buildGrid();
+}
+</script>
+</body>
+</html>
