@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>نموذج اختبار STEP رقم 4 - مستوى صعب</title>
+<style>
+  :root { --primary: #db2777; --primary-dark: #9d174d; --accent: #f59e0b; --bg: #f5f7fa; --card: #fff; --text: #1f2937; --muted: #6b7280; --border: #e5e7eb; --correct: #10b981; --wrong: #ef4444; --warn: #f59e0b; --shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+  .ltr { direction: ltr; text-align: left; font-family: Georgia, 'Times New Roman', serif; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .top-bar { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 18px 28px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+  .top-bar h1 { font-size: 22px; font-weight: 700; }
+  .top-bar h1 small { font-weight: 400; font-size: 14px; opacity: 0.85; display: block; }
+  .timer-box { background: rgba(255,255,255,0.18); padding: 8px 18px; border-radius: 10px; font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+  .timer-box.warn { background: var(--warn); }
+  .timer-box.danger { background: var(--wrong); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .welcome { background: var(--card); border-radius: 16px; padding: 40px; box-shadow: var(--shadow); text-align: center; }
+  .welcome h2 { color: var(--primary); font-size: 28px; margin-bottom: 14px; }
+  .welcome p { color: var(--muted); margin-bottom: 24px; font-size: 16px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 28px 0; }
+  .info-card { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+  .info-card .num { font-size: 28px; font-weight: 700; color: var(--primary); }
+  .info-card .label { color: var(--muted); font-size: 14px; }
+  .instructions { background: #fdf2f8; border-right: 4px solid var(--accent); padding: 18px 22px; border-radius: 8px; text-align: right; margin: 24px 0; }
+  .instructions h3 { color: var(--primary-dark); margin-bottom: 8px; }
+  .instructions ul { padding-right: 22px; color: #4b5563; }
+  .instructions li { margin-bottom: 6px; }
+  .btn { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-danger { background: var(--wrong); }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-secondary { background: #6b7280; }
+  .btn-secondary:hover { background: #4b5563; }
+  .test-area { display: none; }
+  .test-area.active { display: block; }
+  .progress-bar { background: var(--card); border-radius: 12px; padding: 14px 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+  .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+  .progress-track { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); height: 100%; transition: width 0.3s; }
+  .question-card { background: var(--card); border-radius: 16px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .section-tag { display: inline-block; background: var(--primary); color: white; padding: 4px 14px; border-radius: 999px; font-size: 13px; margin-bottom: 14px; }
+  .question-num { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  .passage { background: #f9fafb; border-right: 3px solid var(--primary); padding: 18px 22px; border-radius: 8px; margin-bottom: 20px; font-size: 15px; line-height: 1.85; }
+  .passage p { margin-bottom: 10px; }
+  .question-text { font-size: 17px; margin-bottom: 18px; font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { background: #f9fafb; border: 2px solid var(--border); padding: 14px 18px; border-radius: 10px; cursor: pointer; transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px; }
+  .option:hover { border-color: var(--primary); background: #fdf2f8; }
+  .option.selected { border-color: var(--primary); background: #fce7f3; }
+  .option-letter { background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; font-size: 13px; }
+  .option.selected .option-letter { background: var(--primary-dark); }
+  .option.correct { border-color: var(--correct); background: #ecfdf5; }
+  .option.correct .option-letter { background: var(--correct); }
+  .option.wrong { border-color: var(--wrong); background: #fef2f2; }
+  .option.wrong .option-letter { background: var(--wrong); }
+  .explanation { background: #fdf2f8; border-right: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin-top: 16px; font-size: 15px; }
+  .explanation strong { color: var(--primary-dark); }
+  .nav-controls { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .question-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; margin-top: 16px; }
+  .grid-btn { background: #f3f4f6; border: 2px solid transparent; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; }
+  .grid-btn:hover { border-color: var(--primary); }
+  .grid-btn.answered { background: #fce7f3; color: var(--primary-dark); }
+  .grid-btn.current { border-color: var(--primary); background: var(--primary); color: white; }
+  .grid-btn.review-correct { background: #d1fae5; color: var(--correct); }
+  .grid-btn.review-wrong { background: #fee2e2; color: var(--wrong); }
+  .results { background: var(--card); border-radius: 16px; padding: 36px; box-shadow: var(--shadow); text-align: center; }
+  .score-circle { width: 180px; height: 180px; margin: 20px auto; position: relative; }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-circle .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+  .score-circle .score-num { font-size: 44px; font-weight: 700; color: var(--primary); }
+  .score-circle .score-label { font-size: 13px; color: var(--muted); }
+  .breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 28px 0; }
+  .break-card { background: #f9fafb; border-radius: 12px; padding: 18px; border: 1px solid var(--border); }
+  .break-card h4 { color: var(--primary); margin-bottom: 8px; font-size: 15px; }
+  .break-bar { background: var(--border); height: 8px; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+  .break-bar-fill { background: var(--primary); height: 100%; transition: width 0.6s; }
+  .break-stats { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+  .level-badge { display: inline-block; padding: 8px 24px; border-radius: 999px; font-weight: 700; margin: 14px 0; }
+  .level-excellent { background: #d1fae5; color: var(--correct); }
+  .level-good { background: #fce7f3; color: var(--primary-dark); }
+  .level-pass { background: #fef3c7; color: #92400e; }
+  .level-low { background: #fee2e2; color: var(--wrong); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border-radius: 16px; padding: 30px; max-width: 420px; width: 92%; text-align: center; }
+  .modal h3 { margin-bottom: 14px; color: var(--primary); }
+  .modal p { color: var(--muted); margin-bottom: 22px; }
+  .modal-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  @media (max-width: 640px) { .container { padding: 12px; } .top-bar { padding: 14px 18px; } .top-bar h1 { font-size: 18px; } .question-card { padding: 20px; } .welcome { padding: 24px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <h1>📔 نموذج اختبار STEP - رقم 4 <small>مستوى صعب • قطع معقدة ومفردات متقدمة</small></h1>
+    <div id="timerBox" class="timer-box" style="display:none;">⏱ <span id="timer">03:00:00</span></div>
+  </div>
+  <div id="welcomeScreen">
+    <div class="welcome">
+      <h2>النموذج التدريبي الرابع (صعب)</h2>
+      <p>مواضيع علمية وفلسفية وأدبية متقدمة لتنمية مهارات التحليل العالية 🎯</p>
+      <div class="info-grid">
+        <div class="info-card"><div class="num">100</div><div class="label">سؤال صعب</div></div>
+        <div class="info-card"><div class="num">5</div><div class="label">قطع جديدة</div></div>
+        <div class="info-card"><div class="num">3</div><div class="label">ساعات</div></div>
+        <div class="info-card"><div class="num">🔥</div><div class="label">تحدّي عالٍ</div></div>
+      </div>
+      <div class="instructions">
+        <h3>📋 تعليمات</h3>
+        <ul>
+          <li>القطع تتناول: الترابط بين العقل والجسد، مستقبل العمل، الهندسة الوراثية، فلسفة الوقت، الحضارات المفقودة.</li>
+          <li>المفردات متقدمة وستحتاج لاستنتاج المعاني من السياق.</li>
+          <li>أسئلة القواعد تركّز على التراكيب المعقدة وحالات الاستثناء.</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="startTest()">🚀 ابدأ الاختبار</button>
+    </div>
+  </div>
+  <div id="testArea" class="test-area">
+    <div class="progress-bar">
+      <div class="progress-info">
+        <span>التقدّم: <strong id="progressText">0 / 100</strong></span>
+        <span id="sectionLabel">القسم: —</span>
+      </div>
+      <div class="progress-track"><div id="progressFill" class="progress-fill" style="width: 0%;"></div></div>
+    </div>
+    <div id="questionContainer" class="question-card"></div>
+    <div class="question-card" style="padding: 18px 24px;">
+      <div class="nav-controls">
+        <button class="btn btn-outline" onclick="prevQuestion()">⬅ السابق</button>
+        <div>
+          <button class="btn btn-secondary" onclick="toggleGrid()">🗂 جميع الأسئلة</button>
+          <button class="btn" onclick="nextQuestion()">التالي ➡</button>
+        </div>
+        <button class="btn btn-danger" onclick="confirmSubmit()">✅ إنهاء وتسليم</button>
+      </div>
+      <div id="questionGrid" class="question-grid" style="display:none;"></div>
+    </div>
+  </div>
+  <div id="resultsScreen" style="display:none;"></div>
+</div>
+<div id="submitModal" class="modal-overlay">
+  <div class="modal">
+    <h3>هل أنتِ متأكدة من تسليم الاختبار؟</h3>
+    <p id="submitMsg">سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-outline" onclick="closeModal()">رجوع</button>
+      <button class="btn btn-danger" onclick="submitTest()">نعم، سلّمي</button>
+    </div>
+  </div>
+</div>
+<script>
+const PASSAGES = {
+  p1: `<p><strong>Passage 1: The Mind-Body Connection</strong></p>
+<p>For most of medical history, the mind and body were treated as separate domains. Doctors specialized in physical ailments, while emotional struggles were dismissed as personal weaknesses. However, recent decades have witnessed a profound shift in this thinking. A growing body of evidence suggests that mental states have measurable effects on physical health, and vice versa.</p>
+<p>Chronic stress, for instance, has been linked to a range of physical conditions including heart disease, weakened immunity, and accelerated cellular aging. Conversely, practices that calm the mind, such as meditation and deep breathing, have been shown to lower blood pressure, reduce inflammation, and even alter gene expression. These findings challenge the long-standing assumption that the body operates independently of psychological influence.</p>
+<p>This convergence has given rise to integrative medicine, an approach that treats patients as whole beings rather than collections of symptoms. While critics argue that some claims in this field outpace the available evidence, the broader principle—that mind and body are deeply intertwined—is now widely accepted. The challenge ahead lies in translating this understanding into healthcare systems that have long been structured around separation.</p>`,
+
+  p2: `<p><strong>Passage 2: The Future of Work in the Age of Automation</strong></p>
+<p>Few topics generate as much anxiety today as the rise of automation. Robots assemble cars, algorithms make hiring decisions, and artificial intelligence drafts legal documents that once required years of training. Economists are divided on the long-term implications: some predict widespread job displacement, while others argue that, like previous technological revolutions, this one will create more opportunities than it destroys.</p>
+<p>What is clear is that the nature of work is changing. Routine tasks—both manual and cognitive—are increasingly susceptible to automation, while jobs requiring creativity, empathy, and complex problem-solving remain harder to mechanize. As a result, the skills that command the highest wages are shifting. Education systems designed for a manufacturing era struggle to prepare students for an economy where adaptability matters more than memorization.</p>
+<p>Policymakers face difficult choices. Some advocate for universal basic income to cushion displaced workers; others emphasize retraining programs to help them transition into new roles. What is certain is that ignoring the trend is not an option. The societies that thrive in the coming decades will be those that proactively reshape their education, labor, and welfare systems to fit a world in which machines do more, and humans must do differently.</p>`,
+
+  p3: `<p><strong>Passage 3: The Ethics of Genetic Engineering</strong></p>
+<p>The discovery of CRISPR, a tool that allows scientists to edit DNA with unprecedented precision, has been hailed as one of the most consequential advances of our time. Diseases once considered incurable—from sickle cell anemia to certain cancers—may soon be eliminated at their genetic source. Yet alongside this promise lies an ethical landscape that humanity is only beginning to navigate.</p>
+<p>The clearest controversies surround germline editing, the practice of altering genes in embryos in ways that will be passed to future generations. Proponents argue that eliminating hereditary diseases could spare countless families immense suffering. Critics counter that we lack the wisdom to wield such power responsibly. Even small unintended changes, they note, could ripple through the human gene pool for centuries.</p>
+<p>Equally troubling is the prospect of "enhancement"—using gene editing not to cure disease but to boost intelligence, athletic ability, or appearance. Such applications could deepen existing inequalities, creating a society in which the wealthy literally engineer advantages into their children. The scientific community has called for moratoriums, but enforcement across borders remains nearly impossible. The technology is here; the ethical frameworks to govern it are not.</p>`,
+
+  p4: `<p><strong>Passage 4: The Philosophy of Time</strong></p>
+<p>Time, despite being central to human experience, remains one of the most puzzling concepts in philosophy and physics alike. Augustine, the fourth-century theologian, famously remarked that he knew what time was until someone asked him to explain it. Centuries later, physicists discovered that time does not flow uniformly: clocks tick more slowly at high speeds and in strong gravitational fields, a phenomenon confirmed countless times by precise instruments.</p>
+<p>Equally strange is our subjective experience of time. Hours of joy seem to vanish in moments, while minutes of pain stretch into eternities. Researchers studying perception have found that novelty slows our sense of time, while routine accelerates it. This may explain why childhood summers seemed endless, while adult years appear to blur together.</p>
+<p>Some philosophers argue that our common-sense notion of time—a steady river flowing from past to future—is fundamentally mistaken. Modern physics suggests that past, present, and future may all exist simultaneously in what is sometimes called the "block universe." Whether this view is correct or not, it underscores how strange and slippery time truly is, defying both intuition and language even as it governs every moment of our lives.</p>`,
+
+  p5: `<p><strong>Passage 5: The Lost Civilizations</strong></p>
+<p>Throughout history, several great civilizations have risen, flourished, and then mysteriously declined, leaving behind only ruins and unanswered questions. The Maya, whose cities once dominated Central America, abandoned their grand temples for reasons that remain debated. The Indus Valley civilization, contemporaneous with ancient Egypt, vanished so completely that its written script has never been deciphered. Easter Island\'s population collapsed amid an ecological catastrophe that may hold lessons for our own era.</p>
+<p>What unites these stories is the difficulty of separating myth from evidence. For centuries, lost civilizations have inspired imagination and speculation, from tales of Atlantis to claims of extraterrestrial influence. Yet careful archaeology, supported by tools such as satellite imaging and DNA analysis, has steadily replaced fantasy with sober understanding. We now know that most collapses had multiple causes: climate change, resource depletion, social conflict, and disease often acted in concert.</p>
+<p>The most sobering lesson may be that complexity itself can be fragile. Societies that appear stable can unravel quickly when several pressures align. As modern civilizations face their own combination of climate stress and political strain, the ruins of the past serve not as exotic mysteries but as warnings—reminders that no society, however advanced, is immune to decline.</p>`
+};
+
+const QUESTIONS = [
+  /* ====== Passage 1: Mind-Body (Q1-8) ====== */
+  { section: 'reading', passage: 'p1', text: 'Historically, the mind and body were treated as:', options: ['Inseparable parts', 'Separate domains', 'Equally important', 'Mysterious forces'], correct: 1, explanation: 'النص يبدأ بـ"For most of medical history, the mind and body were treated as separate domains".'},
+  { section: 'reading', passage: 'p1', text: 'Chronic stress has been linked to all of the following EXCEPT:', options: ['Heart disease', 'Weakened immunity', 'Improved memory', 'Accelerated cellular aging'], correct: 2, explanation: 'النص ذكر heart disease, weakened immunity, accelerated cellular aging. أما تحسين الذاكرة فلم يُذكر.'},
+  { section: 'reading', passage: 'p1', text: 'Meditation has been shown to:', options: ['Raise blood pressure', 'Worsen inflammation', 'Lower blood pressure and alter gene expression', 'Have no measurable effect'], correct: 2, explanation: 'النص يقول: "lower blood pressure, reduce inflammation, and even alter gene expression".'},
+  { section: 'reading', passage: 'p1', text: 'The word "intertwined" in paragraph 3 most nearly means:', options: ['Separated', 'Connected', 'Damaged', 'Identical'], correct: 1, explanation: 'intertwined = متشابك، مترابط. أقرب مرادف connected.'},
+  { section: 'reading', passage: 'p1', text: 'Integrative medicine treats patients as:', options: ['Collections of symptoms', 'Whole beings', 'Statistical units', 'Lost causes'], correct: 1, explanation: 'النص يقول: "treats patients as whole beings rather than collections of symptoms".'},
+  { section: 'reading', passage: 'p1', text: 'What do critics of integrative medicine argue?', options: ['It is the only solution', 'Some claims outpace the evidence', 'It is government-mandated', 'It cures all diseases'], correct: 1, explanation: 'النص يذكر: "some claims in this field outpace the available evidence".'},
+  { section: 'reading', passage: 'p1', text: 'The phrase "convergence" in paragraph 3 refers to:', options: ['A medical school', 'The merging of mind and body in medicine', 'A type of surgery', 'An old practice'], correct: 1, explanation: 'convergence = التقاء/تقارب، هنا يشير لتقارب الفهم بأن العقل والجسد مترابطان.'},
+  { section: 'reading', passage: 'p1', text: 'The main challenge the author identifies is:', options: ['Convincing patients', 'Restructuring healthcare systems', 'Inventing new drugs', 'Banning meditation'], correct: 1, explanation: 'النص ينتهي بـ"The challenge ahead lies in translating this understanding into healthcare systems".'},
+
+  /* ====== Passage 2: Automation (Q9-16) ====== */
+  { section: 'reading', passage: 'p2', text: 'Economists are divided about automation\'s effect on:', options: ['Climate change', 'Long-term employment', 'Population growth', 'Tax revenue'], correct: 1, explanation: 'النص يقول: "Economists are divided on the long-term implications".'},
+  { section: 'reading', passage: 'p2', text: 'Which type of job is HARDER to mechanize?', options: ['Assembly line work', 'Data entry', 'Creative problem-solving', 'Routine cognitive tasks'], correct: 2, explanation: 'النص يحدد: "jobs requiring creativity, empathy, and complex problem-solving remain harder to mechanize".'},
+  { section: 'reading', passage: 'p2', text: 'According to the passage, education systems were designed for:', options: ['A digital era', 'A manufacturing era', 'A space-age economy', 'No specific era'], correct: 1, explanation: 'النص يقول: "Education systems designed for a manufacturing era".'},
+  { section: 'reading', passage: 'p2', text: 'What does "adaptability" matter more than, according to the passage?', options: ['Creativity', 'Empathy', 'Memorization', 'Cooperation'], correct: 2, explanation: 'النص يقول: "adaptability matters more than memorization".'},
+  { section: 'reading', passage: 'p2', text: 'Universal basic income is mentioned as:', options: ['A retraining program', 'A policy proposal to cushion displaced workers', 'A guarantee of employment', 'A type of automation'], correct: 1, explanation: 'النص يصفه بأنه: "to cushion displaced workers".'},
+  { section: 'reading', passage: 'p2', text: 'The word "displaced" in paragraph 3 most nearly means:', options: ['Promoted', 'Removed from their jobs', 'Confused', 'Trained'], correct: 1, explanation: 'displaced workers = العمال المُسرّحون أو الذين فقدوا وظائفهم بسبب التطور التقني.'},
+  { section: 'reading', passage: 'p2', text: 'The author\'s view of ignoring the trend is:', options: ['It is wise', 'It is impossible to avoid', 'It is not an option', 'It is recommended'], correct: 2, explanation: 'النص يقول صراحة: "What is certain is that ignoring the trend is not an option".'},
+  { section: 'reading', passage: 'p2', text: 'The thriving societies will be those that:', options: ['Resist all automation', 'Proactively reshape their systems', 'Keep old systems intact', 'Replace humans with machines'], correct: 1, explanation: 'النص يحدد: "those that proactively reshape their education, labor, and welfare systems".'},
+
+  /* ====== Passage 3: Genetic Engineering (Q17-24) ====== */
+  { section: 'reading', passage: 'p3', text: 'CRISPR is described as a tool to:', options: ['Diagnose disease', 'Edit DNA with precision', 'Create new species', 'Predict the future'], correct: 1, explanation: 'النص يقول: "a tool that allows scientists to edit DNA with unprecedented precision".'},
+  { section: 'reading', passage: 'p3', text: 'Germline editing involves altering genes in:', options: ['Adult patients', 'Embryos', 'Plants only', 'Animals only'], correct: 1, explanation: 'النص يحدد: "the practice of altering genes in embryos".'},
+  { section: 'reading', passage: 'p3', text: 'Critics worry that unintended changes could:', options: ['Be easily reversed', 'Ripple through the gene pool for centuries', 'Improve all humans', 'Be limited to one individual'], correct: 1, explanation: 'النص يقول: "could ripple through the human gene pool for centuries".'},
+  { section: 'reading', passage: 'p3', text: '"Enhancement" refers to using gene editing for:', options: ['Curing disease only', 'Boosting non-medical traits like intelligence', 'Increasing population', 'Studying genetics'], correct: 1, explanation: 'النص يعرّف enhancement: "to boost intelligence, athletic ability, or appearance".'},
+  { section: 'reading', passage: 'p3', text: 'Enhancement could lead to:', options: ['Greater equality', 'Deeper existing inequalities', 'The end of medicine', 'No social effect'], correct: 1, explanation: 'النص يحذر من أن enhancement "could deepen existing inequalities".'},
+  { section: 'reading', passage: 'p3', text: 'The scientific community has called for:', options: ['Banning all genetics research', 'Moratoriums on certain practices', 'Mass production of CRISPR', 'Government takeover'], correct: 1, explanation: 'النص يذكر: "The scientific community has called for moratoriums".'},
+  { section: 'reading', passage: 'p3', text: 'The word "moratoriums" most nearly means:', options: ['Funeral rites', 'Temporary halts', 'New laws', 'Awards'], correct: 1, explanation: 'moratoriums = توقفات مؤقتة، تعليق رسمي لنشاط معين. السياق (called for moratoriums) يحدد المعنى.'},
+  { section: 'reading', passage: 'p3', text: 'The author\'s overall stance is:', options: ['Purely enthusiastic about CRISPR', 'Purely opposed to gene editing', 'Concerned about ethical gap', 'Indifferent'], correct: 2, explanation: 'الكاتب يعترف بالفائدة لكن يعبر عن قلق من غياب الأطر الأخلاقية: "The technology is here; the ethical frameworks to govern it are not".'},
+
+  /* ====== Passage 4: Time (Q25-32) ====== */
+  { section: 'reading', passage: 'p4', text: 'Augustine\'s famous remark about time conveys that time is:', options: ['Easy to define', 'Familiar yet hard to explain', 'A modern invention', 'Religious'], correct: 1, explanation: 'الاقتباس يعني أن الإنسان يعرف الوقت بالحدس لكن يصعب عليه شرحه.'},
+  { section: 'reading', passage: 'p4', text: 'Physicists discovered that time:', options: ['Flows the same everywhere', 'Slows at high speeds and strong gravity', 'Does not exist', 'Reverses occasionally'], correct: 1, explanation: 'النص يقول: "clocks tick more slowly at high speeds and in strong gravitational fields".'},
+  { section: 'reading', passage: 'p4', text: 'According to research, novelty:', options: ['Speeds up our sense of time', 'Slows our sense of time', 'Has no effect on time perception', 'Stops time'], correct: 1, explanation: 'النص يقول: "novelty slows our sense of time, while routine accelerates it".'},
+  { section: 'reading', passage: 'p4', text: 'Why might childhood summers have seemed endless?', options: ['They were physically longer', 'Children sleep more', 'Novelty slows the perception of time', 'Adults forget time'], correct: 2, explanation: 'لأن أيام الطفولة مليئة بالتجارب الجديدة، والجدّة تُبطئ الإحساس بالوقت.'},
+  { section: 'reading', passage: 'p4', text: 'The "block universe" theory suggests that:', options: ['Time flows backwards', 'Past, present, and future exist simultaneously', 'Time is an illusion', 'Time has stopped'], correct: 1, explanation: 'النص يعرّف: "past, present, and future may all exist simultaneously in what is sometimes called the block universe".'},
+  { section: 'reading', passage: 'p4', text: 'The word "slippery" in the final paragraph most nearly means:', options: ['Wet', 'Hard to grasp', 'Slow', 'Honest'], correct: 1, explanation: 'slippery (مجازياً) = صعب الإمساك به أو فهمه. السياق "defying both intuition and language" يؤكد المعنى.'},
+  { section: 'reading', passage: 'p4', text: 'Our common-sense notion of time is compared to:', options: ['A puzzle', 'A steady river', 'A solid block', 'A song'], correct: 1, explanation: 'النص يستخدم الاستعارة: "a steady river flowing from past to future".'},
+  { section: 'reading', passage: 'p4', text: 'The overall tone of the passage is:', options: ['Dismissive of philosophy', 'Awestruck and contemplative', 'Practical and instructional', 'Angry and confrontational'], correct: 1, explanation: 'الكاتب يعرض الغموض حول الوقت بنبرة تأملية مفعمة بالدهشة.'},
+
+  /* ====== Passage 5: Lost Civilizations (Q33-40) ====== */
+  { section: 'reading', passage: 'p5', text: 'The Indus Valley civilization\'s writing has:', options: ['Been fully translated', 'Never been deciphered', 'Been recently invented', 'Disappeared'], correct: 1, explanation: 'النص يقول: "its written script has never been deciphered".'},
+  { section: 'reading', passage: 'p5', text: 'According to the passage, which is NOT a cause of civilization collapse?', options: ['Climate change', 'Extraterrestrial intervention', 'Resource depletion', 'Disease'], correct: 1, explanation: 'النص يصف الادعاءات حول الفضائيين بأنها fantasy وليست سبباً حقيقياً.'},
+  { section: 'reading', passage: 'p5', text: 'Modern tools for studying ancient collapses include:', options: ['Magic and folklore', 'Satellite imaging and DNA analysis', 'Time machines', 'Only oral history'], correct: 1, explanation: 'النص ذكر: "tools such as satellite imaging and DNA analysis".'},
+  { section: 'reading', passage: 'p5', text: 'The Easter Island collapse is described as:', options: ['Political', 'Ecological', 'Religious', 'Unknown'], correct: 1, explanation: 'النص يقول: "Easter Island\'s population collapsed amid an ecological catastrophe".'},
+  { section: 'reading', passage: 'p5', text: 'The word "sobering" in the final paragraph most nearly means:', options: ['Drunken', 'Making one think seriously', 'Funny', 'Forgettable'], correct: 1, explanation: 'sobering = جعل المرء يفكر بجدية. مفردة متقدمة شائعة في النصوص الأكاديمية.'},
+  { section: 'reading', passage: 'p5', text: 'According to the passage, complexity in societies is:', options: ['Always permanent', 'Fragile', 'Unnecessary', 'Unattainable'], correct: 1, explanation: 'النص يقول: "complexity itself can be fragile".'},
+  { section: 'reading', passage: 'p5', text: 'Lost civilizations serve as:', options: ['Exotic mysteries only', 'Warnings to modern societies', 'Subjects of fairy tales', 'Tourist destinations'], correct: 1, explanation: 'النص يقول: "serve not as exotic mysteries but as warnings".'},
+  { section: 'reading', passage: 'p5', text: 'The author\'s main message is that:', options: ['Lost civilizations cannot be understood', 'No society is immune to decline', 'Modern civilization is invincible', 'Ancient ruins are not interesting'], correct: 1, explanation: 'الجملة الختامية: "no society, however advanced, is immune to decline".'},
+
+  /* ====== STRUCTURE (25) ====== */
+  { section: 'structure', text: 'Not until she finished the project _____ realize how exhausted she was.', options: ['she did', 'did she', 'she would', 'had she'], correct: 1, explanation: 'مع "Not until" في البداية نستخدم القلب: did + subject + base verb.'},
+  { section: 'structure', text: 'The researcher whose findings _____ groundbreaking received an award.', options: ['was', 'were', 'is', 'has'], correct: 1, explanation: 'findings جمع، فالفعل "were".'},
+  { section: 'structure', text: 'Should you need assistance, please _____ hesitate to call.', options: ['do not', 'don\'t', 'not', 'never'], correct: 0, explanation: 'في الإنجليزية الرسمية: please do not hesitate. "don\'t" مقبولة لكن أقل رسمية.'},
+  { section: 'structure', text: 'Were it not for your help, I _____ this on my own.', options: ['can\'t do', 'couldn\'t have done', 'won\'t do', 'wasn\'t doing'], correct: 1, explanation: 'تركيب شرطي افتراضي عن الماضي: Were it not for + ..., would/could + have + p.p.'},
+  { section: 'structure', text: 'The professor, along with his students, _____ attending the conference.', options: ['are', 'is', 'were', 'have'], correct: 1, explanation: 'العبارات مثل "along with" لا تغير الفعل. الفاعل الحقيقي مفرد (the professor) → is.'},
+  { section: 'structure', text: 'Each of the proposals _____ merit.', options: ['have', 'has', 'are having', 'were'], correct: 1, explanation: '"Each of + جمع" يأخذ فعلاً مفرداً.'},
+  { section: 'structure', text: 'It is essential that the contract _____ before Friday.', options: ['is signed', 'be signed', 'will be signed', 'was signed'], correct: 1, explanation: 'بعد "It is essential that" يأتي subjunctive: be + p.p.'},
+  { section: 'structure', text: 'Hardly had the lecture begun _____ students started asking questions.', options: ['than', 'when', 'that', 'then'], correct: 1, explanation: 'تركيب "Hardly had... when" ثابت.'},
+  { section: 'structure', text: 'The data, _____ collected over five years, supports the hypothesis.', options: ['which were', 'who was', 'that is', 'whose'], correct: 0, explanation: 'data جمع في الاستخدام الأكاديمي. والصيغة المناسبة "which were collected".'},
+  { section: 'structure', text: 'No fewer than 50 students _____ to attend.', options: ['was expected', 'is expected', 'are expected', 'has expected'], correct: 2, explanation: '"No fewer than" يستخدم مع الجمع، فالفعل "are expected".'},
+  { section: 'structure', text: 'I wish I _____ chosen a different career.', options: ['have', 'had', 'will have', 'would'], correct: 1, explanation: 'wish + past perfect = تمني تغيير الماضي.'},
+  { section: 'structure', text: 'The committee recommended that he _____ promoted.', options: ['is', 'be', 'was', 'will be'], correct: 1, explanation: 'بعد recommend يأتي subjunctive: be (في المبني للمجهول).'},
+  { section: 'structure', text: 'No matter how hard she _____, she couldn\'t solve it.', options: ['try', 'tried', 'would try', 'has tried'], correct: 1, explanation: 'الجملة في الماضي، فالفعل "tried".'},
+  { section: 'structure', text: 'Such _____ his dedication that he worked through the night.', options: ['was', 'is', 'were', 'are'], correct: 0, explanation: 'تركيب "Such was... that" يستخدم past tense للوصف.'},
+  { section: 'structure', text: 'Either the manager or the employees _____ responsible.', options: ['is', 'are', 'was', 'has been'], correct: 1, explanation: 'في "Either...or"، الفعل يطابق الأقرب (the employees) → are.'},
+  { section: 'structure', text: 'Few of the candidates _____ truly qualified.', options: ['was', 'were', 'is', 'has'], correct: 1, explanation: '"Few" جمع، فالفعل "were".'},
+  { section: 'structure', text: 'Having _____ the report, she submitted it immediately.', options: ['finish', 'finished', 'finishing', 'finishes'], correct: 1, explanation: 'Perfect participle: Having + p.p. = بعد أن انتهت من...'},
+  { section: 'structure', text: 'The book _____ I bought yesterday is fascinating.', options: ['who', 'whom', 'that', 'whose'], correct: 2, explanation: 'مع غير العاقل نستخدم that أو which. that الأصح هنا.'},
+  { section: 'structure', text: 'Rarely _____ such a brilliant performance.', options: ['I have seen', 'have I seen', 'I saw', 'do I saw'], correct: 1, explanation: 'مع negative adverb في البداية (Rarely) نستخدم القلب: have + I + p.p.'},
+  { section: 'structure', text: 'The students were made _____ the test again.', options: ['take', 'to take', 'taking', 'took'], correct: 1, explanation: 'في المبني للمجهول مع make، يعود "to" قبل المصدر: were made to take.'},
+  { section: 'structure', text: 'I would rather not _____ that movie again.', options: ['watch', 'watching', 'to watch', 'watched'], correct: 0, explanation: 'would rather + base verb (بدون to).'},
+  { section: 'structure', text: 'The findings, as well as the recommendations, _____ included in the report.', options: ['was', 'are', 'is', 'has'], correct: 1, explanation: '"as well as" لا تغير الفعل. الفاعل findings (جمع) → are.'},
+  { section: 'structure', text: 'It is high time we _____ this discussion.', options: ['end', 'ended', 'will end', 'are ending'], correct: 1, explanation: 'بعد "It is high time" نستخدم Past Simple.'},
+  { section: 'structure', text: 'Provided that you _____ on time, you will get the discount.', options: ['paid', 'will pay', 'pay', 'have paid'], correct: 2, explanation: '"Provided that" تعمل مثل if في الجملة الشرطية: present + future.'},
+  { section: 'structure', text: 'Many a student _____ struggled with this concept.', options: ['have', 'has', 'are', 'were'], correct: 1, explanation: '"Many a + اسم مفرد" يأخذ فعلاً مفرداً.'},
+
+  /* ====== COMPOSITION (15) ====== */
+  { section: 'composition', text: 'Which is the strongest thesis statement?', options: ['Pollution is bad.', 'There are many environmental problems.', 'Air pollution in industrial cities reduces life expectancy by an average of 2.5 years, demanding urgent policy reform.', 'Pollution exists in many places.'], correct: 2, explanation: 'الأطروحة القوية محددة، قابلة للنقاش، ومدعومة بدليل. الخيار C يحقق كل ذلك.'},
+  { section: 'composition', text: 'Identify the sentence with parallel structure:', options: ['She likes reading, to write, and singing.', 'She likes to read, write, and sing.', 'She likes reading, writing, and to sing.', 'She likes read, write, and singing.'], correct: 1, explanation: 'التوازي يتطلب نفس الصيغة (مصدر بدون to لكل الأفعال بعد الأول).'},
+  { section: 'composition', text: 'Which transition best signals a result?', options: ['However', 'Nevertheless', 'Consequently', 'Although'], correct: 2, explanation: 'Consequently = نتيجة لذلك، تشير لنتيجة. الباقي يعبر عن تباين.'},
+  { section: 'composition', text: 'Choose the most concise version:', options: ['It is generally understood by most people that exercise is beneficial to one\'s health.', 'Exercise is healthy.', 'Most people generally understand exercise benefits.', 'It is exercise that benefits health, as people understand.'], correct: 1, explanation: 'الإيجاز قوة. الخيار B يقدم الفكرة بثلاث كلمات. الباقي حشو.'},
+  { section: 'composition', text: 'Which sentence uses active voice effectively?', options: ['The decision was made by the committee.', 'The committee made the decision.', 'A decision was something that happened.', 'It was decided.'], correct: 1, explanation: 'المبني للمعلوم أوضح وأقوى عند معرفة الفاعل.'},
+  { section: 'composition', text: 'Identify the comma splice:', options: ['I came home; I ate dinner.', 'I came home, I ate dinner.', 'I came home and ate dinner.', 'After coming home, I ate dinner.'], correct: 1, explanation: 'comma splice = ربط جملتين مستقلتين بفاصلة فقط، وهذا خطأ نحوي.'},
+  { section: 'composition', text: 'Which is the best topic sentence about social media?', options: ['Social media exists.', 'I use Twitter.', 'Despite its benefits, social media has been linked to rising anxiety in young users.', 'There are apps.'], correct: 2, explanation: 'الجملة المحورية الجيدة محددة وتقدم زاوية النقاش. الخيار C يحقق ذلك.'},
+  { section: 'composition', text: 'Choose the most formal sentence:', options: ['Climate change is, like, gonna mess everything up.', 'Climate change will cause significant disruptions.', 'Climate change is super bad.', 'Yeah, climate change is real.'], correct: 1, explanation: 'الأكاديمية تتجنب العامية (gonna, super, like) وتستخدم لغة دقيقة.'},
+  { section: 'composition', text: 'Which has clear pronoun reference?', options: ['When Sara called Layla, she sounded upset.', 'When Sara called her friend Layla, Sara sounded upset.', 'She called her and was upset.', 'They were both upset.'], correct: 1, explanation: 'الخيار A و C غامضين. الخيار B واضح بإعادة الاسم.'},
+  { section: 'composition', text: 'Identify the logical fallacy:', options: ['Studies show this drug reduces symptoms.', 'Experts in the field recommend this approach.', 'My grandmother lived to 95 without exercise, so exercise isn\'t important.', 'The data spans 10 years of research.'], correct: 2, explanation: 'هذا "appeal to anecdote" - تجربة فردية لا تثبت قاعدة عامة. باقي الخيارات تستخدم أدلة سليمة.'},
+  { section: 'composition', text: 'Which is the best concluding sentence?', options: ['That\'s all.', 'In summary, addressing climate change requires both individual choices and systemic policy reform.', 'Hope this helps.', 'The end.'], correct: 1, explanation: 'الخاتمة القوية تلخص وتترك انطباعاً. الخيار B يفعل ذلك ببلاغة.'},
+  { section: 'composition', text: 'Which sentence is most vivid?', options: ['The dog made a noise.', 'The dog barked.', 'The dog let out a sound.', 'There was a dog noise.'], correct: 1, explanation: 'الأفعال الدقيقة تخلق صوراً حية. "barked" أقوى من "made a noise".'},
+  { section: 'composition', text: 'Identify the dangling modifier:', options: ['Walking home, I noticed the stars.', 'Walking home, the stars looked beautiful.', 'I walked home and noticed the stars.', 'After walking home, I saw the stars.'], correct: 1, explanation: 'في B، "Walking home" يبدو وكأنه يصف النجوم، مما يجعل الجملة غير منطقية.'},
+  { section: 'composition', text: 'Which uses evidence most effectively?', options: ['Many people think pollution is bad.', 'A 2024 WHO study found that air pollution causes 7 million premature deaths annually.', 'Pollution hurts.', 'Some people are affected.'], correct: 1, explanation: 'الأدلة القوية محددة (مصدر + سنة + إحصاء).'},
+  { section: 'composition', text: 'Which sentence avoids wordiness?', options: ['At this point in time, we must take immediate action.', 'Now, we must act.', 'In the present moment, we are in a situation requiring action.', 'It is time for taking immediate action now.'], correct: 1, explanation: 'الخيار B موجز ومباشر. باقي الخيارات حشو.'},
+
+  /* ====== VOCABULARY (20) - advanced ====== */
+  { section: 'vocabulary', text: 'The senator gave an _____ speech that convinced even his opponents.', options: ['inept', 'eloquent', 'apathetic', 'incoherent'], correct: 1, explanation: 'eloquent = بليغ. خطاب يقنع المعارضين لازم يكون بليغاً.'},
+  { section: 'vocabulary', text: 'His arguments were so _____ that no one could find a flaw.', options: ['flimsy', 'cogent', 'frivolous', 'specious'], correct: 1, explanation: 'cogent = مقنع، محكم. مفردة متقدمة لوصف الحجة القوية.'},
+  { section: 'vocabulary', text: 'The artist was known for her _____ designs, blending many styles.', options: ['rigid', 'eclectic', 'monotonous', 'simple'], correct: 1, explanation: 'eclectic = انتقائي، يجمع عناصر متنوعة.'},
+  { section: 'vocabulary', text: 'The professor\'s remarks were _____, leaving us thinking for days.', options: ['banal', 'profound', 'trivial', 'shallow'], correct: 1, explanation: 'profound = عميق. ما يجعل المرء يفكر لأيام لازم يكون عميقاً.'},
+  { section: 'vocabulary', text: 'His behavior was _____, showing no respect for tradition.', options: ['reverent', 'iconoclastic', 'conventional', 'orthodox'], correct: 1, explanation: 'iconoclastic = محطم للتقاليد، ثوري. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'The witness gave a _____ account, full of contradictions.', options: ['coherent', 'incongruous', 'logical', 'consistent'], correct: 1, explanation: 'incongruous = متناقض، غير منسجم. السياق (full of contradictions) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The diplomat\'s response was deliberately _____, avoiding clear commitment.', options: ['transparent', 'unequivocal', 'evasive', 'direct'], correct: 2, explanation: 'evasive = مراوغ، يتفادى الإجابة المباشرة. السياق (avoiding commitment) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'Despite the setbacks, she remained _____.', options: ['despondent', 'undaunted', 'demoralized', 'crestfallen'], correct: 1, explanation: 'undaunted = غير منكسر، صامد. السياق (Despite setbacks) يتطلب صفة إيجابية.'},
+  { section: 'vocabulary', text: 'The decision was made with _____ haste, without proper consideration.', options: ['careful', 'undue', 'wise', 'sufficient'], correct: 1, explanation: 'undue = مفرط، غير مبرر. السياق (without proper consideration) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'His _____ work ethic earned him a promotion.', options: ['lackadaisical', 'indefatigable', 'lazy', 'sporadic'], correct: 1, explanation: 'indefatigable = لا يكلّ، نشيط دائماً. مفردة متقدمة للوصف الإيجابي.'},
+  { section: 'vocabulary', text: 'The novel offers a _____ critique of corporate greed.', options: ['mild', 'trenchant', 'gentle', 'subtle'], correct: 1, explanation: 'trenchant = قاطع، حاد. مفردة متقدمة لوصف النقد القوي.'},
+  { section: 'vocabulary', text: 'Her _____ for music led her to a career as a composer.', options: ['indifference', 'penchant', 'aversion', 'disdain'], correct: 1, explanation: 'penchant = ميل قوي، شغف. مفردة متقدمة. السياق (career as composer) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The dictator ruled with _____ authority for decades.', options: ['benevolent', 'autocratic', 'gentle', 'democratic'], correct: 1, explanation: 'autocratic = استبدادي. مرتبط بالديكتاتورية.'},
+  { section: 'vocabulary', text: 'The lecture was so _____ that students struggled to stay focused.', options: ['engaging', 'soporific', 'thrilling', 'captivating'], correct: 1, explanation: 'soporific = مسبب للنعاس. مفردة متقدمة. السياق (struggled to focus) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The CEO\'s decision was _____ - bold and far-reaching.', options: ['timid', 'audacious', 'cautious', 'modest'], correct: 1, explanation: 'audacious = جريء، شجاع. السياق (bold and far-reaching) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'She is a _____ scholar, having written ten major books.', options: ['novice', 'prolific', 'inexperienced', 'amateur'], correct: 1, explanation: 'prolific = غزير الإنتاج. عشر كتب رئيسية = عالم منتج.'},
+  { section: 'vocabulary', text: 'His _____ remarks alienated his colleagues.', options: ['conciliatory', 'caustic', 'kind', 'supportive'], correct: 1, explanation: 'caustic = لاذع، حارق. السياق (alienated colleagues) يحدد المعنى السلبي.'},
+  { section: 'vocabulary', text: 'The treaty was a _____ achievement after years of conflict.', options: ['trivial', 'momentous', 'insignificant', 'minor'], correct: 1, explanation: 'momentous = ذو شأن عظيم، تاريخي. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'The new policy was met with widespread _____.', options: ['acceptance', 'opprobrium', 'praise', 'support'], correct: 1, explanation: 'opprobrium = استنكار شديد، عار. مفردة متقدمة جداً.'},
+  { section: 'vocabulary', text: 'The student showed a _____ for languages, mastering five by age 20.', options: ['inability', 'proclivity', 'aversion', 'reluctance'], correct: 1, explanation: 'proclivity = ميل طبيعي، نزعة. مفردة متقدمة. السياق (mastering five by age 20) يحدد المعنى.'}
+];
+
+const SECTION_NAMES = {
+  reading: 'الفهم القرائي - Reading Comprehension',
+  structure: 'القواعد - Sentence Structure',
+  composition: 'تحليل التركيب - Composition Analysis',
+  vocabulary: 'المفردات - Vocabulary'
+};
+
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let timerInterval = null;
+let timeLeft = 180 * 60;
+let testSubmitted = false;
+
+function startTest() {
+  document.getElementById('welcomeScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'inline-block';
+  startTimer();
+  showQuestion(0);
+  buildGrid();
+}
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+  }, 1000);
+}
+function updateTimerDisplay() {
+  const h = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+  const m = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  document.getElementById('timer').textContent = h + ':' + m + ':' + s;
+  const box = document.getElementById('timerBox');
+  box.classList.remove('warn', 'danger');
+  if (timeLeft < 600) box.classList.add('danger');
+  else if (timeLeft < 1800) box.classList.add('warn');
+}
+function showQuestion(idx) {
+  currentQ = idx;
+  const q = QUESTIONS[idx];
+  const container = document.getElementById('questionContainer');
+  const passageHtml = q.passage ? '<div class="passage ltr">' + PASSAGES[q.passage] + '</div>' : '';
+  const letters = ['A', 'B', 'C', 'D'];
+  let optionsHtml = '';
+  q.options.forEach((opt, i) => {
+    let cls = 'option';
+    if (testSubmitted) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === answers[idx] && i !== q.correct) cls += ' wrong';
+    } else if (answers[idx] === i) cls += ' selected';
+    optionsHtml += '<div class="' + cls + '" onclick="selectOption(' + i + ')"><div class="option-letter">' + letters[i] + '</div><div class="ltr" style="flex:1;">' + opt + '</div></div>';
+  });
+  let explainHtml = '';
+  if (testSubmitted) {
+    const userAns = answers[idx];
+    const isCorrect = userAns === q.correct;
+    explainHtml = '<div class="explanation"><strong>' + (isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة') + ' • الإجابة الصحيحة: ' + letters[q.correct] + '</strong><br>' + q.explanation + '</div>';
+  }
+  container.innerHTML = '<div class="section-tag">' + SECTION_NAMES[q.section] + '</div><div class="question-num">السؤال ' + (idx + 1) + ' من ' + QUESTIONS.length + '</div>' + passageHtml + '<div class="question-text ltr">' + q.text + '</div><div class="options">' + optionsHtml + '</div>' + explainHtml;
+  updateProgress();
+  document.getElementById('sectionLabel').textContent = 'القسم: ' + SECTION_NAMES[q.section];
+  if (document.getElementById('questionGrid').style.display !== 'none') buildGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function selectOption(idx) { if (testSubmitted) return; answers[currentQ] = idx; showQuestion(currentQ); }
+function nextQuestion() { if (currentQ < QUESTIONS.length - 1) showQuestion(currentQ + 1); }
+function prevQuestion() { if (currentQ > 0) showQuestion(currentQ - 1); }
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  document.getElementById('progressText').textContent = answered + ' / ' + QUESTIONS.length;
+  document.getElementById('progressFill').style.width = ((answered / QUESTIONS.length) * 100) + '%';
+}
+function buildGrid() {
+  const grid = document.getElementById('questionGrid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'grid-btn';
+    btn.textContent = i + 1;
+    if (testSubmitted) {
+      if (answers[i] === q.correct) btn.classList.add('review-correct');
+      else btn.classList.add('review-wrong');
+    } else if (answers[i] !== null) btn.classList.add('answered');
+    if (i === currentQ) btn.classList.add('current');
+    btn.onclick = () => showQuestion(i);
+    grid.appendChild(btn);
+  });
+}
+function toggleGrid() {
+  const g = document.getElementById('questionGrid');
+  g.style.display = g.style.display === 'none' ? 'grid' : 'none';
+  if (g.style.display === 'grid') buildGrid();
+}
+function confirmSubmit() {
+  const unanswered = answers.filter(a => a === null).length;
+  document.getElementById('submitMsg').textContent = unanswered > 0 ? 'لديكِ ' + unanswered + ' سؤال بدون إجابة. هل تودين تسليم الاختبار الآن؟' : 'سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.';
+  document.getElementById('submitModal').classList.add('active');
+}
+function closeModal() { document.getElementById('submitModal').classList.remove('active'); }
+function submitTest() { testSubmitted = true; clearInterval(timerInterval); closeModal(); showResults(); }
+function showResults() {
+  const sectionStats = {};
+  ['reading', 'structure', 'composition', 'vocabulary'].forEach(s => { sectionStats[s] = { correct: 0, total: 0 }; });
+  let total = 0;
+  QUESTIONS.forEach((q, i) => {
+    sectionStats[q.section].total++;
+    if (answers[i] === q.correct) { sectionStats[q.section].correct++; total++; }
+  });
+  const overall = (total / QUESTIONS.length) * 100;
+  const stepScore = Math.round(36 + (overall / 100) * 64);
+  let level, levelClass;
+  if (overall >= 85) { level = '🌟 ممتاز - مستوى متقدم'; levelClass = 'level-excellent'; }
+  else if (overall >= 70) { level = '👏 جيد جداً - مستوى عالٍ'; levelClass = 'level-good'; }
+  else if (overall >= 50) { level = '👍 جيد - يحتاج تحسين'; levelClass = 'level-pass'; }
+  else { level = '📚 يحتاج مزيداً من المراجعة'; levelClass = 'level-low'; }
+  document.getElementById('testArea').classList.remove('active');
+  const r = document.getElementById('resultsScreen');
+  r.style.display = 'block';
+  const circ = 2 * Math.PI * 80;
+  const offset = circ - (overall / 100) * circ;
+  let breakdownHtml = '';
+  Object.keys(sectionStats).forEach(s => {
+    const st = sectionStats[s];
+    const pct = (st.correct / st.total) * 100;
+    breakdownHtml += '<div class="break-card"><h4>' + SECTION_NAMES[s] + '</h4><div class="break-bar"><div class="break-bar-fill" style="width: ' + pct + '%;"></div></div><div class="break-stats"><span>' + st.correct + ' / ' + st.total + ' صحيحة</span><span>' + pct.toFixed(0) + '%</span></div></div>';
+  });
+  r.innerHTML = '<div class="results"><h2 style="color: var(--primary); margin-bottom: 4px;">🎉 انتهى الاختبار</h2><p style="color: var(--muted);">إليكِ تحليل أدائك المفصل</p><div class="score-circle"><svg width="180" height="180"><circle cx="90" cy="90" r="80" stroke="#e5e7eb" stroke-width="14" fill="none"/><circle cx="90" cy="90" r="80" stroke="url(#grad4)" stroke-width="14" fill="none" stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '" stroke-linecap="round"/><defs><linearGradient id="grad4"><stop offset="0%" stop-color="#db2777"/><stop offset="100%" stop-color="#f59e0b"/></linearGradient></defs></svg><div class="score-text"><div class="score-num">' + total + ' / 100</div><div class="score-label">' + overall.toFixed(0) + '% • تقدير STEP ≈ ' + stepScore + '</div></div></div><div class="level-badge ' + levelClass + '">' + level + '</div><h3 style="margin: 24px 0 12px; color: var(--primary-dark);">التحليل حسب القسم</h3><div class="breakdown">' + breakdownHtml + '</div><p style="color: var(--muted); margin: 16px 0;">💡 يمكنكِ مراجعة جميع الأسئلة مع الشروحات المفصلة من خلال زر المراجعة أدناه.</p><div style="display:flex; gap: 12px; justify-content: center; flex-wrap: wrap;"><button class="btn" onclick="reviewMode()">📖 مراجعة الأسئلة مع الشرح</button><button class="btn btn-outline" onclick="window.location.reload()">🔄 إعادة الاختبار</button></div></div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function reviewMode() {
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'none';
+  showQuestion(0);
+  document.getElementById('questionGrid').style.display = 'grid';
+  buildGrid();
+}
+</script>
+</body>
+</html>

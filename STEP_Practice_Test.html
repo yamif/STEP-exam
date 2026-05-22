@@ -1,0 +1,1355 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>نموذج اختبار STEP التفاعلي - 100 سؤال</title>
+<style>
+  :root {
+    --primary: #006c35;
+    --primary-dark: #004d26;
+    --accent: #c8a951;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --correct: #10b981;
+    --wrong: #ef4444;
+    --warn: #f59e0b;
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  /* English text inside questions should be LTR */
+  .ltr { direction: ltr; text-align: left; font-family: Georgia, 'Times New Roman', serif; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  /* Header */
+  .top-bar {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    padding: 18px 28px;
+    border-radius: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .top-bar h1 { font-size: 22px; font-weight: 700; }
+  .top-bar h1 small { font-weight: 400; font-size: 14px; opacity: 0.85; display: block; }
+  .timer-box {
+    background: rgba(255,255,255,0.18);
+    padding: 8px 18px;
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    backdrop-filter: blur(4px);
+  }
+  .timer-box.warn { background: var(--warn); }
+  .timer-box.danger { background: var(--wrong); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+  /* Welcome screen */
+  .welcome {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .welcome h2 {
+    color: var(--primary);
+    font-size: 28px;
+    margin-bottom: 14px;
+  }
+  .welcome p { color: var(--muted); margin-bottom: 24px; font-size: 16px; }
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .info-card {
+    background: #f9fafb;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    text-align: center;
+  }
+  .info-card .num {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .info-card .label { color: var(--muted); font-size: 14px; }
+  .instructions {
+    background: #fff8e6;
+    border-right: 4px solid var(--accent);
+    padding: 18px 22px;
+    border-radius: 8px;
+    text-align: right;
+    margin: 24px 0;
+  }
+  .instructions h3 { color: var(--primary-dark); margin-bottom: 8px; }
+  .instructions ul { padding-right: 22px; color: #4b5563; }
+  .instructions li { margin-bottom: 6px; }
+
+  /* Buttons */
+  .btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-outline {
+    background: transparent;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+  }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-danger { background: var(--wrong); }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-secondary { background: #6b7280; }
+  .btn-secondary:hover { background: #4b5563; }
+
+  /* Test interface */
+  .test-area { display: none; }
+  .test-area.active { display: block; }
+
+  .progress-bar {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 14px 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 18px;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .progress-track {
+    background: var(--border);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    height: 100%;
+    transition: width 0.3s;
+  }
+
+  .question-card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+  }
+  .section-tag {
+    display: inline-block;
+    background: var(--primary);
+    color: white;
+    padding: 4px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .question-num {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  .passage {
+    background: #f9fafb;
+    border-right: 3px solid var(--primary);
+    padding: 18px 22px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.85;
+  }
+  .passage p { margin-bottom: 10px; }
+  .question-text {
+    font-size: 17px;
+    margin-bottom: 18px;
+    font-weight: 500;
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    background: #f9fafb;
+    border: 2px solid var(--border);
+    padding: 14px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .option:hover { border-color: var(--primary); background: #f0fdf4; }
+  .option.selected {
+    border-color: var(--primary);
+    background: #ecfdf5;
+  }
+  .option-letter {
+    background: var(--primary);
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 13px;
+  }
+  .option.selected .option-letter { background: var(--primary-dark); }
+
+  /* Review mode */
+  .option.correct {
+    border-color: var(--correct);
+    background: #ecfdf5;
+  }
+  .option.correct .option-letter { background: var(--correct); }
+  .option.wrong {
+    border-color: var(--wrong);
+    background: #fef2f2;
+  }
+  .option.wrong .option-letter { background: var(--wrong); }
+  .explanation {
+    background: #eff6ff;
+    border-right: 4px solid #3b82f6;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-top: 16px;
+    font-size: 15px;
+  }
+  .explanation strong { color: #1e40af; }
+
+  /* Navigation */
+  .nav-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .question-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .grid-btn {
+    background: #f3f4f6;
+    border: 2px solid transparent;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .grid-btn:hover { border-color: var(--primary); }
+  .grid-btn.answered { background: #d1fae5; color: var(--primary-dark); }
+  .grid-btn.current { border-color: var(--primary); background: var(--primary); color: white; }
+  .grid-btn.review-correct { background: #d1fae5; color: var(--correct); }
+  .grid-btn.review-wrong { background: #fee2e2; color: var(--wrong); }
+
+  /* Results */
+  .results {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 36px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .score-circle {
+    width: 180px;
+    height: 180px;
+    margin: 20px auto;
+    position: relative;
+  }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-circle .score-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+  .score-circle .score-num {
+    font-size: 44px;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .score-circle .score-label { font-size: 13px; color: var(--muted); }
+
+  .breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin: 28px 0;
+  }
+  .break-card {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 18px;
+    border: 1px solid var(--border);
+  }
+  .break-card h4 { color: var(--primary); margin-bottom: 8px; font-size: 15px; }
+  .break-bar {
+    background: var(--border);
+    height: 8px;
+    border-radius: 4px;
+    margin: 8px 0;
+    overflow: hidden;
+  }
+  .break-bar-fill {
+    background: var(--primary);
+    height: 100%;
+    transition: width 0.6s;
+  }
+  .break-stats { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+
+  .level-badge {
+    display: inline-block;
+    padding: 8px 24px;
+    border-radius: 999px;
+    font-weight: 700;
+    margin: 14px 0;
+  }
+  .level-excellent { background: #d1fae5; color: var(--correct); }
+  .level-good { background: #dbeafe; color: #1e40af; }
+  .level-pass { background: #fef3c7; color: #92400e; }
+  .level-low { background: #fee2e2; color: var(--wrong); }
+
+  /* Modals */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 30px;
+    max-width: 420px;
+    width: 92%;
+    text-align: center;
+  }
+  .modal h3 { margin-bottom: 14px; color: var(--primary); }
+  .modal p { color: var(--muted); margin-bottom: 22px; }
+  .modal-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 640px) {
+    .container { padding: 12px; }
+    .top-bar { padding: 14px 18px; }
+    .top-bar h1 { font-size: 18px; }
+    .question-card { padding: 20px; }
+    .welcome { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <h1>📘 نموذج اختبار STEP <small>100 سؤال • 4 أقسام • مع شرح مفصل</small></h1>
+    <div id="timerBox" class="timer-box" style="display:none;">⏱ <span id="timer">03:00:00</span></div>
+  </div>
+
+  <!-- Welcome Screen -->
+  <div id="welcomeScreen">
+    <div class="welcome">
+      <h2>أهلاً بكِ في نموذج اختبار STEP</h2>
+      <p>اختبار محاكاة كامل للاختبار الفعلي لقياس الكفاءة في اللغة الإنجليزية</p>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <div class="num">100</div>
+          <div class="label">سؤال إجمالي</div>
+        </div>
+        <div class="info-card">
+          <div class="num">4</div>
+          <div class="label">أقسام رئيسية</div>
+        </div>
+        <div class="info-card">
+          <div class="num">3</div>
+          <div class="label">ساعات للاختبار</div>
+        </div>
+        <div class="info-card">
+          <div class="num">100%</div>
+          <div class="label">شروحات مفصلة</div>
+        </div>
+      </div>
+
+      <div class="instructions">
+        <h3>📋 تعليمات مهمة</h3>
+        <ul>
+          <li>الاختبار يحاكي اختبار STEP الفعلي ويغطي 4 أقسام: الفهم القرائي، التركيب، التحليل، والمفردات.</li>
+          <li>اضغطي على الإجابة المناسبة لكل سؤال، وتقدري ترجعين وتعدّلين قبل التسليم.</li>
+          <li>المؤقت سيبدأ بمجرد ضغط زر "ابدأ الاختبار".</li>
+          <li>بعد التسليم، راح تشوفين نتيجتك مع شرح مفصل لكل سؤال.</li>
+          <li>الأرقام الخضراء بشبكة الأسئلة = مجابة، البيضاء = ما تمت إجابتها بعد.</li>
+        </ul>
+      </div>
+
+      <button class="btn" onclick="startTest()">🚀 ابدأ الاختبار</button>
+    </div>
+  </div>
+
+  <!-- Test Area -->
+  <div id="testArea" class="test-area">
+    <div class="progress-bar">
+      <div class="progress-info">
+        <span>التقدّم: <strong id="progressText">0 / 100</strong></span>
+        <span id="sectionLabel">القسم: —</span>
+      </div>
+      <div class="progress-track">
+        <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
+      </div>
+    </div>
+
+    <div id="questionContainer" class="question-card"></div>
+
+    <div class="question-card" style="padding: 18px 24px;">
+      <div class="nav-controls">
+        <button class="btn btn-outline" onclick="prevQuestion()">⬅ السابق</button>
+        <div>
+          <button class="btn btn-secondary" onclick="toggleGrid()">🗂 جميع الأسئلة</button>
+          <button class="btn" onclick="nextQuestion()">التالي ➡</button>
+        </div>
+        <button class="btn btn-danger" onclick="confirmSubmit()">✅ إنهاء وتسليم</button>
+      </div>
+      <div id="questionGrid" class="question-grid" style="display:none;"></div>
+    </div>
+  </div>
+
+  <!-- Results Screen -->
+  <div id="resultsScreen" style="display:none;"></div>
+</div>
+
+<!-- Submit confirmation modal -->
+<div id="submitModal" class="modal-overlay">
+  <div class="modal">
+    <h3>هل أنتِ متأكدة من تسليم الاختبار؟</h3>
+    <p id="submitMsg">سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-outline" onclick="closeModal()">رجوع</button>
+      <button class="btn btn-danger" onclick="submitTest()">نعم، سلّمي</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   STEP Practice Test - 100 Questions
+   Sections:
+   1. Reading Comprehension (40 Qs - passages 1-5)
+   2. Sentence Structure / Grammar (25 Qs)
+   3. Composition Analysis (15 Qs)
+   4. Vocabulary in Context (20 Qs)
+============================================================ */
+
+const PASSAGES = {
+  p1: `<p><strong>Passage 1: The Power of Sleep</strong></p>
+<p>Sleep has long been considered a passive state, a time when the body simply shuts down to rest. However, modern neuroscience has revealed that sleep is one of the most active and essential processes for human health. During sleep, the brain consolidates memories, repairs damaged cells, and clears out toxins that build up during waking hours. Without sufficient sleep, cognitive performance declines sharply, and the immune system becomes weakened.</p>
+<p>Recent studies suggest that adults need between seven and nine hours of sleep each night, yet a growing percentage of the global population sleeps less than six. Sleep deprivation has been linked to a wide range of issues, including obesity, depression, and cardiovascular disease. Despite these warnings, many cultures continue to praise individuals who sacrifice sleep in pursuit of productivity, often celebrating exhaustion as a badge of honor.</p>
+<p>Experts argue that prioritizing sleep is not laziness but rather a critical investment in long-term health. Simple changes—such as avoiding screens before bed, maintaining a consistent schedule, and reducing caffeine intake—can dramatically improve sleep quality. Ultimately, understanding sleep as an active, restorative process may be the first step toward reversing the harmful trend of chronic sleep deprivation.</p>`,
+
+  p2: `<p><strong>Passage 2: Cities and the Climate Challenge</strong></p>
+<p>By 2050, nearly 70 percent of the world's population is expected to live in urban areas. Cities, while only covering about 3 percent of Earth's land surface, are responsible for over 70 percent of global carbon emissions. This concentration of people and infrastructure makes urban centers both a major contributor to climate change and a critical battleground in the fight against it.</p>
+<p>Forward-thinking cities have begun adopting bold strategies. Copenhagen aims to be the first carbon-neutral capital by 2025, investing heavily in cycling infrastructure and offshore wind energy. Singapore has transformed itself into a "city in a garden" by integrating greenery into nearly every building. Meanwhile, Curitiba in Brazil pioneered an efficient bus rapid transit system that has been replicated worldwide.</p>
+<p>Despite these examples, progress remains uneven. Many rapidly growing cities in developing regions struggle to balance economic growth with environmental concerns. Limited budgets, political instability, and weak enforcement of regulations often slow the pace of change. Nevertheless, small-scale actions—from rooftop gardens to community recycling programs—can make a significant cumulative difference, suggesting that the path forward depends on both policy and citizen engagement.</p>`,
+
+  p3: `<p><strong>Passage 3: The Rise of Artificial Intelligence in Education</strong></p>
+<p>Artificial intelligence is rapidly reshaping how students learn and how teachers teach. Adaptive learning platforms can now analyze a student's performance in real time, identifying weaknesses and tailoring exercises to address them. AI-powered tutors are available around the clock, offering personalized explanations that traditional classrooms struggle to provide.</p>
+<p>Yet, this transformation raises important questions. Critics warn that excessive reliance on AI may erode essential skills such as critical thinking and creativity. There are also concerns about data privacy, since these systems require enormous amounts of personal information to function effectively. Furthermore, the digital divide threatens to widen inequality, as wealthier students gain access to cutting-edge tools while others fall behind.</p>
+<p>Educators argue that AI should complement, not replace, human teachers. The empathy, encouragement, and moral guidance that teachers provide cannot be coded into an algorithm. The most successful schools of the future will likely be those that thoughtfully blend AI's efficiency with the irreplaceable warmth of human interaction.</p>`,
+
+  p4: `<p><strong>Passage 4: Why We Procrastinate</strong></p>
+<p>Procrastination is often dismissed as simple laziness, but psychologists view it as a complex emotional issue. According to recent research, we delay tasks not because we cannot manage our time, but because we struggle to manage our emotions. Tasks that feel boring, frustrating, or threatening trigger negative feelings, and avoiding them provides short-term relief.</p>
+<p>The problem is that this relief is temporary. As deadlines approach, anxiety mounts, and the very tasks we avoided become harder to face. Chronic procrastinators often report higher levels of stress, lower academic performance, and reduced overall well-being. Surprisingly, perfectionists are among the most likely to procrastinate, fearing that their work will not meet impossibly high standards.</p>
+<p>Strategies for overcoming procrastination focus less on willpower and more on emotional regulation. Self-compassion, breaking tasks into smaller steps, and removing distractions have all been shown to help. By understanding procrastination as an emotional response rather than a character flaw, individuals can develop more effective tools to address it.</p>`,
+
+  p5: `<p><strong>Passage 5: The Mystery of Dark Matter</strong></p>
+<p>For nearly a century, astronomers have been puzzled by a strange phenomenon: galaxies appear to contain far more mass than what we can see. Stars at the outer edges of galaxies rotate at speeds that should send them flying apart, yet they remain bound together. The leading explanation is the existence of dark matter, an invisible substance that interacts with gravity but emits no light.</p>
+<p>Despite decades of searching, dark matter has never been directly detected. Massive underground experiments have attempted to capture potential dark matter particles, but so far results have been inconclusive. Some scientists have proposed alternative theories, such as modified gravity, which suggests that our laws of physics may need to be revised at large scales rather than invoking new particles.</p>
+<p>Whatever the true answer, the search for dark matter has profound implications. It challenges our understanding of the universe and may eventually lead to a fundamental shift in physics. As one researcher put it, "We are not just looking for a missing ingredient—we may be looking for evidence that our entire recipe is wrong."</p>`
+};
+
+/* Each question has: section, passageId (optional), text, options (4), correct (index), explanation */
+const QUESTIONS = [
+  /* ============== READING COMPREHENSION (40 questions) ============== */
+  /* Passage 1: The Power of Sleep - Q1-8 */
+  { section: 'reading', passage: 'p1',
+    text: 'According to the passage, sleep is best described as:',
+    options: ['A passive state of body shutdown', 'An active and essential process', 'A waste of productive time', 'A symptom of laziness'],
+    correct: 1,
+    explanation: 'النص يقول صراحة في الفقرة الأولى: "modern neuroscience has revealed that sleep is one of the most active and essential processes". الخيار (A) هو الاعتقاد القديم الذي يفنّده النص.'},
+  { section: 'reading', passage: 'p1',
+    text: 'The word "consolidates" in paragraph 1 most nearly means:',
+    options: ['Erases', 'Strengthens', 'Confuses', 'Postpones'],
+    correct: 1,
+    explanation: 'كلمة consolidates تعني "يعزز ويقوي". في سياق الذاكرة، النوم يقوي الذكريات ويثبتها، فالإجابة الصحيحة Strengthens.'},
+  { section: 'reading', passage: 'p1',
+    text: 'Adults are recommended to sleep:',
+    options: ['Less than six hours', 'Between five and seven hours', 'Between seven and nine hours', 'More than ten hours'],
+    correct: 2,
+    explanation: 'النص ذكر بوضوح: "adults need between seven and nine hours of sleep each night".'},
+  { section: 'reading', passage: 'p1',
+    text: 'Which of the following is NOT mentioned as a consequence of sleep deprivation?',
+    options: ['Obesity', 'Depression', 'Memory loss', 'Cardiovascular disease'],
+    correct: 2,
+    explanation: 'النص ذكر obesity, depression, و cardiovascular disease. أما memory loss فلم يُذكر صراحةً كنتيجة لقلة النوم في الفقرة الثانية.'},
+  { section: 'reading', passage: 'p1',
+    text: 'The phrase "a badge of honor" in paragraph 2 suggests that:',
+    options: ['Tired people receive medals', 'Exhaustion is wrongly celebrated', 'Sleep is a private matter', 'Honor is gained through rest'],
+    correct: 1,
+    explanation: 'العبارة "badge of honor" تستخدم بشكل ساخر، لأن الكاتب ينتقد الثقافات التي تفتخر بالإرهاق وتعتبره علامة على النجاح.'},
+  { section: 'reading', passage: 'p1',
+    text: 'According to experts, prioritizing sleep is:',
+    options: ['A sign of weakness', 'A waste of time', 'An investment in health', 'A cultural taboo'],
+    correct: 2,
+    explanation: 'النص يقول: "prioritizing sleep is not laziness but rather a critical investment in long-term health".'},
+  { section: 'reading', passage: 'p1',
+    text: 'Which of the following is suggested as a way to improve sleep?',
+    options: ['Drinking more coffee', 'Watching TV before bed', 'Maintaining a consistent schedule', 'Sleeping at random times'],
+    correct: 2,
+    explanation: 'النص ذكر صراحةً "maintaining a consistent schedule" كإحدى الطرق لتحسين النوم. الخيارات الأخرى عكس النصائح.'},
+  { section: 'reading', passage: 'p1',
+    text: 'The main purpose of the passage is to:',
+    options: ['Discourage people from working hard', 'Promote a new sleep medicine', 'Argue for the importance of sleep', 'Compare different cultures'],
+    correct: 2,
+    explanation: 'الفكرة الرئيسية للنص هي إقناع القارئ بأهمية النوم. الكاتب يُفنّد المفاهيم الخاطئة ويقدّم الأدلة العلمية والنصائح.'},
+
+  /* Passage 2: Cities and Climate - Q9-16 */
+  { section: 'reading', passage: 'p2',
+    text: 'By 2050, the percentage of people living in urban areas is expected to be:',
+    options: ['About 30%', 'About 50%', 'Nearly 70%', 'Over 90%'],
+    correct: 2,
+    explanation: 'الفقرة الأولى تذكر: "By 2050, nearly 70 percent of the world\'s population is expected to live in urban areas".'},
+  { section: 'reading', passage: 'p2',
+    text: 'Cities cover what percentage of Earth\'s land surface?',
+    options: ['About 3%', 'About 30%', 'About 70%', 'About 90%'],
+    correct: 0,
+    explanation: 'النص ذكر: "Cities, while only covering about 3 percent of Earth\'s land surface". لاحظي التمييز بين المساحة (3%) والانبعاثات (70%).'},
+  { section: 'reading', passage: 'p2',
+    text: 'Copenhagen plans to become carbon-neutral by:',
+    options: ['2020', '2025', '2030', '2050'],
+    correct: 1,
+    explanation: 'النص ذكر بوضوح: "Copenhagen aims to be the first carbon-neutral capital by 2025".'},
+  { section: 'reading', passage: 'p2',
+    text: 'Singapore is described as:',
+    options: ['A city of skyscrapers', 'A city in a garden', 'The greenest port', 'A solar capital'],
+    correct: 1,
+    explanation: 'النص استخدم العبارة بحروفها: "Singapore has transformed itself into a city in a garden".'},
+  { section: 'reading', passage: 'p2',
+    text: 'Curitiba is mentioned as a pioneer in:',
+    options: ['Wind energy', 'Bus rapid transit', 'Rooftop gardens', 'Carbon neutrality'],
+    correct: 1,
+    explanation: 'النص ذكر صراحةً أن Curitiba "pioneered an efficient bus rapid transit system".'},
+  { section: 'reading', passage: 'p2',
+    text: 'According to the passage, what slows progress in developing cities?',
+    options: ['Lack of population', 'Limited budgets and weak enforcement', 'Too much greenery', 'Excessive carbon-neutral policies'],
+    correct: 1,
+    explanation: 'النص ذكر "Limited budgets, political instability, and weak enforcement of regulations" كعوائق رئيسية.'},
+  { section: 'reading', passage: 'p2',
+    text: 'The word "cumulative" in the final paragraph most nearly means:',
+    options: ['Sudden', 'Combined', 'Reduced', 'Wasted'],
+    correct: 1,
+    explanation: 'cumulative تعني "تراكمي" أي مجموع تأثير جزئي عبر الزمن، وأقرب مرادف هو combined.'},
+  { section: 'reading', passage: 'p2',
+    text: 'The author\'s main argument is that:',
+    options: ['Cities are doomed environmentally', 'Climate progress requires both policy and citizens', 'Only Copenhagen has succeeded', 'Rural areas should be abandoned'],
+    correct: 1,
+    explanation: 'الجملة الأخيرة تختصر الفكرة: "the path forward depends on both policy and citizen engagement".'},
+
+  /* Passage 3: AI in Education - Q17-24 */
+  { section: 'reading', passage: 'p3',
+    text: 'According to the passage, AI in education can:',
+    options: ['Replace all teachers', 'Tailor exercises to students', 'Eliminate homework', 'Predict the future'],
+    correct: 1,
+    explanation: 'النص ذكر: "Adaptive learning platforms can now analyze a student\'s performance in real time, identifying weaknesses and tailoring exercises".'},
+  { section: 'reading', passage: 'p3',
+    text: 'Critics worry that excessive reliance on AI may:',
+    options: ['Increase teacher salaries', 'Erode critical thinking', 'Reduce internet usage', 'Eliminate exams'],
+    correct: 1,
+    explanation: 'النص يقول صراحة: "excessive reliance on AI may erode essential skills such as critical thinking and creativity".'},
+  { section: 'reading', passage: 'p3',
+    text: 'The "digital divide" mentioned in the passage refers to:',
+    options: ['A division between programmers', 'Inequality in access to digital tools', 'A type of internet error', 'A computer language'],
+    correct: 1,
+    explanation: 'الفجوة الرقمية تشير لعدم المساواة في الوصول للتقنية بين الأغنياء والفقراء، وهذا واضح من السياق: "wealthier students gain access to cutting-edge tools while others fall behind".'},
+  { section: 'reading', passage: 'p3',
+    text: 'According to educators, AI should:',
+    options: ['Replace teachers entirely', 'Be banned from schools', 'Complement human teachers', 'Be used only by adults'],
+    correct: 2,
+    explanation: 'النص يقول مباشرة: "AI should complement, not replace, human teachers".'},
+  { section: 'reading', passage: 'p3',
+    text: 'The word "erode" in paragraph 2 most nearly means:',
+    options: ['Strengthen', 'Wear away', 'Polish', 'Avoid'],
+    correct: 1,
+    explanation: 'erode تعني "يآكل أو يتلف تدريجياً"، وأقرب مرادف هو wear away.'},
+  { section: 'reading', passage: 'p3',
+    text: 'What is mentioned as something AI cannot replicate?',
+    options: ['Speed of calculation', 'Empathy and moral guidance', 'Memory storage', 'Test grading'],
+    correct: 1,
+    explanation: 'النص ذكر صراحة: "The empathy, encouragement, and moral guidance that teachers provide cannot be coded into an algorithm".'},
+  { section: 'reading', passage: 'p3',
+    text: 'The author\'s tone toward AI in education is best described as:',
+    options: ['Completely opposed', 'Completely supportive', 'Cautiously balanced', 'Indifferent'],
+    correct: 2,
+    explanation: 'الكاتب يعرض المنافع والمخاوف بشكل متوازن، فالنبرة "cautiously balanced" حذرة ومتوازنة.'},
+  { section: 'reading', passage: 'p3',
+    text: 'The best title for this passage would be:',
+    options: ['How to Build an AI Tutor', 'The End of Schools', 'AI in Education: Promises and Pitfalls', 'Why Teachers Should Quit'],
+    correct: 2,
+    explanation: 'العنوان الأفضل يجب أن يلخص الفكرة المتوازنة (الفوائد + المخاوف)، فالخيار C هو الأنسب.'},
+
+  /* Passage 4: Procrastination - Q25-32 */
+  { section: 'reading', passage: 'p4',
+    text: 'According to the passage, procrastination is mainly:',
+    options: ['A time management problem', 'A character defect', 'An emotional regulation issue', 'A medical condition'],
+    correct: 2,
+    explanation: 'النص يقول: "we delay tasks not because we cannot manage our time, but because we struggle to manage our emotions".'},
+  { section: 'reading', passage: 'p4',
+    text: 'Avoiding tasks provides:',
+    options: ['Long-term success', 'Short-term relief', 'Immediate punishment', 'Permanent solutions'],
+    correct: 1,
+    explanation: 'النص ذكر: "avoiding them provides short-term relief".'},
+  { section: 'reading', passage: 'p4',
+    text: 'Surprisingly, who is most likely to procrastinate?',
+    options: ['Lazy people', 'Perfectionists', 'Children', 'Athletes'],
+    correct: 1,
+    explanation: 'النص ذكر بوضوح: "perfectionists are among the most likely to procrastinate".'},
+  { section: 'reading', passage: 'p4',
+    text: 'The word "chronic" in paragraph 2 means:',
+    options: ['Occasional', 'Long-lasting', 'Sudden', 'Painful'],
+    correct: 1,
+    explanation: 'chronic تعني "مزمن أو طويل الأمد"، فأقرب مرادف هو long-lasting.'},
+  { section: 'reading', passage: 'p4',
+    text: 'Effective strategies against procrastination focus on:',
+    options: ['Stronger willpower only', 'Emotional regulation', 'Avoiding all difficult tasks', 'Working at night'],
+    correct: 1,
+    explanation: 'النص يقول: "Strategies for overcoming procrastination focus less on willpower and more on emotional regulation".'},
+  { section: 'reading', passage: 'p4',
+    text: 'The passage suggests that perfectionists procrastinate because they:',
+    options: ['Enjoy delaying tasks', 'Fear not meeting high standards', 'Have too much free time', 'Hate criticism'],
+    correct: 1,
+    explanation: 'النص ذكر: "fearing that their work will not meet impossibly high standards".'},
+  { section: 'reading', passage: 'p4',
+    text: 'Which of the following is suggested as helpful?',
+    options: ['Multitasking', 'Self-criticism', 'Self-compassion', 'Working without breaks'],
+    correct: 2,
+    explanation: 'النص يذكر "Self-compassion" كاستراتيجية فعالة. self-criticism بالعكس يزيد المشكلة.'},
+  { section: 'reading', passage: 'p4',
+    text: 'The main idea of the passage is that procrastination is:',
+    options: ['Always a sign of laziness', 'Best treated by punishment', 'An emotional response that can be managed', 'Impossible to overcome'],
+    correct: 2,
+    explanation: 'الفكرة الرئيسية تتمحور حول رؤية المماطلة كاستجابة عاطفية يمكن التعامل معها بأدوات نفسية.'},
+
+  /* Passage 5: Dark Matter - Q33-40 */
+  { section: 'reading', passage: 'p5',
+    text: 'Astronomers noticed that galaxies seem to contain:',
+    options: ['Less mass than expected', 'More mass than visible', 'Exactly the right mass', 'No mass at all'],
+    correct: 1,
+    explanation: 'النص يقول: "galaxies appear to contain far more mass than what we can see".'},
+  { section: 'reading', passage: 'p5',
+    text: 'According to the passage, dark matter:',
+    options: ['Emits light', 'Has been directly detected', 'Interacts with gravity', 'Is made of stars'],
+    correct: 2,
+    explanation: 'النص يصف المادة المظلمة بأنها "interacts with gravity but emits no light". لم تُكتشف مباشرةً بعد.'},
+  { section: 'reading', passage: 'p5',
+    text: 'The word "invoking" in paragraph 2 most nearly means:',
+    options: ['Calling upon', 'Ignoring', 'Hiding', 'Selling'],
+    correct: 0,
+    explanation: 'invoking تعني "اللجوء إلى أو استدعاء"، وأقرب مرادف هو calling upon.'},
+  { section: 'reading', passage: 'p5',
+    text: 'Some scientists propose that the laws of physics:',
+    options: ['Are completely correct', 'May need revision at large scales', 'Cannot be tested', 'Should be abandoned'],
+    correct: 1,
+    explanation: 'النص يذكر النظريات البديلة مثل modified gravity التي تقترح "our laws of physics may need to be revised at large scales".'},
+  { section: 'reading', passage: 'p5',
+    text: 'The quote at the end suggests scientists may be:',
+    options: ['Cooking dinner', 'Wrong about basic physics', 'Out of funding', 'Too optimistic'],
+    correct: 1,
+    explanation: 'الاقتباس استخدم استعارة الوصفة (recipe) ليقول إن المشكلة قد لا تكون في "مكوّن مفقود" بل في الصياغة الأساسية للفيزياء كلها.'},
+  { section: 'reading', passage: 'p5',
+    text: 'The phrase "fundamental shift" implies:',
+    options: ['A small adjustment', 'A complete redirection', 'A typing error', 'A vacation'],
+    correct: 1,
+    explanation: 'fundamental shift تعني "تحول جذري" أي تغيير عميق في الأساس، فالخيار B هو الأنسب.'},
+  { section: 'reading', passage: 'p5',
+    text: 'Which statement is true based on the passage?',
+    options: ['Dark matter has been detected for centuries', 'Modified gravity is universally accepted', 'Underground experiments have been inconclusive', 'Galaxies fly apart constantly'],
+    correct: 2,
+    explanation: 'النص يقول: "Massive underground experiments have attempted to capture potential dark matter particles, but so far results have been inconclusive".'},
+  { section: 'reading', passage: 'p5',
+    text: 'The passage as a whole is best described as:',
+    options: ['A confirmed scientific report', 'A discussion of an open mystery', 'A historical biography', 'A travel guide'],
+    correct: 1,
+    explanation: 'النص يناقش لغزاً علمياً مفتوحاً ويعرض النظريات المختلفة دون حسم، فهو discussion of an open mystery.'},
+
+  /* ============== SENTENCE STRUCTURE / GRAMMAR (25 questions) ============== */
+  { section: 'structure',
+    text: 'Choose the correct sentence:',
+    options: ['She don\'t like coffee.', 'She doesn\'t likes coffee.', 'She doesn\'t like coffee.', 'She not like coffee.'],
+    correct: 2,
+    explanation: 'مع المفرد الغائب نستخدم doesn\'t + الفعل المجرد. فالصواب: "She doesn\'t like coffee."'},
+  { section: 'structure',
+    text: 'If I _____ more time, I would travel the world.',
+    options: ['have', 'had', 'will have', 'would have'],
+    correct: 1,
+    explanation: 'هذه جملة شرطية من النوع الثاني (Second Conditional)، الصيغة: If + past simple, would + base verb. فالإجابة "had".'},
+  { section: 'structure',
+    text: 'The book _____ on the table belongs to me.',
+    options: ['lays', 'lying', 'laying', 'lied'],
+    correct: 1,
+    explanation: 'بعد الاسم نحتاج صفة فعلية (participle phrase) تصف الكتاب. lying = الذي يرقد. lay/lie فيها فرق دقيق: lie-lay-lain (الراقد بنفسه)، فالصحيح "lying".'},
+  { section: 'structure',
+    text: 'Neither the students nor the teacher _____ the answer.',
+    options: ['know', 'knows', 'knowing', 'are knowing'],
+    correct: 1,
+    explanation: 'في تركيب "neither...nor"، الفعل يتطابق مع الاسم الأقرب إليه (the teacher مفرد)، فيكون الفعل "knows".'},
+  { section: 'structure',
+    text: 'By the time we arrived, the movie _____ already started.',
+    options: ['has', 'have', 'had', 'was'],
+    correct: 2,
+    explanation: 'حدث (started) سبق حدثاً ماضياً آخر (arrived)، فنستخدم Past Perfect: "had started".'},
+  { section: 'structure',
+    text: 'The committee _____ to release its report next week.',
+    options: ['plans', 'plan', 'planning', 'are planning'],
+    correct: 0,
+    explanation: 'كلمة committee اسم جمعي (collective noun) ويعامل كمفرد عادةً في الإنجليزية الأمريكية، فالفعل "plans".'},
+  { section: 'structure',
+    text: 'She is one of the few people who _____ the truth.',
+    options: ['know', 'knows', 'knew', 'has known'],
+    correct: 0,
+    explanation: 'في تركيب "one of the few people who"، الفعل يتطابق مع people (جمع)، فالصحيح "know".'},
+  { section: 'structure',
+    text: 'I look forward to _____ from you soon.',
+    options: ['hear', 'hearing', 'heard', 'have heard'],
+    correct: 1,
+    explanation: 'تعبير "look forward to" دائماً متبوع بـ gerund (verb+ing) لأن "to" هنا حرف جر وليست أداة مصدر.'},
+  { section: 'structure',
+    text: 'Hardly _____ the door when the phone rang.',
+    options: ['I had opened', 'had I opened', 'I opened', 'did I open'],
+    correct: 1,
+    explanation: 'مع كلمات النفي في بداية الجملة (Hardly, Never, Rarely)، نستخدم القلب (inversion): "had I opened".'},
+  { section: 'structure',
+    text: 'The harder he tried, _____ he became.',
+    options: ['the more frustrated', 'more frustrated', 'most frustrated', 'frustrated more'],
+    correct: 0,
+    explanation: 'تركيب "the + مقارن... the + مقارن" يستخدم لربط فكرتين تتزايدان معاً، فالصحيح "the more frustrated".'},
+  { section: 'structure',
+    text: 'She suggested that he _____ a doctor immediately.',
+    options: ['sees', 'saw', 'see', 'will see'],
+    correct: 2,
+    explanation: 'بعد الأفعال suggest, recommend, insist يأتي مصدر مجرد (subjunctive)، فنقول "see" بدون s.'},
+  { section: 'structure',
+    text: 'Although he was tired, _____.',
+    options: ['but he kept working', 'he kept working', 'and he kept working', 'so he kept working'],
+    correct: 1,
+    explanation: 'لا يصح الجمع بين Although و but في نفس الجملة، فنكتفي بإحداهما. الصحيح: "Although he was tired, he kept working."'},
+  { section: 'structure',
+    text: 'This is the most beautiful place _____.',
+    options: ['I have ever visited', 'I ever visited', 'I never visited', 'I visiting'],
+    correct: 0,
+    explanation: 'مع التفضيل (most beautiful) نستخدم Present Perfect مع ever، فالصحيح "I have ever visited".'},
+  { section: 'structure',
+    text: 'Choose the correctly punctuated sentence:',
+    options: ['However, the weather was bad we went out.', 'However the weather was bad, we went out.', 'However, the weather was bad, we went out.', 'However the weather was bad we went out.'],
+    correct: 2,
+    explanation: 'However في بداية الجملة كظرف ربط تأتي بعدها فاصلة، وقبل we فاصلة لفصل الجملة الجديدة: "However, the weather was bad, we went out."'},
+  { section: 'structure',
+    text: 'The instructions were _____ for everyone to understand.',
+    options: ['clear enough', 'enough clear', 'too clear', 'so clear'],
+    correct: 0,
+    explanation: 'enough تأتي بعد الصفة، فالصحيح "clear enough". لاحظي: enough + اسم، صفة + enough.'},
+  { section: 'structure',
+    text: 'He runs faster than _____.',
+    options: ['me', 'I do', 'I am', 'mine'],
+    correct: 1,
+    explanation: 'في المقارنة الرسمية نقول "than I do" (فاعل + فعل مساعد). "than me" مقبولة في العامية لكن I do أصحّ نحوياً.'},
+  { section: 'structure',
+    text: 'The man _____ car was stolen called the police.',
+    options: ['who', 'whom', 'whose', 'which'],
+    correct: 2,
+    explanation: 'whose = الذي يدل على ملكية، وهنا السيارة تعود للرجل، فنقول "whose car".'},
+  { section: 'structure',
+    text: 'I wish I _____ how to swim.',
+    options: ['know', 'knew', 'have known', 'will know'],
+    correct: 1,
+    explanation: 'بعد wish للتمني في الحاضر، نستخدم Past Simple: "I wish I knew".'},
+  { section: 'structure',
+    text: 'The report must _____ by tomorrow morning.',
+    options: ['finish', 'finished', 'be finished', 'being finished'],
+    correct: 2,
+    explanation: 'هذه جملة مبني للمجهول مع modal verb (must)، فالصيغة: must be + past participle، فالصحيح "be finished".'},
+  { section: 'structure',
+    text: 'There _____ several reasons for the delay.',
+    options: ['is', 'are', 'was', 'has been'],
+    correct: 1,
+    explanation: 'بعد There يتطابق الفعل مع الاسم الذي يأتي بعده. several reasons (جمع) فالفعل "are".'},
+  { section: 'structure',
+    text: 'The teacher made the students _____ extra homework.',
+    options: ['to do', 'doing', 'do', 'done'],
+    correct: 2,
+    explanation: 'فعل make بمعنى "أجبر" يأخذ مفعولاً ثم مصدراً مجرداً (bare infinitive)، فالصحيح "do".'},
+  { section: 'structure',
+    text: 'She has been working here _____ five years.',
+    options: ['since', 'for', 'from', 'during'],
+    correct: 1,
+    explanation: 'for يستخدم مع المدة (5 years)، أما since فيستخدم مع نقطة بداية محددة (since 2020).'},
+  { section: 'structure',
+    text: 'Either you or your brother _____ to attend the meeting.',
+    options: ['have', 'has', 'are', 'were'],
+    correct: 1,
+    explanation: 'في تركيب "either...or"، الفعل يتطابق مع الاسم الأقرب (your brother مفرد)، فالصحيح "has".'},
+  { section: 'structure',
+    text: 'It was such _____ that we couldn\'t hear ourselves.',
+    options: ['a noise loud', 'loud a noise', 'a loud noise', 'noise loud'],
+    correct: 2,
+    explanation: 'تركيب such + (a/an) + adjective + noun، فالصحيح "such a loud noise".'},
+  { section: 'structure',
+    text: 'No sooner _____ the train left than it started raining.',
+    options: ['has', 'had', 'have', 'was'],
+    correct: 1,
+    explanation: 'تركيب "No sooner... than" يستخدم Past Perfect مع inversion: "No sooner had the train left than..."'},
+
+  /* ============== COMPOSITION ANALYSIS (15 questions) ============== */
+  { section: 'composition',
+    text: 'Which sentence is the BEST topic sentence for a paragraph about exercise benefits?',
+    options: [
+      'I went to the gym yesterday.',
+      'Regular exercise offers numerous physical and mental benefits.',
+      'My friend jogs every morning.',
+      'Gyms can be expensive nowadays.'
+    ],
+    correct: 1,
+    explanation: 'الجملة المحورية يجب أن تعرّف موضوع الفقرة بشكل عام وشامل. الخيار B يقدّم الفكرة الرئيسية (فوائد الرياضة الجسدية والنفسية) ويفتح المجال للتفاصيل.'},
+  { section: 'composition',
+    text: 'Which transition word best fits in this sentence: "She studied hard; _____, she failed the exam."',
+    options: ['Therefore', 'However', 'Moreover', 'Hence'],
+    correct: 1,
+    explanation: 'هناك تناقض بين الدراسة والرسوب، فنحتاج أداة تباين. However = ومع ذلك. باقي الخيارات تدل على التتابع أو السبب.'},
+  { section: 'composition',
+    text: 'Which sentence is the most concise version?',
+    options: [
+      'Due to the fact that it was raining heavily, we decided that we should cancel the picnic.',
+      'Because of the heavy rain, we cancelled the picnic.',
+      'It was raining heavily, and because of this fact, we cancelled the picnic.',
+      'The picnic, which we had planned, was cancelled due to heavy rain.'
+    ],
+    correct: 1,
+    explanation: 'الكتابة الجيدة تتجنب الحشو. "Because of the heavy rain, we cancelled the picnic" أوصلت الفكرة بإيجاز ودقة. "Due to the fact that" حشو يمكن استبداله بـ because.'},
+  { section: 'composition',
+    text: 'Which sentence contains a logical error?',
+    options: [
+      'All birds can fly; penguins are birds; therefore, penguins can fly.',
+      'Most students study hard before exams.',
+      'Some animals are nocturnal hunters.',
+      'Reading books improves vocabulary.'
+    ],
+    correct: 0,
+    explanation: 'هذا قياس منطقي خاطئ (false syllogism)، لأن المقدمة الأولى خاطئة: ليس كل الطيور تطير. البطاريق طيور لكنها لا تطير.'},
+  { section: 'composition',
+    text: 'Which sentence has parallel structure?',
+    options: [
+      'She likes swimming, hiking, and to read books.',
+      'She likes to swim, hiking, and reading books.',
+      'She likes swimming, hiking, and reading books.',
+      'She likes swim, hike, and read books.'
+    ],
+    correct: 2,
+    explanation: 'التوازي (parallelism) يعني الحفاظ على نفس الصيغة في القائمة. الخيار C استخدم -ing لجميع الأفعال، فهو متوازٍ.'},
+  { section: 'composition',
+    text: 'Which sentence avoids redundancy?',
+    options: [
+      'In my personal opinion, I think it is wrong.',
+      'I personally think this is a true fact.',
+      'I think this is wrong.',
+      'In my own opinion, my view is that it is wrong.'
+    ],
+    correct: 2,
+    explanation: 'الخيار C خالٍ من التكرار. "personal opinion" حشو لأن opinion شخصية بطبعها، و"true fact" حشو لأن fact صحيحة بطبعها.'},
+  { section: 'composition',
+    text: 'Choose the most effective concluding sentence:',
+    options: [
+      'And that is the end of my essay.',
+      'In conclusion, embracing change leads to personal growth and new opportunities.',
+      'I hope you liked my essay.',
+      'There are many things to say about this.'
+    ],
+    correct: 1,
+    explanation: 'الجملة الختامية الجيدة تلخّص الفكرة الرئيسية وتترك انطباعاً قوياً. الخيار B يفعل ذلك بأناقة ويربط بفكرة المقال.'},
+  { section: 'composition',
+    text: 'Which sentence has a clear pronoun reference?',
+    options: [
+      'When the teacher spoke to the student, she was angry.',
+      'When the teacher spoke to the student, the teacher was angry.',
+      'When she spoke to her, she was angry.',
+      'They were both angry when they spoke.'
+    ],
+    correct: 1,
+    explanation: 'الخيار A و C غامض - مين كانت غاضبة؟ الخيار B يحل الغموض بإعادة ذكر "the teacher".'},
+  { section: 'composition',
+    text: 'Which sentence has a misplaced modifier?',
+    options: [
+      'Walking to school, the rain started to fall.',
+      'Walking to school, I noticed the rain.',
+      'I walked to school in the rain.',
+      'The rain started while I was walking.'
+    ],
+    correct: 0,
+    explanation: 'في الخيار A، عبارة "Walking to school" تعدّل المطر، وكأن المطر هو الذي يمشي! الخيار B صحيح: المتكلم هو الذي يمشي.'},
+  { section: 'composition',
+    text: 'Which is the best supporting sentence for: "Cities should invest in public transportation."?',
+    options: [
+      'I love riding the bus.',
+      'Public transportation reduces traffic congestion and air pollution.',
+      'Cars are very expensive.',
+      'My grandfather used to take the train.'
+    ],
+    correct: 1,
+    explanation: 'الجملة الداعمة الفعّالة تقدّم سبباً منطقياً يدعم الفكرة الرئيسية. الخيار B يقدم سببين قويين (الازدحام والتلوث).'},
+  { section: 'composition',
+    text: 'Which sentence is most formal and appropriate for an academic essay?',
+    options: [
+      'Stuff like global warming is a big deal.',
+      'Global warming is, like, super serious.',
+      'Global warming represents one of the most pressing challenges of our time.',
+      'Global warming is kind of a problem.'
+    ],
+    correct: 2,
+    explanation: 'اللغة الأكاديمية رسمية ودقيقة. الخيار C يستخدم مفردات راقية (pressing challenges) ويتجنب العامية مثل stuff, like, kind of.'},
+  { section: 'composition',
+    text: 'Which sentence shows cause and effect clearly?',
+    options: [
+      'The road was wet; it had rained.',
+      'The road was wet because it had rained.',
+      'The road was wet, the rain.',
+      'The road, the rain, was wet.'
+    ],
+    correct: 1,
+    explanation: 'الخيار B يستخدم "because" لتوضيح العلاقة السببية بين هطول المطر وبلل الطريق.'},
+  { section: 'composition',
+    text: 'Identify the sentence with the strongest verb:',
+    options: [
+      'The wind was making a loud noise.',
+      'The wind was being heard by us.',
+      'The wind howled through the trees.',
+      'There was a wind that was loud.'
+    ],
+    correct: 2,
+    explanation: 'الكتابة القوية تستخدم أفعالاً حيوية تصنع صورة. "howled" أقوى وأدق من "was making a loud noise".'},
+  { section: 'composition',
+    text: 'Which sentence uses the active voice effectively?',
+    options: [
+      'The ball was kicked by the player.',
+      'The player kicked the ball.',
+      'The kicking of the ball was done.',
+      'The ball, by the player, was kicked.'
+    ],
+    correct: 1,
+    explanation: 'المبني للمعلوم (active voice) أوضح وأقوى. "The player kicked the ball" مباشر وفعّال.'},
+  { section: 'composition',
+    text: 'Choose the sentence with the best word choice:',
+    options: [
+      'The food was nice.',
+      'The food was good.',
+      'The food was delicious and aromatic.',
+      'The food was okay.'
+    ],
+    correct: 2,
+    explanation: 'الوصف الدقيق والمحدد أفضل من الكلمات المبهمة (nice, good, okay). الخيار C يصف بدقة.'},
+
+  /* ============== VOCABULARY IN CONTEXT (20 questions) ============== */
+  { section: 'vocabulary',
+    text: 'The candidate gave a _____ speech that moved everyone in the audience.',
+    options: ['mundane', 'eloquent', 'tedious', 'insipid'],
+    correct: 1,
+    explanation: 'eloquent = بليغ، فصيح، يعبّر بقوة. هي الكلمة المناسبة لخطاب أثّر في الناس. الباقي يعني ممل أو عادي.'},
+  { section: 'vocabulary',
+    text: 'Despite the difficulties, she remained _____ and finished the project.',
+    options: ['resilient', 'fragile', 'hesitant', 'reluctant'],
+    correct: 0,
+    explanation: 'resilient = صامد، قوي يستطيع تجاوز الصعوبات. باقي الخيارات تدل على الضعف أو التردد.'},
+  { section: 'vocabulary',
+    text: 'The ancient artifact was _____ in the museum\'s glass case.',
+    options: ['displayed', 'destroyed', 'discarded', 'demolished'],
+    correct: 0,
+    explanation: 'displayed = معروض. القطعة الأثرية في المتحف تكون معروضة. باقي الخيارات تعني التدمير أو الرمي.'},
+  { section: 'vocabulary',
+    text: 'His arguments were so _____ that no one could refute them.',
+    options: ['flimsy', 'compelling', 'weak', 'doubtful'],
+    correct: 1,
+    explanation: 'compelling = مقنع، قوي. حجج لا يستطيع أحد دحضها لازم تكون قوية ومقنعة.'},
+  { section: 'vocabulary',
+    text: 'The professor\'s explanation was _____ and easy to follow.',
+    options: ['ambiguous', 'lucid', 'obscure', 'cryptic'],
+    correct: 1,
+    explanation: 'lucid = واضح، مفهوم. التفسير السهل المتابعة لازم يكون واضحاً. باقي الخيارات تعني غامض أو ملغّز.'},
+  { section: 'vocabulary',
+    text: 'The new policy was met with widespread _____ from the public.',
+    options: ['acclaim', 'praise', 'opposition', 'support'],
+    correct: 2,
+    explanation: 'opposition = معارضة. كلمة widespread + سياق "met with" تشير عادة لرد فعل سلبي. السياق يحدد المعنى.'},
+  { section: 'vocabulary',
+    text: 'The writer is known for her _____ style, which is rich in metaphor.',
+    options: ['plain', 'literal', 'vivid', 'dull'],
+    correct: 2,
+    explanation: 'vivid = حيوي، نابض بالحياة. الأسلوب الغني بالاستعارات يكون حيوياً. الباقي عكس المعنى.'},
+  { section: 'vocabulary',
+    text: 'The CEO\'s decision was _____ and changed the company forever.',
+    options: ['trivial', 'pivotal', 'minor', 'insignificant'],
+    correct: 1,
+    explanation: 'pivotal = محوري، حاسم. القرار الذي غيّر الشركة لازم يكون محورياً. الباقي يعني تافه.'},
+  { section: 'vocabulary',
+    text: 'Despite his wealth, he lived a _____ life with few possessions.',
+    options: ['lavish', 'frugal', 'extravagant', 'wasteful'],
+    correct: 1,
+    explanation: 'frugal = مقتصد، بسيط. السياق ("few possessions") يدل على البساطة. lavish/extravagant = مسرف.'},
+  { section: 'vocabulary',
+    text: 'The detective was _____ in his pursuit of the truth.',
+    options: ['lazy', 'tenacious', 'careless', 'apathetic'],
+    correct: 1,
+    explanation: 'tenacious = عنيد، مثابر. المحقق الذي يبحث عن الحقيقة بجد يكون مثابراً.'},
+  { section: 'vocabulary',
+    text: 'Her behavior at the meeting was _____ and offended several colleagues.',
+    options: ['polite', 'gracious', 'inappropriate', 'respectful'],
+    correct: 2,
+    explanation: 'inappropriate = غير لائق. السياق "offended colleagues" يدل على سلوك سلبي.'},
+  { section: 'vocabulary',
+    text: 'The scientist made a _____ discovery that revolutionized the field.',
+    options: ['groundbreaking', 'ordinary', 'minor', 'forgettable'],
+    correct: 0,
+    explanation: 'groundbreaking = ثوري، رائد. الاكتشاف الذي ثوّر المجال لازم يكون ثورياً.'},
+  { section: 'vocabulary',
+    text: 'After the long journey, the travelers were _____.',
+    options: ['energized', 'exhausted', 'refreshed', 'invigorated'],
+    correct: 1,
+    explanation: 'exhausted = منهك. الرحلة الطويلة تسبب الإرهاق طبيعياً. الباقي يدل على النشاط.'},
+  { section: 'vocabulary',
+    text: 'The two countries reached an _____ after weeks of negotiation.',
+    options: ['conflict', 'accord', 'dispute', 'disagreement'],
+    correct: 1,
+    explanation: 'accord = اتفاق، تفاهم. التفاوض غالباً يقود لاتفاق إيجابي. الباقي يعني خلاف.'},
+  { section: 'vocabulary',
+    text: 'The athlete\'s performance was nothing short of _____.',
+    options: ['mediocre', 'extraordinary', 'average', 'common'],
+    correct: 1,
+    explanation: 'تعبير "nothing short of" يقوي ما بعده، ويستخدم مع كلمات إيجابية قوية. extraordinary = استثنائي.'},
+  { section: 'vocabulary',
+    text: 'The witness gave a _____ account of what happened.',
+    options: ['vague', 'detailed', 'incomplete', 'fuzzy'],
+    correct: 1,
+    explanation: 'detailed = مفصّل. الشاهد الجيد يقدّم رواية مفصّلة. باقي الخيارات تعني غامض/ناقص.'},
+  { section: 'vocabulary',
+    text: 'His comments were _____ and revealed his lack of preparation.',
+    options: ['profound', 'superficial', 'thoughtful', 'insightful'],
+    correct: 1,
+    explanation: 'superficial = سطحي. السياق ("lack of preparation") يدل على معنى سلبي. الباقي إيجابي.'},
+  { section: 'vocabulary',
+    text: 'The new manager has a _____ approach to problem-solving.',
+    options: ['rigid', 'innovative', 'outdated', 'stubborn'],
+    correct: 1,
+    explanation: 'innovative = مبتكر، جديد. السياق إيجابي عادةً عن مدير جديد. الباقي سلبي.'},
+  { section: 'vocabulary',
+    text: 'The children listened with _____ attention to the storyteller.',
+    options: ['rapt', 'distracted', 'bored', 'indifferent'],
+    correct: 0,
+    explanation: 'rapt = مأخوذ، مشدوه باهتمام. الأطفال أمام راوي القصص يستمعون بانبهار.'},
+  { section: 'vocabulary',
+    text: 'The plan was _____ from the start and was bound to fail.',
+    options: ['solid', 'flawed', 'perfect', 'foolproof'],
+    correct: 1,
+    explanation: 'flawed = معيب، فيه خلل. الخطة التي محكوم عليها بالفشل لازم تكون معيبة من البداية.'}
+];
+
+const SECTION_NAMES = {
+  reading: 'الفهم القرائي - Reading Comprehension',
+  structure: 'القواعد - Sentence Structure',
+  composition: 'تحليل التركيب - Composition Analysis',
+  vocabulary: 'المفردات - Vocabulary'
+};
+
+/* State */
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let timerInterval = null;
+let timeLeft = 180 * 60; // 3 hours
+let testSubmitted = false;
+
+function startTest() {
+  document.getElementById('welcomeScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'inline-block';
+  startTimer();
+  showQuestion(0);
+  buildGrid();
+}
+
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      submitTest();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const h = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+  const m = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+  const box = document.getElementById('timerBox');
+  box.classList.remove('warn', 'danger');
+  if (timeLeft < 600) box.classList.add('danger');
+  else if (timeLeft < 1800) box.classList.add('warn');
+}
+
+function showQuestion(idx) {
+  currentQ = idx;
+  const q = QUESTIONS[idx];
+  const container = document.getElementById('questionContainer');
+  const passageHtml = q.passage ? `<div class="passage ltr">${PASSAGES[q.passage]}</div>` : '';
+  const letters = ['A', 'B', 'C', 'D'];
+
+  let optionsHtml = '';
+  q.options.forEach((opt, i) => {
+    let cls = 'option';
+    if (testSubmitted) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === answers[idx] && i !== q.correct) cls += ' wrong';
+    } else if (answers[idx] === i) cls += ' selected';
+    optionsHtml += `
+      <div class="${cls}" onclick="selectOption(${i})">
+        <div class="option-letter">${letters[i]}</div>
+        <div class="ltr" style="flex:1;">${opt}</div>
+      </div>`;
+  });
+
+  let explainHtml = '';
+  if (testSubmitted) {
+    const userAns = answers[idx];
+    const isCorrect = userAns === q.correct;
+    explainHtml = `
+      <div class="explanation">
+        <strong>${isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة'} • الإجابة الصحيحة: ${letters[q.correct]}</strong><br>
+        ${q.explanation}
+      </div>`;
+  }
+
+  container.innerHTML = `
+    <div class="section-tag">${SECTION_NAMES[q.section]}</div>
+    <div class="question-num">السؤال ${idx + 1} من ${QUESTIONS.length}</div>
+    ${passageHtml}
+    <div class="question-text ltr">${q.text}</div>
+    <div class="options">${optionsHtml}</div>
+    ${explainHtml}
+  `;
+  updateProgress();
+  document.getElementById('sectionLabel').textContent = 'القسم: ' + SECTION_NAMES[q.section];
+  if (document.getElementById('questionGrid').style.display !== 'none') buildGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectOption(idx) {
+  if (testSubmitted) return;
+  answers[currentQ] = idx;
+  showQuestion(currentQ);
+}
+
+function nextQuestion() {
+  if (currentQ < QUESTIONS.length - 1) showQuestion(currentQ + 1);
+}
+function prevQuestion() {
+  if (currentQ > 0) showQuestion(currentQ - 1);
+}
+
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  document.getElementById('progressText').textContent = `${answered} / ${QUESTIONS.length}`;
+  document.getElementById('progressFill').style.width = `${(answered / QUESTIONS.length) * 100}%`;
+}
+
+function buildGrid() {
+  const grid = document.getElementById('questionGrid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'grid-btn';
+    btn.textContent = i + 1;
+    if (testSubmitted) {
+      if (answers[i] === q.correct) btn.classList.add('review-correct');
+      else btn.classList.add('review-wrong');
+    } else if (answers[i] !== null) btn.classList.add('answered');
+    if (i === currentQ) btn.classList.add('current');
+    btn.onclick = () => showQuestion(i);
+    grid.appendChild(btn);
+  });
+}
+
+function toggleGrid() {
+  const g = document.getElementById('questionGrid');
+  g.style.display = g.style.display === 'none' ? 'grid' : 'none';
+  if (g.style.display === 'grid') buildGrid();
+}
+
+function confirmSubmit() {
+  const unanswered = answers.filter(a => a === null).length;
+  document.getElementById('submitMsg').textContent = unanswered > 0
+    ? `لديكِ ${unanswered} سؤال بدون إجابة. هل تودين تسليم الاختبار الآن؟`
+    : 'سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.';
+  document.getElementById('submitModal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('submitModal').classList.remove('active');
+}
+
+function submitTest() {
+  testSubmitted = true;
+  clearInterval(timerInterval);
+  closeModal();
+  showResults();
+}
+
+function showResults() {
+  /* Calculate scores */
+  const sectionStats = {};
+  ['reading', 'structure', 'composition', 'vocabulary'].forEach(s => {
+    sectionStats[s] = { correct: 0, total: 0 };
+  });
+  let total = 0;
+  QUESTIONS.forEach((q, i) => {
+    sectionStats[q.section].total++;
+    if (answers[i] === q.correct) {
+      sectionStats[q.section].correct++;
+      total++;
+    }
+  });
+  const overall = (total / QUESTIONS.length) * 100;
+  const stepScore = Math.round(36 + (overall / 100) * 64); // map 0-100% to 36-100 STEP scale approx
+
+  let level, levelClass;
+  if (overall >= 85) { level = '🌟 ممتاز - مستوى متقدم'; levelClass = 'level-excellent'; }
+  else if (overall >= 70) { level = '👏 جيد جداً - مستوى عالٍ'; levelClass = 'level-good'; }
+  else if (overall >= 50) { level = '👍 جيد - يحتاج تحسين'; levelClass = 'level-pass'; }
+  else { level = '📚 يحتاج مزيداً من المراجعة'; levelClass = 'level-low'; }
+
+  /* Hide test, show results */
+  document.getElementById('testArea').classList.remove('active');
+  const r = document.getElementById('resultsScreen');
+  r.style.display = 'block';
+
+  /* SVG circle */
+  const circ = 2 * Math.PI * 80;
+  const offset = circ - (overall / 100) * circ;
+
+  let breakdownHtml = '';
+  Object.keys(sectionStats).forEach(s => {
+    const st = sectionStats[s];
+    const pct = (st.correct / st.total) * 100;
+    breakdownHtml += `
+      <div class="break-card">
+        <h4>${SECTION_NAMES[s]}</h4>
+        <div class="break-bar">
+          <div class="break-bar-fill" style="width: ${pct}%;"></div>
+        </div>
+        <div class="break-stats">
+          <span>${st.correct} / ${st.total} صحيحة</span>
+          <span>${pct.toFixed(0)}%</span>
+        </div>
+      </div>`;
+  });
+
+  r.innerHTML = `
+    <div class="results">
+      <h2 style="color: var(--primary); margin-bottom: 4px;">🎉 انتهى الاختبار</h2>
+      <p style="color: var(--muted);">إليكِ تحليل أدائك المفصل</p>
+
+      <div class="score-circle">
+        <svg width="180" height="180">
+          <circle cx="90" cy="90" r="80" stroke="#e5e7eb" stroke-width="14" fill="none"/>
+          <circle cx="90" cy="90" r="80" stroke="url(#grad)" stroke-width="14" fill="none"
+            stroke-dasharray="${circ}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="grad">
+              <stop offset="0%" stop-color="#006c35"/>
+              <stop offset="100%" stop-color="#c8a951"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="score-text">
+          <div class="score-num">${total} / 100</div>
+          <div class="score-label">${overall.toFixed(0)}% • تقدير STEP ≈ ${stepScore}</div>
+        </div>
+      </div>
+
+      <div class="level-badge ${levelClass}">${level}</div>
+
+      <h3 style="margin: 24px 0 12px; color: var(--primary-dark);">التحليل حسب القسم</h3>
+      <div class="breakdown">${breakdownHtml}</div>
+
+      <p style="color: var(--muted); margin: 16px 0;">
+        💡 يمكنكِ مراجعة جميع الأسئلة مع الشروحات المفصلة من خلال زر المراجعة أدناه.
+      </p>
+
+      <div style="display:flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn" onclick="reviewMode()">📖 مراجعة الأسئلة مع الشرح</button>
+        <button class="btn btn-outline" onclick="window.location.reload()">🔄 إعادة الاختبار</button>
+      </div>
+    </div>
+  `;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reviewMode() {
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'none';
+  showQuestion(0);
+  document.getElementById('questionGrid').style.display = 'grid';
+  buildGrid();
+}
+</script>
+</body>
+</html>

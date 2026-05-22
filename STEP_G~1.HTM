@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>دليل القواعد والمفردات المتكررة في STEP</title>
+<style>
+  :root {
+    --primary: #006c35;
+    --primary-dark: #004d26;
+    --accent: #c8a951;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --highlight: #fff8e6;
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+  .ltr { direction: ltr; text-align: left; font-family: Georgia, serif; display: inline-block; }
+  .ltr-block { direction: ltr; text-align: left; font-family: Georgia, serif; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+  header {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  header h1 { font-size: 32px; margin-bottom: 8px; }
+  header p { font-size: 16px; opacity: 0.9; }
+
+  .tabs {
+    display: flex;
+    gap: 8px;
+    background: var(--card);
+    padding: 8px;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    flex: 1;
+    min-width: 140px;
+    padding: 12px 18px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.2s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .tab-btn:hover { background: #f9fafb; color: var(--primary); }
+  .tab-btn.active { background: var(--primary); color: white; }
+
+  .search-bar {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .search-bar input {
+    flex: 1;
+    border: 2px solid var(--border);
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+  }
+  .search-bar input:focus {
+    outline: none;
+    border-color: var(--primary);
+  }
+
+  .content { display: none; }
+  .content.active { display: block; }
+
+  .topic-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+    border-right: 4px solid var(--primary);
+  }
+  .topic-card h2 {
+    color: var(--primary);
+    font-size: 22px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .topic-card h3 {
+    color: var(--primary-dark);
+    font-size: 17px;
+    margin: 16px 0 8px;
+    padding-right: 10px;
+    border-right: 3px solid var(--accent);
+  }
+  .topic-card p { margin-bottom: 8px; }
+
+  .rule-box {
+    background: var(--highlight);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 10px 0;
+    border-right: 4px solid var(--accent);
+  }
+  .rule-box .label { color: var(--primary-dark); font-weight: 700; margin-bottom: 4px; }
+
+  .example {
+    background: #eff6ff;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin: 8px 0;
+    border-right: 3px solid #3b82f6;
+  }
+  .example .ar { color: var(--muted); font-size: 14px; margin-top: 4px; }
+
+  .vocab-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    background: var(--card);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .vocab-table th {
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    text-align: right;
+    font-size: 14px;
+  }
+  .vocab-table td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+  }
+  .vocab-table tr:hover { background: #f9fafb; }
+  .vocab-table .word {
+    font-weight: 700;
+    color: var(--primary-dark);
+    font-family: Georgia, serif;
+  }
+
+  .tip-box {
+    background: #fef3c7;
+    border-right: 4px solid #f59e0b;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin: 14px 0;
+  }
+  .tip-box strong { color: #92400e; }
+
+  .warning-box {
+    background: #fee2e2;
+    border-right: 4px solid #ef4444;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin: 14px 0;
+  }
+  .warning-box strong { color: #991b1b; }
+
+  .word-tag {
+    display: inline-block;
+    background: #ecfdf5;
+    color: #047857;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    margin: 3px;
+    font-family: Georgia, serif;
+  }
+
+  .quick-nav {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow);
+  }
+  .quick-nav h4 {
+    color: var(--primary);
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+  .quick-nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .quick-nav-links a {
+    background: #f3f4f6;
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 999px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s;
+  }
+  .quick-nav-links a:hover {
+    background: var(--primary);
+    color: white;
+  }
+
+  .hidden { display: none !important; }
+  .highlight-match { background: yellow; padding: 0 2px; }
+
+  @media (max-width: 640px) {
+    header h1 { font-size: 24px; }
+    .container { padding: 12px; }
+    .topic-card { padding: 16px; }
+    .tab-btn { font-size: 13px; padding: 10px 12px; min-width: 100px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>📚 دليل القواعد والمفردات المتكررة في STEP</h1>
+    <p>الموارد الأساسية المُختصرة لاجتياز اختبار STEP بثقة</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('grammar')">📝 القواعد</button>
+    <button class="tab-btn" onclick="switchTab('vocabulary')">📖 المفردات</button>
+    <button class="tab-btn" onclick="switchTab('patterns')">🎯 أنماط الأسئلة</button>
+    <button class="tab-btn" onclick="switchTab('tips')">💡 نصائح الاختبار</button>
+  </div>
+
+  <div class="search-bar">
+    <span>🔍</span>
+    <input type="text" id="searchBox" placeholder="ابحثي عن كلمة أو قاعدة..." oninput="searchContent()" />
+  </div>
+
+  <!-- ============== GRAMMAR ============== -->
+  <div id="grammar" class="content active">
+
+    <div class="quick-nav">
+      <h4>🎯 القواعد الأكثر تكراراً (اضغطي للانتقال):</h4>
+      <div class="quick-nav-links">
+        <a href="#conditionals">الجمل الشرطية</a>
+        <a href="#inversion">القلب (Inversion)</a>
+        <a href="#subjunctive">صيغة الفرضية</a>
+        <a href="#agreement">تطابق الفاعل والفعل</a>
+        <a href="#relatives">ضمائر الوصل</a>
+        <a href="#gerunds">Gerunds & Infinitives</a>
+        <a href="#tenses">الأزمنة</a>
+        <a href="#wishes">Wish / If only</a>
+        <a href="#prepositions">حروف الجر</a>
+      </div>
+    </div>
+
+    <!-- Conditionals -->
+    <div class="topic-card" id="conditionals">
+      <h2>1️⃣ الجمل الشرطية (Conditionals)</h2>
+      <p>من أكثر القواعد تكراراً في STEP - تتكرر 2-4 مرات في كل اختبار.</p>
+
+      <h3>النوع الأول (First Conditional) - شرط واقعي مستقبلي</h3>
+      <div class="rule-box">
+        <div class="label">الصيغة:</div>
+        <div class="ltr-block">If + Present Simple, will + base verb</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block"><strong>If</strong> it <strong>rains</strong>, we <strong>will stay</strong> home.</div>
+        <div class="ar">إذا أمطرت، سنبقى في البيت.</div>
+      </div>
+
+      <h3>النوع الثاني (Second Conditional) - شرط افتراضي حالي</h3>
+      <div class="rule-box">
+        <div class="label">الصيغة:</div>
+        <div class="ltr-block">If + Past Simple, would + base verb</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block"><strong>If</strong> I <strong>had</strong> more money, I <strong>would buy</strong> a house.</div>
+        <div class="ar">لو كان عندي مال أكثر، لاشتريت بيتاً.</div>
+      </div>
+
+      <h3>النوع الثالث (Third Conditional) - شرط مستحيل في الماضي</h3>
+      <div class="rule-box">
+        <div class="label">الصيغة:</div>
+        <div class="ltr-block">If + Past Perfect, would have + past participle</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block"><strong>If</strong> she <strong>had studied</strong>, she <strong>would have passed</strong>.</div>
+        <div class="ar">لو كانت درست، لكانت نجحت.</div>
+      </div>
+
+      <h3>الشرط المختلط (Mixed Conditional)</h3>
+      <div class="rule-box">
+        <div class="label">الصيغة:</div>
+        <div class="ltr-block">If + Past Perfect, would + base verb (نتيجة حاضرة لسبب ماضٍ)</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block"><strong>If</strong> I <strong>had studied</strong> medicine, I <strong>would be</strong> a doctor now.</div>
+        <div class="ar">لو كنت درست الطب، لكنت طبيبة الآن.</div>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 تنبيه مهم:</strong> الشرط الصفر (Zero Conditional) يستخدم Present + Present للحقائق العامة: <span class="ltr">"If water boils, it evaporates."</span>
+      </div>
+    </div>
+
+    <!-- Inversion -->
+    <div class="topic-card" id="inversion">
+      <h2>2️⃣ القلب (Inversion) - أداء فعل المساعد قبل الفاعل</h2>
+      <p>تأتي عادةً مع كلمات النفي أو الظروف المحددة في بداية الجملة.</p>
+
+      <h3>الكلمات التي تتطلب قلباً:</h3>
+      <div class="rule-box">
+        <div class="ltr-block"><strong>Hardly / Scarcely ... when</strong></div>
+        <div class="ltr-block"><strong>No sooner ... than</strong></div>
+        <div class="ltr-block"><strong>Not until</strong></div>
+        <div class="ltr-block"><strong>Never / Rarely / Seldom</strong></div>
+        <div class="ltr-block"><strong>Only after / Only when</strong></div>
+        <div class="ltr-block"><strong>Not only ... but also</strong></div>
+      </div>
+
+      <div class="example">
+        <div class="ltr-block"><strong>Hardly had</strong> I arrived <strong>when</strong> the phone rang.</div>
+        <div class="ar">ما إن وصلت حتى رنّ الهاتف.</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block"><strong>No sooner had</strong> she finished <strong>than</strong> the boss called.</div>
+        <div class="ar">ما كادت تنتهي حتى اتصل المدير.</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block"><strong>Never have</strong> I seen such a beautiful sunset.</div>
+        <div class="ar">لم أرَ مثل هذا الغروب الجميل أبداً.</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block"><strong>Not only did</strong> he study, <strong>but</strong> he also worked.</div>
+        <div class="ar">لم يدرس فقط، بل عمل أيضاً.</div>
+      </div>
+
+      <h3>الشرطية مع قلب (بدون if):</h3>
+      <div class="example">
+        <div class="ltr-block"><strong>Were I</strong> rich, I would travel. = If I were rich...</div>
+        <div class="ltr-block"><strong>Had she known</strong>, she would have helped. = If she had known...</div>
+        <div class="ltr-block"><strong>Should you need</strong> help, call me. = If you should need help...</div>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ خطأ شائع:</strong> لا تستخدمي <span class="ltr">"Hardly I had..."</span> أو <span class="ltr">"No sooner I went..."</span> - دائماً ضعي فعل المساعد قبل الفاعل!
+      </div>
+    </div>
+
+    <!-- Subjunctive -->
+    <div class="topic-card" id="subjunctive">
+      <h2>3️⃣ صيغة الفرضية (Subjunctive) - الفعل المجرد</h2>
+      <p>تأتي بعد أفعال وصفات معينة تعبّر عن الطلب أو الأهمية.</p>
+
+      <h3>الأفعال التي تتطلب subjunctive:</h3>
+      <div class="rule-box">
+        <div class="ltr-block">suggest, recommend, insist, demand, request, propose, require, urge</div>
+      </div>
+
+      <h3>العبارات التي تتطلب subjunctive:</h3>
+      <div class="rule-box">
+        <div class="ltr-block">It is essential / important / vital / crucial / necessary that ...</div>
+      </div>
+
+      <div class="rule-box">
+        <div class="label">الصيغة:</div>
+        <div class="ltr-block">verb/expression + that + subject + base verb (بدون s)</div>
+      </div>
+
+      <div class="example">
+        <div class="ltr-block">The doctor recommended that he <strong>take</strong> the medicine. (NOT takes)</div>
+        <div class="ar">الطبيب أوصى بأن يتناول الدواء.</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">It is essential that everyone <strong>be</strong> on time. (NOT is)</div>
+        <div class="ar">من الضروري أن يحضر الجميع في الوقت.</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">She demanded that the contract <strong>be signed</strong> immediately.</div>
+        <div class="ar">طالبت بتوقيع العقد فوراً.</div>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 ملاحظة:</strong> النفي يصير "not + base verb": <span class="ltr">"It is important that she not be late."</span>
+      </div>
+    </div>
+
+    <!-- Subject-Verb Agreement -->
+    <div class="topic-card" id="agreement">
+      <h2>4️⃣ تطابق الفاعل والفعل (Subject-Verb Agreement)</h2>
+      <p>من أصعب الأسئلة - فيه استثناءات كثيرة. ركّزي على هذه الحالات:</p>
+
+      <h3>كلمات تأخذ فعلاً مفرداً دائماً:</h3>
+      <div class="rule-box">
+        <div class="ltr-block"><strong>Each, Every, Either, Neither, Everyone, Someone, Anyone, No one, Nothing</strong></div>
+        <div class="ltr-block"><strong>Each of, Every one of, Many a, Neither of</strong> (رسمياً)</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">Each of the students <strong>has</strong> a book. (NOT have)</div>
+      </div>
+
+      <h3>كلمات تأخذ فعلاً جمعاً:</h3>
+      <div class="rule-box">
+        <div class="ltr-block"><strong>Both, Few, Many, Several, A number of + plural</strong></div>
+        <div class="ltr-block"><strong>Police, People, Cattle</strong></div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">A number of students <strong>are</strong> absent.</div>
+        <div class="ltr-block">BUT: <strong>The number of</strong> students <strong>is</strong> increasing.</div>
+      </div>
+
+      <h3>Neither...nor / Either...or:</h3>
+      <div class="rule-box">
+        الفعل يطابق <strong>الاسم الأقرب</strong>.
+      </div>
+      <div class="example">
+        <div class="ltr-block">Either the manager or the employees <strong>are</strong> responsible.</div>
+        <div class="ltr-block">Neither the students nor the teacher <strong>knows</strong>.</div>
+      </div>
+
+      <h3>الأسماء الجمعية (Collective Nouns):</h3>
+      <div class="rule-box">
+        <div class="ltr-block">team, committee, family, government, audience</div>
+        <div>في الإنجليزية الأمريكية: مفرد. في البريطانية: جمع ممكن.</div>
+      </div>
+
+      <h3>"as well as" / "along with" / "together with":</h3>
+      <div class="rule-box">
+        لا تغير الفعل - الفاعل الحقيقي قبل العبارة.
+      </div>
+      <div class="example">
+        <div class="ltr-block">The teacher, along with her students, <strong>is</strong> here.</div>
+      </div>
+
+      <h3>Data, Criteria, Phenomena:</h3>
+      <div class="rule-box">
+        جمع رسمياً (مفردها: datum, criterion, phenomenon)
+      </div>
+      <div class="example">
+        <div class="ltr-block">The data <strong>suggest</strong> a trend. (academic usage)</div>
+      </div>
+    </div>
+
+    <!-- Relative Pronouns -->
+    <div class="topic-card" id="relatives">
+      <h2>5️⃣ ضمائر الوصل (Relative Pronouns)</h2>
+
+      <table class="vocab-table">
+        <tr><th>الضمير</th><th>الاستخدام</th><th>مثال</th></tr>
+        <tr>
+          <td class="word">who</td>
+          <td>للعاقل، فاعل</td>
+          <td class="ltr-block">The woman <strong>who</strong> called is my aunt.</td>
+        </tr>
+        <tr>
+          <td class="word">whom</td>
+          <td>للعاقل، مفعول (رسمي)</td>
+          <td class="ltr-block">The man <strong>whom</strong> I met is a doctor.</td>
+        </tr>
+        <tr>
+          <td class="word">whose</td>
+          <td>للملكية (عاقل وغير عاقل)</td>
+          <td class="ltr-block">The book <strong>whose</strong> cover is red.</td>
+        </tr>
+        <tr>
+          <td class="word">which</td>
+          <td>لغير العاقل</td>
+          <td class="ltr-block">The book <strong>which</strong> I bought.</td>
+        </tr>
+        <tr>
+          <td class="word">that</td>
+          <td>للعاقل وغير العاقل (defining)</td>
+          <td class="ltr-block">The girl <strong>that</strong> won the prize.</td>
+        </tr>
+        <tr>
+          <td class="word">where</td>
+          <td>للمكان</td>
+          <td class="ltr-block">The city <strong>where</strong> I grew up.</td>
+        </tr>
+        <tr>
+          <td class="word">when</td>
+          <td>للزمن</td>
+          <td class="ltr-block">The day <strong>when</strong> we met.</td>
+        </tr>
+      </table>
+
+      <div class="tip-box">
+        <strong>💡 ترك الضمير:</strong> يمكن حذف who/whom/which/that إذا كان مفعولاً: <span class="ltr">"The book (that) I read."</span> ولا يمكن حذفه إذا كان فاعلاً.
+      </div>
+    </div>
+
+    <!-- Gerunds & Infinitives -->
+    <div class="topic-card" id="gerunds">
+      <h2>6️⃣ Gerunds (V-ing) vs Infinitives (to + V)</h2>
+
+      <h3>أفعال تتبعها gerund (V-ing):</h3>
+      <div class="rule-box">
+        <div class="ltr-block">enjoy, avoid, suggest, recommend, mind, finish, keep, deny, admit, consider, postpone, practice</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">She enjoys <strong>reading</strong>. (NOT to read)</div>
+      </div>
+
+      <h3>أفعال تتبعها infinitive (to + V):</h3>
+      <div class="rule-box">
+        <div class="ltr-block">want, need, decide, plan, hope, agree, refuse, expect, promise, offer, choose, learn, manage</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">He decided <strong>to leave</strong>. (NOT leaving)</div>
+      </div>
+
+      <h3>أفعال يتبعها مفعول + infinitive:</h3>
+      <div class="rule-box">
+        <div class="ltr-block">tell, ask, want, allow, encourage, force, persuade, advise, remind, warn</div>
+      </div>
+
+      <h3>أفعال الإحساس (Sense Verbs) - تأخذ مصدراً مجرداً أو V-ing:</h3>
+      <div class="rule-box">
+        <div class="ltr-block">see, hear, watch, feel, notice + object + base verb / V-ing</div>
+      </div>
+
+      <h3>Make / Let / Have - يأخذون مصدراً مجرداً (bare infinitive):</h3>
+      <div class="example">
+        <div class="ltr-block">She made him <strong>cry</strong>. (NOT to cry)</div>
+        <div class="ltr-block">BUT passive: He was made <strong>to cry</strong>. (مع to في المبني للمجهول)</div>
+      </div>
+
+      <h3>To + gerund (to هنا حرف جر، ليس أداة مصدر):</h3>
+      <div class="rule-box">
+        <div class="ltr-block">look forward to, be used to, get used to, object to, admit to, confess to</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">I look forward to <strong>hearing</strong> from you. (NOT hear)</div>
+        <div class="ltr-block">She is used to <strong>working</strong> late. (NOT work)</div>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ تنبيه:</strong> فرّقي بين "used to + base" (كنت معتاد على) و "be/get used to + V-ing" (معتاد على).
+      </div>
+    </div>
+
+    <!-- Tenses -->
+    <div class="topic-card" id="tenses">
+      <h2>7️⃣ الأزمنة (Tenses) - الأكثر تكراراً</h2>
+
+      <h3>Past Perfect (had + p.p.)</h3>
+      <p>يستخدم لحدث ماضٍ سبق حدثاً ماضياً آخر.</p>
+      <div class="example">
+        <div class="ltr-block">By the time we arrived, the movie <strong>had started</strong>.</div>
+      </div>
+
+      <h3>Past Perfect Continuous (had been + V-ing)</h3>
+      <p>لحدث مستمر سبق حدثاً ماضياً.</p>
+      <div class="example">
+        <div class="ltr-block">She <strong>had been working</strong> for two hours when he called.</div>
+      </div>
+
+      <h3>Future Perfect (will have + p.p.)</h3>
+      <p>لحدث سيكتمل قبل وقت في المستقبل.</p>
+      <div class="example">
+        <div class="ltr-block">By next year, I <strong>will have worked</strong> here for 10 years.</div>
+      </div>
+
+      <h3>Present Perfect مع كلمات دلالة:</h3>
+      <div class="rule-box">
+        <div class="ltr-block"><strong>since</strong> + نقطة زمنية (since 2010)</div>
+        <div class="ltr-block"><strong>for</strong> + مدة (for 5 years)</div>
+        <div class="ltr-block">just, already, yet, ever, never, recently, lately</div>
+      </div>
+      <div class="example">
+        <div class="ltr-block">I <strong>have lived</strong> here <strong>for</strong> 10 years.</div>
+        <div class="ltr-block">She <strong>has worked</strong> here <strong>since</strong> 2015.</div>
+      </div>
+
+      <div class="warning-box">
+        <strong>⚠️ خطأ شائع:</strong> لا تستخدمي Present Perfect مع كلمات زمنية محددة في الماضي مثل (yesterday, last year, in 2020) - استخدمي Past Simple بدلاً.
+      </div>
+    </div>
+
+    <!-- Wish -->
+    <div class="topic-card" id="wishes">
+      <h2>8️⃣ Wish / If only - التمني</h2>
+
+      <table class="vocab-table">
+        <tr><th>المعنى</th><th>الصيغة</th><th>مثال</th></tr>
+        <tr>
+          <td>تمني تغيير الحاضر</td>
+          <td>wish + past simple</td>
+          <td class="ltr-block">I wish I <strong>knew</strong> the answer.</td>
+        </tr>
+        <tr>
+          <td>تمني تغيير الماضي</td>
+          <td>wish + past perfect</td>
+          <td class="ltr-block">I wish I <strong>had studied</strong> harder.</td>
+        </tr>
+        <tr>
+          <td>تمني تغيير سلوك شخص</td>
+          <td>wish + would</td>
+          <td class="ltr-block">I wish you <strong>would stop</strong> smoking.</td>
+        </tr>
+        <tr>
+          <td>تمني قدرة</td>
+          <td>wish + could</td>
+          <td class="ltr-block">I wish I <strong>could speak</strong> French.</td>
+        </tr>
+      </table>
+
+      <h3>It's (high) time + past simple:</h3>
+      <p>تعني "لقد حان الوقت" - مع شعور بالإلحاح.</p>
+      <div class="example">
+        <div class="ltr-block">It's high time we <strong>left</strong>. (NOT leave)</div>
+        <div class="ar">لقد حان الوقت لنغادر.</div>
+      </div>
+
+      <h3>Would rather:</h3>
+      <div class="rule-box">
+        <div class="ltr-block">would rather + base verb (لنفس الشخص): "I would rather <strong>stay</strong>."</div>
+        <div class="ltr-block">would rather + subject + past simple (لشخص آخر): "I would rather you <strong>stayed</strong>."</div>
+      </div>
+    </div>
+
+    <!-- Prepositions -->
+    <div class="topic-card" id="prepositions">
+      <h2>9️⃣ حروف الجر الأكثر تكراراً</h2>
+
+      <h3>للزمن:</h3>
+      <table class="vocab-table">
+        <tr><th>الحرف</th><th>الاستخدام</th><th>مثال</th></tr>
+        <tr><td class="word">at</td><td>الساعة، أعياد محددة</td><td class="ltr-block">at 5 PM, at Christmas</td></tr>
+        <tr><td class="word">on</td><td>أيام، تواريخ</td><td class="ltr-block">on Monday, on May 5th</td></tr>
+        <tr><td class="word">in</td><td>أشهر، سنوات، عقود</td><td class="ltr-block">in March, in 2024</td></tr>
+        <tr><td class="word">for</td><td>مدة</td><td class="ltr-block">for 3 hours, for years</td></tr>
+        <tr><td class="word">since</td><td>نقطة بداية</td><td class="ltr-block">since Monday, since 2020</td></tr>
+        <tr><td class="word">by</td><td>قبل أو في موعد</td><td class="ltr-block">by tomorrow, by next week</td></tr>
+        <tr><td class="word">until</td><td>حتى</td><td class="ltr-block">until Friday</td></tr>
+      </table>
+
+      <h3>أفعال + حروف جر شائعة:</h3>
+      <table class="vocab-table">
+        <tr><th>التركيب</th><th>المعنى</th></tr>
+        <tr><td class="ltr-block">depend <strong>on</strong></td><td>يعتمد على</td></tr>
+        <tr><td class="ltr-block">consist <strong>of</strong></td><td>يتكون من</td></tr>
+        <tr><td class="ltr-block">good <strong>at</strong></td><td>بارع في</td></tr>
+        <tr><td class="ltr-block">afraid <strong>of</strong></td><td>خائف من</td></tr>
+        <tr><td class="ltr-block">interested <strong>in</strong></td><td>مهتم بـ</td></tr>
+        <tr><td class="ltr-block">famous <strong>for</strong></td><td>مشهور بـ</td></tr>
+        <tr><td class="ltr-block">similar <strong>to</strong></td><td>مشابه لـ</td></tr>
+        <tr><td class="ltr-block">different <strong>from</strong></td><td>مختلف عن</td></tr>
+        <tr><td class="ltr-block">responsible <strong>for</strong></td><td>مسؤول عن</td></tr>
+        <tr><td class="ltr-block">accustomed <strong>to</strong></td><td>معتاد على</td></tr>
+        <tr><td class="ltr-block">capable <strong>of</strong></td><td>قادر على</td></tr>
+        <tr><td class="ltr-block">aware <strong>of</strong></td><td>مدرك لـ</td></tr>
+        <tr><td class="ltr-block">satisfied <strong>with</strong></td><td>راضٍ عن</td></tr>
+        <tr><td class="ltr-block">married <strong>to</strong></td><td>متزوج من</td></tr>
+        <tr><td class="ltr-block">jealous <strong>of</strong></td><td>غيور من</td></tr>
+        <tr><td class="ltr-block">addicted <strong>to</strong></td><td>مدمن على</td></tr>
+        <tr><td class="ltr-block">opposed <strong>to</strong></td><td>معارض لـ</td></tr>
+        <tr><td class="ltr-block">accused <strong>of</strong></td><td>متهم بـ</td></tr>
+      </table>
+    </div>
+
+    <!-- Articles -->
+    <div class="topic-card">
+      <h2>🔟 أدوات التعريف (Articles): a / an / the</h2>
+      <h3>a / an (نكرة):</h3>
+      <div class="rule-box">
+        <div class="ltr-block"><strong>a</strong> + اسم يبدأ بصوت ساكن (a book, a university)</div>
+        <div class="ltr-block"><strong>an</strong> + اسم يبدأ بصوت متحرك (an apple, an hour)</div>
+      </div>
+      <div class="tip-box">
+        <strong>💡 ملاحظة:</strong> العبرة بالصوت لا الحرف! "university" تبدأ بصوت Y (يو) فنقول "a"، لكن "hour" تبدأ بصوت متحرك (الـ h صامتة) فنقول "an".
+      </div>
+
+      <h3>the (معرّفة):</h3>
+      <div class="rule-box">
+        <div>تُستخدم مع: الأشياء المعروفة، الفريدة (the sun, the moon)، أسماء البحار والمحيطات، السلاسل الجبلية، أسماء الجرائد، التفضيل (the best)، الترتيب (the first)</div>
+      </div>
+
+      <h3>بدون أداة:</h3>
+      <div class="rule-box">
+        <div>أسماء الدول العادية، الأشخاص، اللغات، الوجبات، وسائل النقل (by car, by train)</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============== VOCABULARY ============== -->
+  <div id="vocabulary" class="content">
+
+    <div class="quick-nav">
+      <h4>🎯 فئات المفردات الأكثر تكراراً:</h4>
+      <div class="quick-nav-links">
+        <a href="#adj-positive">صفات إيجابية</a>
+        <a href="#adj-negative">صفات سلبية</a>
+        <a href="#academic">مفردات أكاديمية</a>
+        <a href="#verbs">أفعال مهمة</a>
+        <a href="#nouns">أسماء مهمة</a>
+        <a href="#synonyms">مرادفات شائعة</a>
+        <a href="#transitions">روابط الفقرات</a>
+        <a href="#phrasal">phrasal verbs</a>
+      </div>
+    </div>
+
+    <div class="topic-card" id="adj-positive">
+      <h2>✨ صفات إيجابية متقدمة (Advanced Positive Adjectives)</h2>
+      <table class="vocab-table">
+        <tr><th>الكلمة</th><th>المعنى</th><th>مثال السياق</th></tr>
+        <tr><td class="word">eloquent</td><td>بليغ، فصيح</td><td class="ltr-block">an eloquent speaker</td></tr>
+        <tr><td class="word">cogent</td><td>مقنع، محكم</td><td class="ltr-block">a cogent argument</td></tr>
+        <tr><td class="word">profound</td><td>عميق</td><td class="ltr-block">profound knowledge</td></tr>
+        <tr><td class="word">meticulous</td><td>دقيق، حريص</td><td class="ltr-block">meticulous research</td></tr>
+        <tr><td class="word">sagacious</td><td>حكيم، فطن</td><td class="ltr-block">a sagacious decision</td></tr>
+        <tr><td class="word">astute</td><td>فطن، ذكي</td><td class="ltr-block">an astute observation</td></tr>
+        <tr><td class="word">prolific</td><td>غزير الإنتاج</td><td class="ltr-block">a prolific writer</td></tr>
+        <tr><td class="word">tenacious</td><td>عنيد، مثابر</td><td class="ltr-block">tenacious effort</td></tr>
+        <tr><td class="word">resilient</td><td>صامد، مرن</td><td class="ltr-block">resilient community</td></tr>
+        <tr><td class="word">judicious</td><td>حكيم، رشيد</td><td class="ltr-block">a judicious choice</td></tr>
+        <tr><td class="word">lucid</td><td>واضح، جلي</td><td class="ltr-block">a lucid explanation</td></tr>
+        <tr><td class="word">vivid</td><td>حيوي، نابض</td><td class="ltr-block">a vivid description</td></tr>
+        <tr><td class="word">compelling</td><td>مقنع، آسر</td><td class="ltr-block">a compelling story</td></tr>
+        <tr><td class="word">groundbreaking</td><td>رائد، ثوري</td><td class="ltr-block">groundbreaking research</td></tr>
+        <tr><td class="word">innovative</td><td>مبتكر</td><td class="ltr-block">innovative approach</td></tr>
+        <tr><td class="word">pivotal</td><td>محوري، حاسم</td><td class="ltr-block">a pivotal moment</td></tr>
+        <tr><td class="word">consummate</td><td>بارع، متقن</td><td class="ltr-block">a consummate professional</td></tr>
+        <tr><td class="word">indefatigable</td><td>لا يكلّ، نشيط</td><td class="ltr-block">indefatigable worker</td></tr>
+      </table>
+    </div>
+
+    <div class="topic-card" id="adj-negative">
+      <h2>⚠️ صفات سلبية متقدمة (Advanced Negative Adjectives)</h2>
+      <table class="vocab-table">
+        <tr><th>الكلمة</th><th>المعنى</th><th>مثال السياق</th></tr>
+        <tr><td class="word">flimsy</td><td>واهٍ، ضعيف</td><td class="ltr-block">a flimsy excuse</td></tr>
+        <tr><td class="word">tenuous</td><td>ضعيف، واهٍ</td><td class="ltr-block">a tenuous connection</td></tr>
+        <tr><td class="word">specious</td><td>خادع ظاهرياً</td><td class="ltr-block">specious reasoning</td></tr>
+        <tr><td class="word">ambiguous</td><td>غامض</td><td class="ltr-block">an ambiguous answer</td></tr>
+        <tr><td class="word">obscure</td><td>غامض، مبهم</td><td class="ltr-block">an obscure reference</td></tr>
+        <tr><td class="word">vague</td><td>مبهم</td><td class="ltr-block">a vague description</td></tr>
+        <tr><td class="word">mediocre</td><td>متوسط، عادي</td><td class="ltr-block">mediocre performance</td></tr>
+        <tr><td class="word">banal</td><td>تافه، مبتذل</td><td class="ltr-block">banal remarks</td></tr>
+        <tr><td class="word">trite</td><td>مبتذل، مكرر</td><td class="ltr-block">trite phrases</td></tr>
+        <tr><td class="word">monotonous</td><td>رتيب، ممل</td><td class="ltr-block">a monotonous lecture</td></tr>
+        <tr><td class="word">tedious</td><td>مضجر</td><td class="ltr-block">a tedious task</td></tr>
+        <tr><td class="word">soporific</td><td>مسبب للنعاس</td><td class="ltr-block">a soporific speech</td></tr>
+        <tr><td class="word">scathing</td><td>لاذع، نقدي</td><td class="ltr-block">scathing criticism</td></tr>
+        <tr><td class="word">caustic</td><td>لاذع، حارق</td><td class="ltr-block">caustic remarks</td></tr>
+        <tr><td class="word">erratic</td><td>متقلب، غير متوقع</td><td class="ltr-block">erratic behavior</td></tr>
+        <tr><td class="word">aberrant</td><td>شاذ، غير اعتيادي</td><td class="ltr-block">aberrant findings</td></tr>
+        <tr><td class="word">precarious</td><td>مزعزع، خطير</td><td class="ltr-block">a precarious position</td></tr>
+        <tr><td class="word">ephemeral</td><td>عابر، قصير الأمد</td><td class="ltr-block">ephemeral pleasures</td></tr>
+        <tr><td class="word">imprudent</td><td>طائش</td><td class="ltr-block">an imprudent decision</td></tr>
+        <tr><td class="word">venal</td><td>قابل للرشوة</td><td class="ltr-block">a venal official</td></tr>
+      </table>
+    </div>
+
+    <div class="topic-card" id="academic">
+      <h2>🎓 المفردات الأكاديمية الأساسية</h2>
+      <table class="vocab-table">
+        <tr><th>الكلمة</th><th>المعنى</th><th>مثال</th></tr>
+        <tr><td class="word">analyze</td><td>يحلل</td><td class="ltr-block">analyze the data</td></tr>
+        <tr><td class="word">evaluate</td><td>يقيّم</td><td class="ltr-block">evaluate the results</td></tr>
+        <tr><td class="word">demonstrate</td><td>يُبيّن</td><td class="ltr-block">demonstrate the theory</td></tr>
+        <tr><td class="word">indicate</td><td>يشير إلى</td><td class="ltr-block">the study indicates</td></tr>
+        <tr><td class="word">imply</td><td>يلمّح</td><td class="ltr-block">the data implies</td></tr>
+        <tr><td class="word">infer</td><td>يستنتج</td><td class="ltr-block">we can infer</td></tr>
+        <tr><td class="word">assess</td><td>يقيّم</td><td class="ltr-block">assess the impact</td></tr>
+        <tr><td class="word">examine</td><td>يفحص، يدرس</td><td class="ltr-block">examine the evidence</td></tr>
+        <tr><td class="word">investigate</td><td>يبحث، يحقق</td><td class="ltr-block">investigate the cause</td></tr>
+        <tr><td class="word">explore</td><td>يستكشف</td><td class="ltr-block">explore the possibilities</td></tr>
+        <tr><td class="word">establish</td><td>يؤسس، يثبت</td><td class="ltr-block">establish a link</td></tr>
+        <tr><td class="word">contribute</td><td>يساهم</td><td class="ltr-block">contribute to research</td></tr>
+        <tr><td class="word">correlate</td><td>يرتبط</td><td class="ltr-block">correlate with success</td></tr>
+        <tr><td class="word">distinguish</td><td>يميّز</td><td class="ltr-block">distinguish between</td></tr>
+        <tr><td class="word">refute</td><td>يفنّد</td><td class="ltr-block">refute the claim</td></tr>
+        <tr><td class="word">substantiate</td><td>يدعم بالأدلة</td><td class="ltr-block">substantiate the theory</td></tr>
+        <tr><td class="word">corroborate</td><td>يؤكد بأدلة</td><td class="ltr-block">corroborate the evidence</td></tr>
+        <tr><td class="word">scrutinize</td><td>يدقق</td><td class="ltr-block">scrutinize the proposal</td></tr>
+        <tr><td class="word">postulate</td><td>يفترض</td><td class="ltr-block">postulate a theory</td></tr>
+        <tr><td class="word">elucidate</td><td>يوضح</td><td class="ltr-block">elucidate the matter</td></tr>
+      </table>
+    </div>
+
+    <div class="topic-card" id="verbs">
+      <h2>🔄 أفعال مهمة تتكرر</h2>
+      <table class="vocab-table">
+        <tr><th>الفعل</th><th>المعنى</th><th>تركيب شائع</th></tr>
+        <tr><td class="word">acquire</td><td>يكتسب</td><td class="ltr-block">acquire skills</td></tr>
+        <tr><td class="word">adapt</td><td>يتكيّف</td><td class="ltr-block">adapt to change</td></tr>
+        <tr><td class="word">adopt</td><td>يتبنى</td><td class="ltr-block">adopt a policy</td></tr>
+        <tr><td class="word">advocate</td><td>يدافع عن</td><td class="ltr-block">advocate for reform</td></tr>
+        <tr><td class="word">attribute</td><td>ينسب إلى</td><td class="ltr-block">attribute success to</td></tr>
+        <tr><td class="word">comprise</td><td>يشمل، يتكون</td><td class="ltr-block">the team comprises</td></tr>
+        <tr><td class="word">consolidate</td><td>يعزز، يقوّي</td><td class="ltr-block">consolidate position</td></tr>
+        <tr><td class="word">enhance</td><td>يعزز، يحسن</td><td class="ltr-block">enhance performance</td></tr>
+        <tr><td class="word">facilitate</td><td>يُسهّل</td><td class="ltr-block">facilitate learning</td></tr>
+        <tr><td class="word">flourish</td><td>يزدهر</td><td class="ltr-block">businesses flourish</td></tr>
+        <tr><td class="word">hinder</td><td>يعيق</td><td class="ltr-block">hinder progress</td></tr>
+        <tr><td class="word">impede</td><td>يعرقل</td><td class="ltr-block">impede development</td></tr>
+        <tr><td class="word">mitigate</td><td>يخفف</td><td class="ltr-block">mitigate the effects</td></tr>
+        <tr><td class="word">alleviate</td><td>يخفف، يلطّف</td><td class="ltr-block">alleviate suffering</td></tr>
+        <tr><td class="word">perpetuate</td><td>يديم، يكرّس</td><td class="ltr-block">perpetuate inequality</td></tr>
+        <tr><td class="word">undermine</td><td>يقوّض</td><td class="ltr-block">undermine trust</td></tr>
+        <tr><td class="word">undertake</td><td>يتعهد، يقوم بـ</td><td class="ltr-block">undertake a project</td></tr>
+        <tr><td class="word">comply</td><td>يمتثل</td><td class="ltr-block">comply with rules</td></tr>
+        <tr><td class="word">accommodate</td><td>يستوعب</td><td class="ltr-block">accommodate guests</td></tr>
+        <tr><td class="word">anticipate</td><td>يتوقع</td><td class="ltr-block">anticipate problems</td></tr>
+      </table>
+    </div>
+
+    <div class="topic-card" id="nouns">
+      <h2>📦 أسماء مهمة تتكرر</h2>
+      <table class="vocab-table">
+        <tr><th>الاسم</th><th>المعنى</th><th>سياق شائع</th></tr>
+        <tr><td class="word">phenomenon</td><td>ظاهرة (مفرد)</td><td class="ltr-block">a natural phenomenon</td></tr>
+        <tr><td class="word">phenomena</td><td>ظواهر (جمع)</td><td class="ltr-block">these phenomena</td></tr>
+        <tr><td class="word">criterion / criteria</td><td>معيار/معايير</td><td class="ltr-block">strict criteria</td></tr>
+        <tr><td class="word">hypothesis</td><td>فرضية</td><td class="ltr-block">test a hypothesis</td></tr>
+        <tr><td class="word">paradigm</td><td>نموذج، إطار</td><td class="ltr-block">a paradigm shift</td></tr>
+        <tr><td class="word">consensus</td><td>إجماع</td><td class="ltr-block">reach consensus</td></tr>
+        <tr><td class="word">discrepancy</td><td>تباين، اختلاف</td><td class="ltr-block">a discrepancy in</td></tr>
+        <tr><td class="word">implication</td><td>أثر، تداعيات</td><td class="ltr-block">far-reaching implications</td></tr>
+        <tr><td class="word">prevalence</td><td>انتشار</td><td class="ltr-block">prevalence of disease</td></tr>
+        <tr><td class="word">scrutiny</td><td>تدقيق</td><td class="ltr-block">close scrutiny</td></tr>
+        <tr><td class="word">turmoil</td><td>اضطراب</td><td class="ltr-block">political turmoil</td></tr>
+        <tr><td class="word">adversity</td><td>محنة</td><td class="ltr-block">overcome adversity</td></tr>
+        <tr><td class="word">prosperity</td><td>ازدهار</td><td class="ltr-block">economic prosperity</td></tr>
+        <tr><td class="word">scarcity</td><td>ندرة، شح</td><td class="ltr-block">water scarcity</td></tr>
+        <tr><td class="word">abundance</td><td>وفرة</td><td class="ltr-block">in abundance</td></tr>
+        <tr><td class="word">demise</td><td>زوال، انتهاء</td><td class="ltr-block">the demise of</td></tr>
+        <tr><td class="word">advent</td><td>قدوم، ظهور</td><td class="ltr-block">the advent of AI</td></tr>
+        <tr><td class="word">surge</td><td>زيادة مفاجئة</td><td class="ltr-block">a surge in demand</td></tr>
+        <tr><td class="word">deterrent</td><td>رادع</td><td class="ltr-block">a powerful deterrent</td></tr>
+        <tr><td class="word">epitome</td><td>تجسيد، نموذج</td><td class="ltr-block">the epitome of grace</td></tr>
+      </table>
+    </div>
+
+    <div class="topic-card" id="synonyms">
+      <h2>🔀 مرادفات شائعة (Common Synonyms)</h2>
+
+      <h3>بمعنى "مهم" (important):</h3>
+      <div>
+        <span class="word-tag">crucial</span>
+        <span class="word-tag">vital</span>
+        <span class="word-tag">essential</span>
+        <span class="word-tag">pivotal</span>
+        <span class="word-tag">significant</span>
+        <span class="word-tag">paramount</span>
+        <span class="word-tag">momentous</span>
+        <span class="word-tag">critical</span>
+        <span class="word-tag">indispensable</span>
+      </div>
+
+      <h3>بمعنى "كبير" (big/large):</h3>
+      <div>
+        <span class="word-tag">enormous</span>
+        <span class="word-tag">vast</span>
+        <span class="word-tag">immense</span>
+        <span class="word-tag">substantial</span>
+        <span class="word-tag">considerable</span>
+        <span class="word-tag">colossal</span>
+        <span class="word-tag">tremendous</span>
+        <span class="word-tag">monumental</span>
+      </div>
+
+      <h3>بمعنى "صغير" (small):</h3>
+      <div>
+        <span class="word-tag">tiny</span>
+        <span class="word-tag">minute</span>
+        <span class="word-tag">minuscule</span>
+        <span class="word-tag">negligible</span>
+        <span class="word-tag">trivial</span>
+        <span class="word-tag">insignificant</span>
+        <span class="word-tag">marginal</span>
+      </div>
+
+      <h3>بمعنى "جيد" (good):</h3>
+      <div>
+        <span class="word-tag">excellent</span>
+        <span class="word-tag">superb</span>
+        <span class="word-tag">outstanding</span>
+        <span class="word-tag">remarkable</span>
+        <span class="word-tag">exceptional</span>
+        <span class="word-tag">stellar</span>
+        <span class="word-tag">commendable</span>
+      </div>
+
+      <h3>بمعنى "سيئ" (bad):</h3>
+      <div>
+        <span class="word-tag">dreadful</span>
+        <span class="word-tag">appalling</span>
+        <span class="word-tag">deplorable</span>
+        <span class="word-tag">atrocious</span>
+        <span class="word-tag">abysmal</span>
+        <span class="word-tag">detrimental</span>
+        <span class="word-tag">deleterious</span>
+      </div>
+
+      <h3>بمعنى "زيادة" (increase):</h3>
+      <div>
+        <span class="word-tag">rise</span>
+        <span class="word-tag">grow</span>
+        <span class="word-tag">surge</span>
+        <span class="word-tag">soar</span>
+        <span class="word-tag">escalate</span>
+        <span class="word-tag">multiply</span>
+        <span class="word-tag">proliferate</span>
+        <span class="word-tag">augment</span>
+      </div>
+
+      <h3>بمعنى "نقص" (decrease):</h3>
+      <div>
+        <span class="word-tag">decline</span>
+        <span class="word-tag">drop</span>
+        <span class="word-tag">plummet</span>
+        <span class="word-tag">diminish</span>
+        <span class="word-tag">dwindle</span>
+        <span class="word-tag">subside</span>
+        <span class="word-tag">wane</span>
+        <span class="word-tag">recede</span>
+      </div>
+
+      <h3>بمعنى "سعيد" (happy):</h3>
+      <div>
+        <span class="word-tag">delighted</span>
+        <span class="word-tag">elated</span>
+        <span class="word-tag">jubilant</span>
+        <span class="word-tag">ecstatic</span>
+        <span class="word-tag">overjoyed</span>
+        <span class="word-tag">content</span>
+      </div>
+
+      <h3>بمعنى "حزين" (sad):</h3>
+      <div>
+        <span class="word-tag">melancholy</span>
+        <span class="word-tag">despondent</span>
+        <span class="word-tag">disconsolate</span>
+        <span class="word-tag">forlorn</span>
+        <span class="word-tag">crestfallen</span>
+        <span class="word-tag">dejected</span>
+      </div>
+    </div>
+
+    <div class="topic-card" id="transitions">
+      <h2>🔗 روابط الفقرات (Transition Words)</h2>
+
+      <table class="vocab-table">
+        <tr><th>الوظيفة</th><th>الكلمات</th></tr>
+        <tr><td>إضافة</td><td class="ltr-block">moreover, furthermore, additionally, in addition, besides</td></tr>
+        <tr><td>تباين</td><td class="ltr-block">however, nevertheless, nonetheless, conversely, on the other hand, in contrast, yet</td></tr>
+        <tr><td>سبب</td><td class="ltr-block">because, since, as, due to, owing to, on account of</td></tr>
+        <tr><td>نتيجة</td><td class="ltr-block">therefore, thus, hence, consequently, as a result, accordingly</td></tr>
+        <tr><td>مثال</td><td class="ltr-block">for instance, for example, such as, namely, particularly</td></tr>
+        <tr><td>تأكيد</td><td class="ltr-block">indeed, in fact, certainly, undoubtedly, of course</td></tr>
+        <tr><td>تلخيص</td><td class="ltr-block">in conclusion, to sum up, in summary, ultimately, overall</td></tr>
+        <tr><td>تتابع</td><td class="ltr-block">first, then, next, finally, subsequently, afterward</td></tr>
+        <tr><td>مقارنة</td><td class="ltr-block">similarly, likewise, in the same way, equally</td></tr>
+      </table>
+    </div>
+
+    <div class="topic-card" id="phrasal">
+      <h2>🔄 Phrasal Verbs الأكثر تكراراً</h2>
+      <table class="vocab-table">
+        <tr><th>التعبير</th><th>المعنى</th><th>مثال</th></tr>
+        <tr><td class="word">bring about</td><td>يسبب، يحدث</td><td class="ltr-block">bring about change</td></tr>
+        <tr><td class="word">bring up</td><td>يربّي / يطرح موضوع</td><td class="ltr-block">bring up children</td></tr>
+        <tr><td class="word">carry out</td><td>ينفّذ</td><td class="ltr-block">carry out a plan</td></tr>
+        <tr><td class="word">come up with</td><td>يخترع، يقترح</td><td class="ltr-block">come up with an idea</td></tr>
+        <tr><td class="word">deal with</td><td>يتعامل مع</td><td class="ltr-block">deal with problems</td></tr>
+        <tr><td class="word">figure out</td><td>يكتشف، يفهم</td><td class="ltr-block">figure out the answer</td></tr>
+        <tr><td class="word">find out</td><td>يكتشف</td><td class="ltr-block">find out the truth</td></tr>
+        <tr><td class="word">give up</td><td>يستسلم، يتوقف</td><td class="ltr-block">give up smoking</td></tr>
+        <tr><td class="word">go through</td><td>يمرّ بـ، يراجع</td><td class="ltr-block">go through hard times</td></tr>
+        <tr><td class="word">look after</td><td>يعتني بـ</td><td class="ltr-block">look after the children</td></tr>
+        <tr><td class="word">look forward to</td><td>يتطلّع إلى</td><td class="ltr-block">look forward to meeting</td></tr>
+        <tr><td class="word">look into</td><td>يحقّق في</td><td class="ltr-block">look into the matter</td></tr>
+        <tr><td class="word">make up</td><td>يختلق، يكوّن</td><td class="ltr-block">make up a story</td></tr>
+        <tr><td class="word">point out</td><td>يشير إلى</td><td class="ltr-block">point out the error</td></tr>
+        <tr><td class="word">put off</td><td>يؤجّل</td><td class="ltr-block">put off the meeting</td></tr>
+        <tr><td class="word">put up with</td><td>يتحمّل</td><td class="ltr-block">put up with noise</td></tr>
+        <tr><td class="word">run into</td><td>يقابل صدفة</td><td class="ltr-block">run into a friend</td></tr>
+        <tr><td class="word">set up</td><td>يؤسّس</td><td class="ltr-block">set up a business</td></tr>
+        <tr><td class="word">take after</td><td>يشبه (في العائلة)</td><td class="ltr-block">she takes after her mom</td></tr>
+        <tr><td class="word">take over</td><td>يتولّى</td><td class="ltr-block">take over the company</td></tr>
+        <tr><td class="word">turn down</td><td>يرفض</td><td class="ltr-block">turn down an offer</td></tr>
+        <tr><td class="word">turn out</td><td>يتضح، تنتهي</td><td class="ltr-block">it turned out well</td></tr>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- ============== PATTERNS ============== -->
+  <div id="patterns" class="content">
+
+    <div class="topic-card">
+      <h2>🎯 أنماط الأسئلة المتكررة في STEP</h2>
+      <p>اختبار STEP له أنماط ثابتة - معرفتها تساعدك في التعرف على الإجابات بسرعة.</p>
+    </div>
+
+    <div class="topic-card">
+      <h3>1. أسئلة الفهم القرائي (Reading Comprehension)</h3>
+
+      <div class="rule-box">
+        <strong>أنواع الأسئلة:</strong>
+        <ul style="padding-right: 20px; margin-top: 6px;">
+          <li>الفكرة الرئيسية (Main Idea)</li>
+          <li>التفاصيل (Specific Detail)</li>
+          <li>الاستنتاج (Inference)</li>
+          <li>معنى كلمة في السياق (Vocabulary in Context)</li>
+          <li>غرض الكاتب (Author's Purpose)</li>
+          <li>نبرة الكاتب (Tone)</li>
+          <li>EXCEPT / NOT (تحديد الخيار الخاطئ)</li>
+        </ul>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 استراتيجية:</strong> اقرئي السؤال أولاً، ثم ابحثي عن الإجابة في القطعة - لا تحفظي القطعة كاملة.
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>2. أسئلة معنى الكلمات (Vocabulary)</h3>
+      <p>عادةً السؤال يكون:</p>
+      <div class="example">
+        <div class="ltr-block">The word "X" in the passage most nearly means:</div>
+      </div>
+
+      <div class="rule-box">
+        <strong>الاستراتيجية:</strong>
+        <ol style="padding-right: 20px; margin-top: 6px;">
+          <li>اقرئي الجملة كاملة، مش الكلمة بس</li>
+          <li>حاولي تخمين المعنى من السياق</li>
+          <li>طابقي تخمينك مع الخيارات</li>
+          <li>تذكّري: STEP يستخدم المعنى السياقي، لا القاموسي</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>3. أسئلة القواعد (Sentence Structure)</h3>
+      <p>الأنماط الأكثر تكراراً:</p>
+
+      <div class="rule-box">
+        <ul style="padding-right: 20px;">
+          <li><strong>أزمنة:</strong> اختاري الزمن الصحيح حسب الكلمات الدالة (since, for, by, already, yet)</li>
+          <li><strong>تطابق الفاعل والفعل:</strong> انتبهي للكلمات الخادعة (each, neither, along with)</li>
+          <li><strong>ضمائر الوصل:</strong> who للعاقل، which لغير العاقل، whose للملكية</li>
+          <li><strong>الشرطيات:</strong> اعرفي الأنواع الثلاثة من خلال زمن الشرط</li>
+          <li><strong>القلب (Inversion):</strong> ابحثي عن Hardly, Never, No sooner في بداية الجملة</li>
+          <li><strong>Subjunctive:</strong> بعد suggest, recommend, essential = مصدر مجرد</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>4. أسئلة التركيب (Composition Analysis)</h3>
+      <div class="rule-box">
+        <ul style="padding-right: 20px;">
+          <li><strong>التوازي (Parallelism):</strong> الكلمات في القائمة بنفس الصيغة (gerund/infinitive/...)</li>
+          <li><strong>الإيجاز (Conciseness):</strong> اختاري الجملة الأقصر بنفس المعنى</li>
+          <li><strong>اختيار المفردات (Word Choice):</strong> الكلمات الدقيقة أفضل من العامة</li>
+          <li><strong>روابط الفقرات (Transitions):</strong> اختاري حسب علاقة الفقرتين</li>
+          <li><strong>الجملة الرئيسية (Topic Sentence):</strong> محددة وقابلة للنقاش</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>5. خدع شائعة في STEP</h3>
+      <div class="warning-box">
+        <strong>⚠️ احذري من:</strong>
+        <ul style="padding-right: 20px;">
+          <li><strong>الأجوبة شديدة العمومية</strong> (always, never, all, none) - عادةً خاطئة</li>
+          <li><strong>الأجوبة المتطرفة</strong> - STEP يفضّل الإجابات المتوازنة</li>
+          <li><strong>المعلومات الإضافية</strong> - الإجابة الصحيحة موجودة في النص حرفياً أو ضمنياً</li>
+          <li><strong>Past Simple vs Present Perfect</strong> - انتبهي للزمن المحدد</li>
+          <li><strong>Less vs Fewer:</strong> less مع غير المعدود، fewer مع المعدود</li>
+          <li><strong>Affect vs Effect:</strong> affect فعل، effect اسم</li>
+          <li><strong>Few vs A few:</strong> few تعني "قليل جداً"، a few تعني "بعض"</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============== TIPS ============== -->
+  <div id="tips" class="content">
+
+    <div class="topic-card">
+      <h2>💡 نصائح ذهبية للنجاح في STEP</h2>
+    </div>
+
+    <div class="topic-card">
+      <h3>⏰ إدارة الوقت</h3>
+      <div class="rule-box">
+        <ul style="padding-right: 20px;">
+          <li>الاختبار 3 ساعات لـ 100 سؤال = حوالي <strong>1.8 دقيقة لكل سؤال</strong></li>
+          <li>قسّمي الوقت: 90 دقيقة للقراءة، 45 دقيقة للقواعد، 45 دقيقة للمراجعة</li>
+          <li>إذا توقفتي عند سؤال أكثر من دقيقتين، علّمي عليه وانتقلي</li>
+          <li>ارجعي للأسئلة المعلّمة في آخر 20 دقيقة</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>📖 قبل الاختبار</h3>
+      <div class="rule-box">
+        <ul style="padding-right: 20px;">
+          <li>اقرئي قصص قصيرة وأخبار إنجليزية يومياً لمدة 15 دقيقة</li>
+          <li>راجعي قائمة المفردات في هذا الدليل أسبوعياً</li>
+          <li>ركّزي على القواعد الأكثر تكراراً (المذكورة هنا)</li>
+          <li>حُلّي نموذج كامل كل أسبوع وراجعي الأخطاء</li>
+          <li>تابعي قنوات يوتيوب تعليمية لـ STEP</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>🌙 ليلة الاختبار</h3>
+      <div class="rule-box">
+        <ul style="padding-right: 20px;">
+          <li>لا تذاكري بعد الساعة 9 مساءً</li>
+          <li>نامي 7-8 ساعات على الأقل</li>
+          <li>جهّزي أدواتك (هوية، أقلام) من الليل</li>
+          <li>اعرفي موقع مركز الاختبار وحدّدي طريق الذهاب</li>
+          <li>اقرئي شيئاً مريحاً غير الاختبار قبل النوم</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>☀️ يوم الاختبار</h3>
+      <div class="rule-box">
+        <ul style="padding-right: 20px;">
+          <li>افطري إفطاراً متكاملاً (بروتين + كاربوهيدرات + فاكهة)</li>
+          <li>تجنّبي الكافيين الزائد (يسبب التوتر)</li>
+          <li>اشربي ماء كافياً قبل الدخول</li>
+          <li>اوصلي قبل 30 دقيقة على الأقل</li>
+          <li>تنفّسي بعمق قبل فتح الاختبار</li>
+          <li>ابدئي بالأسئلة السهلة لبناء الثقة</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>🎯 استراتيجية الاستبعاد</h3>
+      <p>إذا ما عرفتي الإجابة، استخدمي الاستبعاد:</p>
+      <div class="rule-box">
+        <ol style="padding-right: 20px;">
+          <li>استبعدي الإجابات المتطرفة (always, never, all)</li>
+          <li>استبعدي الإجابات اللي ما لها علاقة بالقطعة</li>
+          <li>استبعدي الإجابات اللي فيها معلومات إضافية لم تُذكر</li>
+          <li>قارني بين الإجابتين المتبقيتين بحذر</li>
+          <li>إذا بقيت غير متأكدة، خمّني - STEP ما يخصم على الخطأ</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>🧘 إدارة التوتر</h3>
+      <div class="rule-box">
+        <ul style="padding-right: 20px;">
+          <li>إذا شعرتي بالضغط، توقفي 30 ثانية وتنفّسي</li>
+          <li>تذكّري: درجة واحدة لا تحدد مستقبلك</li>
+          <li>اختبار STEP يمكن إعادته - ما هو نهاية العالم</li>
+          <li>ثقي بتدريبك - أنتِ مستعدة</li>
+          <li>ركّزي على السؤال الحالي فقط، لا تفكري في الماضي أو القادم</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="topic-card">
+      <h3>📊 معادلة الدرجات</h3>
+      <p>درجة STEP من 36 إلى 100. التوزيع التقريبي:</p>
+      <table class="vocab-table">
+        <tr><th>الدرجة</th><th>المستوى</th></tr>
+        <tr><td>36 - 50</td><td>مبتدئ</td></tr>
+        <tr><td>51 - 65</td><td>متوسط</td></tr>
+        <tr><td>66 - 80</td><td>جيد</td></tr>
+        <tr><td>81 - 90</td><td>جيد جداً</td></tr>
+        <tr><td>91 - 100</td><td>ممتاز</td></tr>
+      </table>
+      <div class="tip-box">
+        <strong>💡 ملاحظة:</strong> معظم الجامعات تشترط 65-80 درجة حسب التخصص. تحققي من متطلبات تخصصك.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function switchTab(tabName) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(tabName).classList.add('active');
+  document.getElementById('searchBox').value = '';
+  clearHighlights();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function clearHighlights() {
+  document.querySelectorAll('.topic-card').forEach(card => card.classList.remove('hidden'));
+}
+
+function searchContent() {
+  const term = document.getElementById('searchBox').value.toLowerCase().trim();
+  if (!term) {
+    clearHighlights();
+    return;
+  }
+  const active = document.querySelector('.content.active');
+  if (!active) return;
+  active.querySelectorAll('.topic-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    if (text.includes(term)) {
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

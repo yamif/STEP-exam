@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>نموذج اختبار STEP رقم 3 - 100 سؤال (مستوى متقدم)</title>
+<style>
+  :root {
+    --primary: #7c3aed;
+    --primary-dark: #5b21b6;
+    --accent: #f43f5e;
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --correct: #10b981;
+    --wrong: #ef4444;
+    --warn: #f59e0b;
+    --shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+  .ltr { direction: ltr; text-align: left; font-family: Georgia, 'Times New Roman', serif; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .top-bar { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 18px 28px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+  .top-bar h1 { font-size: 22px; font-weight: 700; }
+  .top-bar h1 small { font-weight: 400; font-size: 14px; opacity: 0.85; display: block; }
+  .timer-box { background: rgba(255,255,255,0.18); padding: 8px 18px; border-radius: 10px; font-size: 18px; font-weight: 700; letter-spacing: 1px; backdrop-filter: blur(4px); }
+  .timer-box.warn { background: var(--warn); }
+  .timer-box.danger { background: var(--wrong); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .welcome { background: var(--card); border-radius: 16px; padding: 40px; box-shadow: var(--shadow); text-align: center; }
+  .welcome h2 { color: var(--primary); font-size: 28px; margin-bottom: 14px; }
+  .welcome p { color: var(--muted); margin-bottom: 24px; font-size: 16px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 28px 0; }
+  .info-card { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+  .info-card .num { font-size: 28px; font-weight: 700; color: var(--primary); }
+  .info-card .label { color: var(--muted); font-size: 14px; }
+  .instructions { background: #fdf2f8; border-right: 4px solid var(--accent); padding: 18px 22px; border-radius: 8px; text-align: right; margin: 24px 0; }
+  .instructions h3 { color: var(--primary-dark); margin-bottom: 8px; }
+  .instructions ul { padding-right: 22px; color: #4b5563; }
+  .instructions li { margin-bottom: 6px; }
+  .btn { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-danger { background: var(--wrong); }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-secondary { background: #6b7280; }
+  .btn-secondary:hover { background: #4b5563; }
+  .test-area { display: none; }
+  .test-area.active { display: block; }
+  .progress-bar { background: var(--card); border-radius: 12px; padding: 14px 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+  .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+  .progress-track { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); height: 100%; transition: width 0.3s; }
+  .question-card { background: var(--card); border-radius: 16px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .section-tag { display: inline-block; background: var(--primary); color: white; padding: 4px 14px; border-radius: 999px; font-size: 13px; margin-bottom: 14px; }
+  .question-num { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  .passage { background: #f9fafb; border-right: 3px solid var(--primary); padding: 18px 22px; border-radius: 8px; margin-bottom: 20px; font-size: 15px; line-height: 1.85; }
+  .passage p { margin-bottom: 10px; }
+  .question-text { font-size: 17px; margin-bottom: 18px; font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { background: #f9fafb; border: 2px solid var(--border); padding: 14px 18px; border-radius: 10px; cursor: pointer; transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px; }
+  .option:hover { border-color: var(--primary); background: #faf5ff; }
+  .option.selected { border-color: var(--primary); background: #ede9fe; }
+  .option-letter { background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; font-size: 13px; }
+  .option.selected .option-letter { background: var(--primary-dark); }
+  .option.correct { border-color: var(--correct); background: #ecfdf5; }
+  .option.correct .option-letter { background: var(--correct); }
+  .option.wrong { border-color: var(--wrong); background: #fef2f2; }
+  .option.wrong .option-letter { background: var(--wrong); }
+  .explanation { background: #faf5ff; border-right: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin-top: 16px; font-size: 15px; }
+  .explanation strong { color: var(--primary-dark); }
+  .nav-controls { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .question-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; margin-top: 16px; }
+  .grid-btn { background: #f3f4f6; border: 2px solid transparent; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.15s; font-family: inherit; }
+  .grid-btn:hover { border-color: var(--primary); }
+  .grid-btn.answered { background: #ede9fe; color: var(--primary-dark); }
+  .grid-btn.current { border-color: var(--primary); background: var(--primary); color: white; }
+  .grid-btn.review-correct { background: #d1fae5; color: var(--correct); }
+  .grid-btn.review-wrong { background: #fee2e2; color: var(--wrong); }
+  .results { background: var(--card); border-radius: 16px; padding: 36px; box-shadow: var(--shadow); text-align: center; }
+  .score-circle { width: 180px; height: 180px; margin: 20px auto; position: relative; }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-circle .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+  .score-circle .score-num { font-size: 44px; font-weight: 700; color: var(--primary); }
+  .score-circle .score-label { font-size: 13px; color: var(--muted); }
+  .breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 28px 0; }
+  .break-card { background: #f9fafb; border-radius: 12px; padding: 18px; border: 1px solid var(--border); }
+  .break-card h4 { color: var(--primary); margin-bottom: 8px; font-size: 15px; }
+  .break-bar { background: var(--border); height: 8px; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+  .break-bar-fill { background: var(--primary); height: 100%; transition: width 0.6s; }
+  .break-stats { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+  .level-badge { display: inline-block; padding: 8px 24px; border-radius: 999px; font-weight: 700; margin: 14px 0; }
+  .level-excellent { background: #d1fae5; color: var(--correct); }
+  .level-good { background: #ede9fe; color: var(--primary-dark); }
+  .level-pass { background: #fef3c7; color: #92400e; }
+  .level-low { background: #fee2e2; color: var(--wrong); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border-radius: 16px; padding: 30px; max-width: 420px; width: 92%; text-align: center; }
+  .modal h3 { margin-bottom: 14px; color: var(--primary); }
+  .modal p { color: var(--muted); margin-bottom: 22px; }
+  .modal-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  @media (max-width: 640px) { .container { padding: 12px; } .top-bar { padding: 14px 18px; } .top-bar h1 { font-size: 18px; } .question-card { padding: 20px; } .welcome { padding: 24px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <h1>📕 نموذج اختبار STEP - رقم 3 <small>100 سؤال • مستوى متقدم • للجاهزات للاختبار</small></h1>
+    <div id="timerBox" class="timer-box" style="display:none;">⏱ <span id="timer">03:00:00</span></div>
+  </div>
+
+  <div id="welcomeScreen">
+    <div class="welcome">
+      <h2>النموذج التدريبي الثالث (متقدم)</h2>
+      <p>أسئلة بمستوى أعلى ومفردات أصعب لاختبار جاهزيتك الكاملة 💪</p>
+      <div class="info-grid">
+        <div class="info-card"><div class="num">100</div><div class="label">سؤال متقدم</div></div>
+        <div class="info-card"><div class="num">5</div><div class="label">قطع قراءة جديدة</div></div>
+        <div class="info-card"><div class="num">3</div><div class="label">ساعات للاختبار</div></div>
+        <div class="info-card"><div class="num">📈</div><div class="label">مستوى تحدّي</div></div>
+      </div>
+      <div class="instructions">
+        <h3>📋 تعليمات</h3>
+        <ul>
+          <li>هذا النموذج هو الأصعب من الثلاثة، صُمم لمحاكاة الأسئلة الصعبة في الاختبار الفعلي.</li>
+          <li>القطع: قصة القهوة، الدماغ ثنائي اللغة، الحياة البرية الحضرية، علم العادات، حماية المحيطات.</li>
+          <li>ركّزي على المفردات والاستنتاج - أكبر تحدّيات هذا النموذج.</li>
+          <li>بعد التسليم راح تشوفين الشرح المفصل لكل سؤال.</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="startTest()">🚀 ابدأ الاختبار</button>
+    </div>
+  </div>
+
+  <div id="testArea" class="test-area">
+    <div class="progress-bar">
+      <div class="progress-info">
+        <span>التقدّم: <strong id="progressText">0 / 100</strong></span>
+        <span id="sectionLabel">القسم: —</span>
+      </div>
+      <div class="progress-track"><div id="progressFill" class="progress-fill" style="width: 0%;"></div></div>
+    </div>
+    <div id="questionContainer" class="question-card"></div>
+    <div class="question-card" style="padding: 18px 24px;">
+      <div class="nav-controls">
+        <button class="btn btn-outline" onclick="prevQuestion()">⬅ السابق</button>
+        <div>
+          <button class="btn btn-secondary" onclick="toggleGrid()">🗂 جميع الأسئلة</button>
+          <button class="btn" onclick="nextQuestion()">التالي ➡</button>
+        </div>
+        <button class="btn btn-danger" onclick="confirmSubmit()">✅ إنهاء وتسليم</button>
+      </div>
+      <div id="questionGrid" class="question-grid" style="display:none;"></div>
+    </div>
+  </div>
+
+  <div id="resultsScreen" style="display:none;"></div>
+</div>
+
+<div id="submitModal" class="modal-overlay">
+  <div class="modal">
+    <h3>هل أنتِ متأكدة من تسليم الاختبار؟</h3>
+    <p id="submitMsg">سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-outline" onclick="closeModal()">رجوع</button>
+      <button class="btn btn-danger" onclick="submitTest()">نعم، سلّمي</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const PASSAGES = {
+  p1: `<p><strong>Passage 1: The Curious Journey of Coffee</strong></p>
+<p>The story of coffee is as rich as the drink itself. Legend traces its discovery to a ninth-century Ethiopian goatherd who noticed his goats becoming unusually energetic after eating certain red berries. Whether or not this tale is accurate, by the fifteenth century coffee had become a staple in Yemen, where Sufi monks used it to stay alert during long nights of prayer.</p>
+<p>From the Arabian Peninsula, coffee spread to the Ottoman Empire and eventually to Europe, where it provoked a peculiar mix of enthusiasm and suspicion. Some clerics initially condemned it as a "devil's drink," but its popularity could not be contained. London alone had thousands of coffeehouses by the late seventeenth century, and these establishments quickly became centers of political debate and intellectual exchange.</p>
+<p>Today, coffee is the second most traded commodity in the world after oil, sustaining millions of small farmers in tropical countries. Yet the global coffee industry faces serious threats: climate change is shrinking suitable growing regions, and many producers earn barely enough to survive. The future of this beloved beverage depends on whether consumers and corporations will pay fair prices and support sustainable farming.</p>`,
+
+  p2: `<p><strong>Passage 2: The Bilingual Brain</strong></p>
+<p>Once considered a disadvantage, growing up with two languages is now recognized as a remarkable cognitive asset. Decades of research show that bilingual children, far from being confused, often outperform their monolingual peers on tasks requiring mental flexibility. They switch between languages constantly, and this practice appears to strengthen the brain's executive function—the network responsible for attention, planning, and self-control.</p>
+<p>The benefits extend well into old age. Studies have found that bilingual adults develop symptoms of dementia, on average, four to five years later than those who speak only one language. Researchers suspect that the constant mental workout of managing two linguistic systems builds a kind of cognitive reserve, helping the brain resist decline.</p>
+<p>None of this means that bilingualism is effortless. Bilingual children sometimes have smaller vocabularies in each individual language, and adults occasionally struggle to find the precise word in one tongue when the other comes first. Yet these minor trade-offs seem negligible compared to the lifelong advantages. As one neuroscientist put it, learning a second language is one of the most enriching gifts a parent—or an adult learner—can give to the brain.</p>`,
+
+  p3: `<p><strong>Passage 3: Wildlife in the Heart of the City</strong></p>
+<p>Urban environments, with their concrete buildings and constant traffic, may seem inhospitable to wildlife. Yet a growing body of research reveals that many species not only survive in cities but actually thrive there. Foxes patrol London suburbs, raccoons raid trash cans in Toronto, and falcons nest on skyscrapers in New York.</p>
+<p>What enables some animals to flourish in such an unnatural habitat? Scientists point to behavioral flexibility. Urban-adapted species tend to be omnivorous, fearless of humans, and clever enough to exploit new food sources. Pigeons, for example, learned to forage in human settlements thousands of years ago and have become utterly dependent on the bread crumbs and discarded food of city life.</p>
+<p>This coexistence is not without conflict. Crop-raiding monkeys in Asian cities and increasing reports of coyote attacks in North America illustrate the tensions that arise as humans and wildlife share dwindling space. Yet ecologists argue that fostering urban biodiversity is essential. Green roofs, wildlife corridors, and protected city parks can transform concrete jungles into vibrant ecosystems—reminding us that nature is not always somewhere else, but often just outside our window.</p>`,
+
+  p4: `<p><strong>Passage 4: The Power of Habits</strong></p>
+<p>Habits shape our lives in ways we rarely appreciate. According to researchers, roughly 40 percent of our daily actions are not the result of conscious decisions but of habits—automatic behaviors triggered by familiar cues. When we drive a well-known route, brush our teeth, or reach for the phone first thing in the morning, we are typically operating on autopilot.</p>
+<p>The neuroscience behind habits is fascinating. Each habit consists of a three-part loop: a cue that triggers the behavior, the routine itself, and a reward that reinforces it. Over time, the brain stops actively processing these sequences, conserving mental energy for novel decisions. This efficiency is useful but also dangerous: bad habits, once established, can be remarkably resistant to change.</p>
+<p>Modern psychology offers practical strategies for habit change. Rather than relying on willpower, experts recommend modifying the cue or the reward. Replacing soda with sparkling water at the same time of day keeps the habit loop intact while substituting a healthier behavior. Tiny changes, repeated consistently, can compound dramatically over months and years. The takeaway is empowering: we are not simply prisoners of our habits, but architects who can—with patience—redesign them.</p>`,
+
+  p5: `<p><strong>Passage 5: Saving the Oceans</strong></p>
+<p>Oceans cover more than seventy percent of the planet's surface, yet they remain among the least understood and most endangered ecosystems on Earth. Over the past century, industrial fishing, plastic pollution, and rising temperatures have inflicted severe damage on marine life. Coral reefs, often called the rainforests of the sea, have lost roughly half of their global cover in just a few decades.</p>
+<p>One of the most alarming threats is plastic waste. An estimated eight million metric tons of plastic enter the oceans each year, harming wildlife and accumulating in vast garbage patches across the Pacific. Microplastics—tiny fragments smaller than a grain of rice—have been found in the stomachs of fish, in seafood served at restaurants, and even in human blood.</p>
+<p>Despite these grim realities, there is reason for cautious optimism. Marine protected areas have grown significantly, some fisheries have recovered after careful regulation, and innovative cleanup technologies are beginning to remove waste from open waters. Yet experts agree that voluntary efforts alone are insufficient. The fate of the oceans will ultimately depend on coordinated international action, stricter regulations, and a fundamental shift in how societies value the natural world that sustains them.</p>`
+};
+
+const QUESTIONS = [
+  /* ====== Passage 1: Coffee (Q1-8) ====== */
+  { section: 'reading', passage: 'p1', text: 'According to legend, coffee was discovered by:', options: ['A French merchant', 'An Ethiopian goatherd', 'A Yemeni monk', 'An Ottoman sultan'], correct: 1, explanation: 'النص يقول: "Legend traces its discovery to a ninth-century Ethiopian goatherd".'},
+  { section: 'reading', passage: 'p1', text: 'Sufi monks used coffee to:', options: ['Treat illness', 'Celebrate festivals', 'Stay alert during prayer', 'Sell to travelers'], correct: 2, explanation: 'النص ذكر صراحة: "Sufi monks used it to stay alert during long nights of prayer".'},
+  { section: 'reading', passage: 'p1', text: 'Why did some European clerics initially oppose coffee?', options: ['It was too expensive', 'They called it a "devil\'s drink"', 'It made people sleepy', 'It was illegal'], correct: 1, explanation: 'النص يقول: "Some clerics initially condemned it as a devil\'s drink".'},
+  { section: 'reading', passage: 'p1', text: 'London coffeehouses became centers of:', options: ['Religious services', 'Political and intellectual exchange', 'Military training', 'Royal celebrations'], correct: 1, explanation: 'النص ذكر: "these establishments quickly became centers of political debate and intellectual exchange".'},
+  { section: 'reading', passage: 'p1', text: 'Coffee is currently the world\'s _____ most traded commodity.', options: ['Most', 'Second', 'Third', 'Tenth'], correct: 1, explanation: 'النص يحدد: "coffee is the second most traded commodity in the world after oil".'},
+  { section: 'reading', passage: 'p1', text: 'The word "staple" in paragraph 1 most nearly means:', options: ['Forbidden item', 'Basic essential', 'Unknown product', 'Luxury'], correct: 1, explanation: 'staple = شيء أساسي ضروري في الحياة اليومية، وأقرب مرادف basic essential.'},
+  { section: 'reading', passage: 'p1', text: 'A major threat to coffee mentioned in the passage is:', options: ['Lack of demand', 'Climate change', 'Too many farmers', 'Banking crises'], correct: 1, explanation: 'النص ذكر: "climate change is shrinking suitable growing regions".'},
+  { section: 'reading', passage: 'p1', text: 'The author\'s view of coffee\'s future is:', options: ['Hopeless', 'Conditional on fair prices and sustainability', 'Guaranteed to be bright', 'Irrelevant'], correct: 1, explanation: 'النص يربط مستقبل القهوة بدفع الأسعار العادلة ودعم الزراعة المستدامة.'},
+
+  /* ====== Passage 2: Bilingual Brain (Q9-16) ====== */
+  { section: 'reading', passage: 'p2', text: 'Growing up with two languages was once considered:', options: ['A great advantage', 'A disadvantage', 'A medical condition', 'A talent'], correct: 1, explanation: 'النص يبدأ بـ"Once considered a disadvantage" قبل أن يصف الفهم الحديث.'},
+  { section: 'reading', passage: 'p2', text: 'Bilingual children often outperform peers on tasks requiring:', options: ['Physical strength', 'Mental flexibility', 'Memorization only', 'Singing'], correct: 1, explanation: 'النص يقول: "often outperform their monolingual peers on tasks requiring mental flexibility".'},
+  { section: 'reading', passage: 'p2', text: 'The "executive function" of the brain is responsible for:', options: ['Vision and hearing', 'Attention, planning, and self-control', 'Digestion', 'Storing memories'], correct: 1, explanation: 'النص يعرّفها: "the network responsible for attention, planning, and self-control".'},
+  { section: 'reading', passage: 'p2', text: 'Bilingual adults develop dementia symptoms on average:', options: ['Earlier than monolinguals', '4-5 years later than monolinguals', 'At the same time', 'Never'], correct: 1, explanation: 'النص يحدد: "four to five years later than those who speak only one language".'},
+  { section: 'reading', passage: 'p2', text: '"Cognitive reserve" suggests that the brain:', options: ['Stores extra knowledge', 'Builds protection against decline', 'Forgets faster', 'Becomes lazy'], correct: 1, explanation: 'النص يوضح أن المخزون الإدراكي "builds a kind of cognitive reserve, helping the brain resist decline".'},
+  { section: 'reading', passage: 'p2', text: 'A minor disadvantage of bilingualism mentioned in the passage is:', options: ['Slower reading speed', 'Smaller vocabulary in each language', 'Inability to write', 'Hearing problems'], correct: 1, explanation: 'النص يذكر: "Bilingual children sometimes have smaller vocabularies in each individual language".'},
+  { section: 'reading', passage: 'p2', text: 'The word "negligible" in paragraph 3 most nearly means:', options: ['Huge', 'Insignificant', 'Critical', 'Unique'], correct: 1, explanation: 'negligible = ضئيل، يمكن تجاهله. والسياق ("compared to the lifelong advantages") يؤكد المعنى.'},
+  { section: 'reading', passage: 'p2', text: 'The neuroscientist quoted views second-language learning as:', options: ['A waste of time', 'An enriching gift to the brain', 'Mandatory for everyone', 'Suitable only for children'], correct: 1, explanation: 'الاقتباس: "learning a second language is one of the most enriching gifts... can give to the brain".'},
+
+  /* ====== Passage 3: Urban Wildlife (Q17-24) ====== */
+  { section: 'reading', passage: 'p3', text: 'Urban environments seem inhospitable to wildlife because of:', options: ['Cold weather', 'Concrete and constant traffic', 'Lack of food only', 'Government bans'], correct: 1, explanation: 'النص يصف المدن بـ"concrete buildings and constant traffic".'},
+  { section: 'reading', passage: 'p3', text: 'Which animal is mentioned as nesting on New York skyscrapers?', options: ['Pigeons', 'Falcons', 'Foxes', 'Raccoons'], correct: 1, explanation: 'النص ذكر: "falcons nest on skyscrapers in New York".'},
+  { section: 'reading', passage: 'p3', text: 'What trait helps urban-adapted species thrive?', options: ['Strict diet', 'Behavioral flexibility', 'Hibernation', 'Large size'], correct: 1, explanation: 'النص يقول: "Scientists point to behavioral flexibility".'},
+  { section: 'reading', passage: 'p3', text: 'Pigeons have become dependent on:', options: ['Hunting other birds', 'Human food and crumbs', 'Wild seeds only', 'Tree fruits'], correct: 1, explanation: 'النص ذكر: "have become utterly dependent on the bread crumbs and discarded food of city life".'},
+  { section: 'reading', passage: 'p3', text: 'Crop-raiding monkeys are mentioned as an example of:', options: ['Conservation success', 'Human-wildlife conflict', 'Endangered species', 'Pet ownership'], correct: 1, explanation: 'النص يذكرها كمثال على التوترات: "Crop-raiding monkeys in Asian cities... illustrate the tensions".'},
+  { section: 'reading', passage: 'p3', text: 'The word "fostering" in the final paragraph most nearly means:', options: ['Destroying', 'Encouraging', 'Ignoring', 'Punishing'], correct: 1, explanation: 'fostering = رعاية، تنمية، تشجيع. السياق إيجابي (urban biodiversity).'},
+  { section: 'reading', passage: 'p3', text: 'Which is NOT mentioned as a way to support urban wildlife?', options: ['Green roofs', 'Wildlife corridors', 'Protected city parks', 'Hunting permits'], correct: 3, explanation: 'النص ذكر green roofs, wildlife corridors, protected city parks لكن لم يذكر تصاريح الصيد.'},
+  { section: 'reading', passage: 'p3', text: 'The author\'s main point is that urban wildlife:', options: ['Should be eliminated', 'Is doomed', 'Coexists with humans and deserves protection', 'Is purely a nuisance'], correct: 2, explanation: 'الفكرة الرئيسية هي التعايش بين الإنسان والحياة البرية وأهمية الحفاظ عليها.'},
+
+  /* ====== Passage 4: Habits (Q25-32) ====== */
+  { section: 'reading', passage: 'p4', text: 'According to researchers, roughly _____ of our daily actions are habits.', options: ['10%', '40%', '70%', '90%'], correct: 1, explanation: 'النص يحدد: "roughly 40 percent of our daily actions".'},
+  { section: 'reading', passage: 'p4', text: 'A habit loop consists of:', options: ['Cue, routine, and reward', 'Sleep, work, and rest', 'Cause and effect', 'Reward and punishment'], correct: 0, explanation: 'النص يصف الحلقة: "a cue that triggers the behavior, the routine itself, and a reward that reinforces it".'},
+  { section: 'reading', passage: 'p4', text: 'The brain stops actively processing habits in order to:', options: ['Forget them', 'Conserve mental energy', 'Replace them', 'Reward them'], correct: 1, explanation: 'النص ذكر: "conserving mental energy for novel decisions".'},
+  { section: 'reading', passage: 'p4', text: 'A consequence of habit efficiency is that:', options: ['Bad habits are easy to break', 'Bad habits are resistant to change', 'All habits are good', 'Habits never form'], correct: 1, explanation: 'النص يقول: "bad habits, once established, can be remarkably resistant to change".'},
+  { section: 'reading', passage: 'p4', text: 'Modern psychology recommends habit change through:', options: ['Pure willpower', 'Modifying cues or rewards', 'Punishment', 'Hypnosis'], correct: 1, explanation: 'النص يقول: "experts recommend modifying the cue or the reward".'},
+  { section: 'reading', passage: 'p4', text: 'The example of replacing soda with sparkling water shows how to:', options: ['Eliminate habits', 'Substitute behavior while keeping the loop', 'Use willpower alone', 'Ignore habits'], correct: 1, explanation: 'النص يشرح: "keeps the habit loop intact while substituting a healthier behavior".'},
+  { section: 'reading', passage: 'p4', text: 'The word "compound" in paragraph 3 most nearly means:', options: ['Decrease', 'Accumulate', 'Disappear', 'Confuse'], correct: 1, explanation: 'compound (فعل) = يتراكم، يكبر تدريجياً. السياق "over months and years" يؤكد المعنى.'},
+  { section: 'reading', passage: 'p4', text: 'The author\'s message is best described as:', options: ['Hopeless', 'Empowering', 'Confusing', 'Indifferent'], correct: 1, explanation: 'النص يستخدم كلمة "empowering" حرفياً في الجملة الختامية، ويؤكد قدرتنا على إعادة تصميم عاداتنا.'},
+
+  /* ====== Passage 5: Oceans (Q33-40) ====== */
+  { section: 'reading', passage: 'p5', text: 'Oceans cover approximately what percentage of Earth\'s surface?', options: ['30%', '50%', 'More than 70%', 'Less than 10%'], correct: 2, explanation: 'النص يحدد: "Oceans cover more than seventy percent of the planet\'s surface".'},
+  { section: 'reading', passage: 'p5', text: 'Coral reefs are described as:', options: ['Useless rocks', 'Rainforests of the sea', 'Floating gardens', 'Pollution sources'], correct: 1, explanation: 'النص يستخدم العبارة: "Coral reefs, often called the rainforests of the sea".'},
+  { section: 'reading', passage: 'p5', text: 'How much plastic enters the oceans each year?', options: ['One thousand tons', 'Eight million metric tons', 'Half a billion tons', 'Negligible amounts'], correct: 1, explanation: 'النص يحدد: "An estimated eight million metric tons of plastic enter the oceans each year".'},
+  { section: 'reading', passage: 'p5', text: 'Microplastics have been found in:', options: ['Only deep-sea fish', 'Fish, seafood, and even human blood', 'Mountain springs', 'Desert sand'], correct: 1, explanation: 'النص ذكر: "found in the stomachs of fish, in seafood served at restaurants, and even in human blood".'},
+  { section: 'reading', passage: 'p5', text: 'Which is mentioned as a sign of progress?', options: ['Plastic production has stopped', 'Marine protected areas have grown', 'All pollution has ceased', 'Fishing has been banned globally'], correct: 1, explanation: 'النص ذكر: "Marine protected areas have grown significantly".'},
+  { section: 'reading', passage: 'p5', text: 'According to experts, voluntary efforts alone are:', options: ['Sufficient', 'Insufficient', 'Counterproductive', 'Ideal'], correct: 1, explanation: 'النص يقول: "experts agree that voluntary efforts alone are insufficient".'},
+  { section: 'reading', passage: 'p5', text: 'The word "grim" in paragraph 3 most nearly means:', options: ['Hopeful', 'Bleak', 'Funny', 'Vague'], correct: 1, explanation: 'grim = قاتم، كئيب. السياق ("Despite these grim realities") يؤكد المعنى السلبي.'},
+  { section: 'reading', passage: 'p5', text: 'The author concludes that ocean protection requires:', options: ['Individual action only', 'International cooperation and regulation', 'Banning the seas', 'No action at all'], correct: 1, explanation: 'النص ينتهي بـ"coordinated international action, stricter regulations, and a fundamental shift".'},
+
+  /* ====== STRUCTURE (25 questions) ====== */
+  { section: 'structure', text: 'Had I known about the traffic, I _____ earlier.', options: ['leave', 'would leave', 'would have left', 'will leave'], correct: 2, explanation: 'شرطية النوع الثالث مع inversion: Had + p.p., would + have + p.p.'},
+  { section: 'structure', text: 'Scarcely _____ when the phone rang again.', options: ['I had hung up', 'had I hung up', 'I hung up', 'did I hung up'], correct: 1, explanation: 'مع negative adverbs (Scarcely) نستخدم القلب: had + subject + p.p.'},
+  { section: 'structure', text: 'The committee, _____ members come from various fields, meets weekly.', options: ['who', 'which', 'whose', 'that'], correct: 2, explanation: 'whose يدل على الملكية ويستخدم مع العاقل وغير العاقل. هنا أعضاء اللجنة → whose members.'},
+  { section: 'structure', text: 'Were I in your position, I _____ accept the offer.', options: ['will', 'would', 'have', 'had'], correct: 1, explanation: 'شرطية النوع الثاني مع inversion (formal): Were I + ..., would + base verb.'},
+  { section: 'structure', text: 'The data _____ that the experiment was successful.', options: ['suggest', 'suggests', 'suggesting', 'is suggest'], correct: 0, explanation: 'data (في الاستخدام العلمي الرسمي) جمع، فالفعل "suggest" (بدون s).'},
+  { section: 'structure', text: 'He demanded that the report _____ submitted immediately.', options: ['is', 'was', 'be', 'will be'], correct: 2, explanation: 'بعد demand يأتي subjunctive: be + p.p. (مبني للمجهول مع base verb).'},
+  { section: 'structure', text: 'Only after the meeting _____ we realize what had happened.', options: ['do', 'did', 'have', 'were'], correct: 1, explanation: 'مع "Only after" في البداية نستخدم القلب. والزمن ماضٍ، فالصحيح "did we realize".'},
+  { section: 'structure', text: 'She is the only one of the candidates who _____ truly qualified.', options: ['is', 'are', 'were', 'have'], correct: 0, explanation: 'مع "the only one of the X who"، الفعل مفرد ويتبع "the only one".'},
+  { section: 'structure', text: 'I\'d rather you _____ tell anyone about this.', options: ['don\'t', 'didn\'t', 'wouldn\'t', 'aren\'t'], correct: 1, explanation: 'I\'d rather + subject + past simple = أفضل أن يفعل أحد آخر (تفضيل حالي).'},
+  { section: 'structure', text: 'Hardly had he sat down _____ the phone rang.', options: ['when', 'than', 'that', 'and'], correct: 0, explanation: 'تركيب "Hardly... when" يستخدم مع past perfect والقلب.'},
+  { section: 'structure', text: 'The proposal must _____ before next week.', options: ['approve', 'approves', 'be approved', 'be approving'], correct: 2, explanation: 'مبني للمجهول مع modal: modal + be + p.p. فالصحيح "be approved".'},
+  { section: 'structure', text: 'No sooner had the plane taken off _____ it encountered turbulence.', options: ['when', 'then', 'than', 'that'], correct: 2, explanation: 'تركيب ثابت: "No sooner... than".'},
+  { section: 'structure', text: 'Many a student _____ failed this exam.', options: ['have', 'has', 'are', 'were'], correct: 1, explanation: '"Many a + اسم مفرد" يأخذ فعلاً مفرداً رغم المعنى الجمعي.'},
+  { section: 'structure', text: 'It is high time the government _____ action.', options: ['takes', 'took', 'will take', 'is taking'], correct: 1, explanation: 'بعد "It is high time" نستخدم Past Simple للتعبير عن الإلحاح في الحاضر.'},
+  { section: 'structure', text: '_____ we left the house, it started to pour.', options: ['No sooner', 'Hardly', 'The moment', 'Scarcely'], correct: 2, explanation: '"The moment" تعمل مثل as soon as. الباقي يتطلب قلب الجملة (inversion).'},
+  { section: 'structure', text: 'The findings _____ presented at the conference yesterday.', options: ['was', 'were', 'is', 'has'], correct: 1, explanation: 'findings جمع، والزمن ماضٍ → were + p.p.'},
+  { section: 'structure', text: 'Few people _____ such patience in difficult times.', options: ['has', 'have', 'is', 'was'], correct: 1, explanation: '"Few people" جمع، فالفعل "have".'},
+  { section: 'structure', text: 'The teacher made the students _____ the essay again.', options: ['to write', 'writing', 'write', 'wrote'], correct: 2, explanation: 'make + مفعول + bare infinitive (بدون to). فالصحيح "write".'},
+  { section: 'structure', text: 'We should have left earlier, _____ we?', options: ['shouldnt', 'should', 'didnt', 'havent'], correct: 0, explanation: 'سؤال الإضافة (tag) يأخذ نفس فعل المساعد بصيغة معاكسة: should have → shouldnt (shouldn t).'},
+  { section: 'structure', text: 'I look forward _____ from you.', options: ['to hear', 'to hearing', 'hearing', 'for hearing'], correct: 1, explanation: 'look forward to + gerund (to هنا حرف جر).'},
+  { section: 'structure', text: 'He is used _____ in noisy environments.', options: ['to work', 'to working', 'work', 'working'], correct: 1, explanation: 'be used to + gerund = معتاد على. غير "used to + base verb" (كان معتاد).'},
+  { section: 'structure', text: 'Neither the manager nor the employees _____ aware of the problem.', options: ['was', 'were', 'is', 'has'], correct: 1, explanation: 'في "neither... nor"، الفعل يطابق الاسم الأقرب (the employees جمع) → were.'},
+  { section: 'structure', text: 'The boy whom I spoke _____ is my cousin.', options: ['with', 'to', 'about', 'all are correct'], correct: 3, explanation: 'كل حروف الجر صحيحة حسب السياق. "spoke to/with/about" كلها مقبولة لكنها تعطي معنى مختلفاً قليلاً.'},
+  { section: 'structure', text: 'Such _____ his fame that everyone recognized him.', options: ['is', 'was', 'were', 'are'], correct: 1, explanation: '"Such was his fame that..." = كانت شهرته عظيمة لدرجة أن... (تركيب رسمي).'},
+  { section: 'structure', text: 'I wish I _____ studied harder for the exam.', options: ['have', 'had', 'would', 'did'], correct: 1, explanation: 'wish + past perfect = تمني تغيير الماضي. "I wish I had studied".'},
+
+  /* ====== COMPOSITION (15 questions) ====== */
+  { section: 'composition', text: 'Which sentence is the most precise?', options: ['He went somewhere.', 'He went to a place.', 'He drove to the airport.', 'He moved.'], correct: 2, explanation: 'الكتابة الدقيقة تستخدم تفاصيل محددة. "drove to the airport" أوضح بكثير من "somewhere".'},
+  { section: 'composition', text: 'Choose the best topic sentence for a paragraph about social media\'s effect on teens:', options: ['Teens use phones.', 'Social media affects teenagers in profound psychological ways.', 'I don\'t like social media.', 'Many things happen online.'], correct: 1, explanation: 'الجملة المحورية يجب أن تكون محددة وقابلة للنقاش. الخيار B واضح ويعد القارئ بالنقاط.'},
+  { section: 'composition', text: 'Identify the comma splice:', options: ['I came, I saw, I conquered.', 'I came; I saw; I conquered.', 'I came. I saw. I conquered.', 'When I came, I saw and conquered.'], correct: 0, explanation: 'comma splice = ربط جمل مستقلة بفاصلة فقط. الخيار A خطأ شائع، يجب استخدام نقطة أو نقطة-فاصلة.'},
+  { section: 'composition', text: 'Choose the most varied sentence structure:', options: ['I went home. I ate dinner. I watched TV. I slept.', 'After arriving home, I had dinner, watched some TV, and then went to bed.', 'Home went. Dinner ate. TV watched. Sleep.', 'I home went, dinner ate, TV watched.'], correct: 1, explanation: 'الكتابة الجيدة تنوّع في التركيب. الخيار B يدمج الأفكار بسلاسة بدلاً من الجمل القصيرة المتشابهة.'},
+  { section: 'composition', text: 'Which transition signals example?', options: ['However', 'For instance', 'Although', 'Nonetheless'], correct: 1, explanation: 'For instance = على سبيل المثال. الباقي يعبر عن تباين.'},
+  { section: 'composition', text: 'Which is most concise?', options: ['It is a fact that water boils at 100°C.', 'Water boils at 100°C.', 'Water, as everyone knows, boils at exactly 100 degrees Celsius.', 'Water has the property of boiling at 100°C.'], correct: 1, explanation: 'الكتابة الموجزة قوة. لا حاجة لـ"It is a fact that". الخيار B مباشر وفعّال.'},
+  { section: 'composition', text: 'Identify the sentence with incorrect agreement:', options: ['Each student has their own book.', 'Each student has his or her own book.', 'Every one of the students have their books.', 'All students have their books.'], correct: 2, explanation: '"Every one of" يأخذ فعلاً مفرداً (has)، لكن الخيار يستخدم "have" مما يخلق خطأ في التطابق.'},
+  { section: 'composition', text: 'Which sentence avoids wordiness?', options: ['At this point in time, we must act.', 'Now, we must act.', 'In the current time period, we must take action.', 'It is now the time to take action.'], correct: 1, explanation: '"Now" بحد ذاتها كافية. عبارات مثل "at this point in time" حشو.'},
+  { section: 'composition', text: 'Choose the best sentence for an academic essay:', options: ['Honestly, climate change is gonna mess us up.', 'Climate change poses an existential threat to humanity.', 'Climate change is super bad.', 'Yeah, climate change is real bad.'], correct: 1, explanation: 'الأكاديمية تتجنب العامية (gonna, super, yeah) وتستخدم لغة دقيقة (poses an existential threat).'},
+  { section: 'composition', text: 'Which contains a logical fallacy?', options: ['Many people support this policy, so it must be right.', 'Studies show this policy reduces poverty.', 'Experts in economics support this policy.', 'Data from ten countries supports this policy.'], correct: 0, explanation: 'هذا "appeal to popularity" - كون الشيء شائع لا يعني أنه صحيح. باقي الخيارات تستخدم أدلة فعلية.'},
+  { section: 'composition', text: 'Choose the strongest sentence:', options: ['The wind was very strong.', 'A fierce wind tore through the valley.', 'The wind was kind of strong.', 'There was wind which was strong.'], correct: 1, explanation: 'الأفعال القوية + المفردات الدقيقة تخلق صورة حية. "tore through" أقوى من "was strong".'},
+  { section: 'composition', text: 'Which sentence has clear pronoun reference?', options: ['When Sara met Lisa, she gave her a present.', 'When Sara met Lisa, Sara gave Lisa a present.', 'She gave her a gift when they met.', 'They exchanged things.'], correct: 1, explanation: 'الخيار A و C غامضين (مين أعطت مين؟). الخيار B واضح بإعادة الأسماء.'},
+  { section: 'composition', text: 'Which is the most effective use of evidence?', options: ['Some people think exercise is good.', 'A 2023 Harvard study found that regular exercise reduces depression by 26%.', 'Exercise helps everyone.', 'My friend exercises.'], correct: 1, explanation: 'الأدلة القوية محددة (مصدر + سنة + إحصاء). الخيار B يستوفي معايير الدليل الجيد.'},
+  { section: 'composition', text: 'Identify the awkward sentence:', options: ['The book was on the table.', 'Reading the book was enjoyable.', 'It was the book, which the student, was reading, that was interesting.', 'The student found the book interesting.'], correct: 2, explanation: 'الخيار C مكسور بفواصل غير ضرورية ويصعب قراءته. الكتابة الجيدة تتجنب التعقيد غير الضروري.'},
+  { section: 'composition', text: 'Choose the best conclusion sentence:', options: ['That\'s all I had to say.', 'In summary, embracing sustainable practices is not optional but essential for our collective future.', 'The end of my essay.', 'Hope you liked it.'], correct: 1, explanation: 'الخاتمة القوية تلخص وتلهم. الخيار B يقدم خلاصة قوية ودعوة للتفكير.'},
+
+  /* ====== VOCABULARY (20 questions) - more advanced level ====== */
+  { section: 'vocabulary', text: 'His arguments were _____ - clearly impossible to disprove.', options: ['flimsy', 'irrefutable', 'questionable', 'weak'], correct: 1, explanation: 'irrefutable = لا يمكن دحضها، قاطعة. السياق "impossible to disprove" يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The politician\'s _____ speech inspired millions.', options: ['lackluster', 'fervent', 'apathetic', 'dull'], correct: 1, explanation: 'fervent = حماسي، مفعم بالحماس. خطاب يلهم الملايين يكون متحمساً.'},
+  { section: 'vocabulary', text: 'After years of training, she had become a _____ pianist.', options: ['mediocre', 'consummate', 'amateur', 'novice'], correct: 1, explanation: 'consummate = بارع، متمكن للغاية. سنوات من التدريب تنتج عازفاً بارعاً.'},
+  { section: 'vocabulary', text: 'The CEO was known for her _____ - she rarely changed her mind.', options: ['flexibility', 'tenacity', 'indecisiveness', 'fickleness'], correct: 1, explanation: 'tenacity = إصرار، مثابرة. السياق (rarely changed her mind) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The novel offers a _____ critique of modern society.', options: ['superficial', 'scathing', 'gentle', 'mild'], correct: 1, explanation: 'scathing = لاذع، شديد النقد. مفردة متقدمة لوصف النقد القاسي.'},
+  { section: 'vocabulary', text: 'The professor\'s explanation was so _____ that even beginners understood it.', options: ['convoluted', 'lucid', 'complex', 'opaque'], correct: 1, explanation: 'lucid = واضح، جلي. السياق "even beginners understood" يؤكد الوضوح.'},
+  { section: 'vocabulary', text: 'His behavior was _____, completely unlike his usual manner.', options: ['typical', 'aberrant', 'normal', 'consistent'], correct: 1, explanation: 'aberrant = شاذ، مختلف عن المعتاد. السياق (unlike his usual manner) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The witness\'s account of events was _____.', options: ['corroborated', 'denied', 'fabricated', 'forgotten'], correct: 0, explanation: 'corroborated = مؤكد، مدعوم بأدلة أخرى. مفردة قانونية متقدمة.'},
+  { section: 'vocabulary', text: 'The company\'s _____ growth surprised analysts.', options: ['stagnant', 'meteoric', 'sluggish', 'flat'], correct: 1, explanation: 'meteoric = صاروخي، سريع جداً. النمو الذي يفاجئ المحللين يكون سريعاً غير متوقع.'},
+  { section: 'vocabulary', text: 'Her _____ attention to detail made her work flawless.', options: ['careless', 'meticulous', 'sloppy', 'haphazard'], correct: 1, explanation: 'meticulous = دقيق جداً، حريص. الأشخاص الدقيقون ينتجون أعمالاً خالية من الأخطاء.'},
+  { section: 'vocabulary', text: 'The peace agreement was _____ - both sides quickly returned to conflict.', options: ['lasting', 'enduring', 'ephemeral', 'permanent'], correct: 2, explanation: 'ephemeral = عابر، قصير الأمد. السياق (return to conflict) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The senator was accused of being _____ by accepting bribes.', options: ['honest', 'venal', 'principled', 'incorruptible'], correct: 1, explanation: 'venal = قابل للرشوة، فاسد. مفردة متقدمة. السياق (accepting bribes) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The dictator\'s _____ rule lasted twenty years.', options: ['benevolent', 'tyrannical', 'gentle', 'fair'], correct: 1, explanation: 'tyrannical = استبدادي، طاغوي. صفة مرتبطة بالدكتاتورية.'},
+  { section: 'vocabulary', text: 'His criticism, though _____, was meant to help her improve.', options: ['friendly', 'harsh', 'kind', 'supportive'], correct: 1, explanation: 'harsh = قاسٍ. السياق (though = رغم أن) يدل على تباين، فالنقد قاسٍ لكن قصده الإيجاد.'},
+  { section: 'vocabulary', text: 'The witness gave a _____ account, full of unnecessary details.', options: ['concise', 'verbose', 'brief', 'succinct'], correct: 1, explanation: 'verbose = مسهب، مطوّل. السياق "full of unnecessary details" يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The artist\'s style is _____, blending traditional and modern elements.', options: ['rigid', 'eclectic', 'monotonous', 'limited'], correct: 1, explanation: 'eclectic = انتقائي، يجمع بين عناصر متنوعة. السياق (blending traditional and modern) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'His arguments seemed _____, lacking any solid foundation.', options: ['robust', 'specious', 'convincing', 'sound'], correct: 1, explanation: 'specious = ظاهره الصحة وباطنه الخطأ، خادع. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'The diplomat\'s _____ helped resolve the crisis.', options: ['rashness', 'sagacity', 'foolishness', 'recklessness'], correct: 1, explanation: 'sagacity = حكمة، فطنة. مفردة متقدمة، صفة الدبلوماسي الناجح.'},
+  { section: 'vocabulary', text: 'The audience listened in _____ silence to the moving speech.', options: ['raucous', 'rapt', 'distracted', 'noisy'], correct: 1, explanation: 'rapt = مأخوذ بإعجاب، مستغرق. السياق (moving speech) يدل على الانغماس.'},
+  { section: 'vocabulary', text: 'The investigation _____ the truth that had been hidden for decades.', options: ['concealed', 'unearthed', 'forgot', 'destroyed'], correct: 1, explanation: 'unearthed = اكتشف، أخرج إلى النور. السياق (truth hidden for decades) يحدد المعنى.'}
+];
+
+const SECTION_NAMES = {
+  reading: 'الفهم القرائي - Reading Comprehension',
+  structure: 'القواعد - Sentence Structure',
+  composition: 'تحليل التركيب - Composition Analysis',
+  vocabulary: 'المفردات - Vocabulary'
+};
+
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let timerInterval = null;
+let timeLeft = 180 * 60;
+let testSubmitted = false;
+
+function startTest() {
+  document.getElementById('welcomeScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'inline-block';
+  startTimer();
+  showQuestion(0);
+  buildGrid();
+}
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+  }, 1000);
+}
+function updateTimerDisplay() {
+  const h = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+  const m = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  document.getElementById('timer').textContent = h + ':' + m + ':' + s;
+  const box = document.getElementById('timerBox');
+  box.classList.remove('warn', 'danger');
+  if (timeLeft < 600) box.classList.add('danger');
+  else if (timeLeft < 1800) box.classList.add('warn');
+}
+function showQuestion(idx) {
+  currentQ = idx;
+  const q = QUESTIONS[idx];
+  const container = document.getElementById('questionContainer');
+  const passageHtml = q.passage ? '<div class="passage ltr">' + PASSAGES[q.passage] + '</div>' : '';
+  const letters = ['A', 'B', 'C', 'D'];
+  let optionsHtml = '';
+  q.options.forEach((opt, i) => {
+    let cls = 'option';
+    if (testSubmitted) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === answers[idx] && i !== q.correct) cls += ' wrong';
+    } else if (answers[idx] === i) cls += ' selected';
+    optionsHtml += '<div class="' + cls + '" onclick="selectOption(' + i + ')"><div class="option-letter">' + letters[i] + '</div><div class="ltr" style="flex:1;">' + opt + '</div></div>';
+  });
+  let explainHtml = '';
+  if (testSubmitted) {
+    const userAns = answers[idx];
+    const isCorrect = userAns === q.correct;
+    explainHtml = '<div class="explanation"><strong>' + (isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة') + ' • الإجابة الصحيحة: ' + letters[q.correct] + '</strong><br>' + q.explanation + '</div>';
+  }
+  container.innerHTML = '<div class="section-tag">' + SECTION_NAMES[q.section] + '</div><div class="question-num">السؤال ' + (idx + 1) + ' من ' + QUESTIONS.length + '</div>' + passageHtml + '<div class="question-text ltr">' + q.text + '</div><div class="options">' + optionsHtml + '</div>' + explainHtml;
+  updateProgress();
+  document.getElementById('sectionLabel').textContent = 'القسم: ' + SECTION_NAMES[q.section];
+  if (document.getElementById('questionGrid').style.display !== 'none') buildGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function selectOption(idx) { if (testSubmitted) return; answers[currentQ] = idx; showQuestion(currentQ); }
+function nextQuestion() { if (currentQ < QUESTIONS.length - 1) showQuestion(currentQ + 1); }
+function prevQuestion() { if (currentQ > 0) showQuestion(currentQ - 1); }
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  document.getElementById('progressText').textContent = answered + ' / ' + QUESTIONS.length;
+  document.getElementById('progressFill').style.width = ((answered / QUESTIONS.length) * 100) + '%';
+}
+function buildGrid() {
+  const grid = document.getElementById('questionGrid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'grid-btn';
+    btn.textContent = i + 1;
+    if (testSubmitted) {
+      if (answers[i] === q.correct) btn.classList.add('review-correct');
+      else btn.classList.add('review-wrong');
+    } else if (answers[i] !== null) btn.classList.add('answered');
+    if (i === currentQ) btn.classList.add('current');
+    btn.onclick = () => showQuestion(i);
+    grid.appendChild(btn);
+  });
+}
+function toggleGrid() {
+  const g = document.getElementById('questionGrid');
+  g.style.display = g.style.display === 'none' ? 'grid' : 'none';
+  if (g.style.display === 'grid') buildGrid();
+}
+function confirmSubmit() {
+  const unanswered = answers.filter(a => a === null).length;
+  document.getElementById('submitMsg').textContent = unanswered > 0 ? 'لديكِ ' + unanswered + ' سؤال بدون إجابة. هل تودين تسليم الاختبار الآن؟' : 'سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.';
+  document.getElementById('submitModal').classList.add('active');
+}
+function closeModal() { document.getElementById('submitModal').classList.remove('active'); }
+function submitTest() { testSubmitted = true; clearInterval(timerInterval); closeModal(); showResults(); }
+
+function showResults() {
+  const sectionStats = {};
+  ['reading', 'structure', 'composition', 'vocabulary'].forEach(s => { sectionStats[s] = { correct: 0, total: 0 }; });
+  let total = 0;
+  QUESTIONS.forEach((q, i) => {
+    sectionStats[q.section].total++;
+    if (answers[i] === q.correct) { sectionStats[q.section].correct++; total++; }
+  });
+  const overall = (total / QUESTIONS.length) * 100;
+  const stepScore = Math.round(36 + (overall / 100) * 64);
+  let level, levelClass;
+  if (overall >= 85) { level = '🌟 ممتاز - مستوى متقدم'; levelClass = 'level-excellent'; }
+  else if (overall >= 70) { level = '👏 جيد جداً - مستوى عالٍ'; levelClass = 'level-good'; }
+  else if (overall >= 50) { level = '👍 جيد - يحتاج تحسين'; levelClass = 'level-pass'; }
+  else { level = '📚 يحتاج مزيداً من المراجعة'; levelClass = 'level-low'; }
+
+  document.getElementById('testArea').classList.remove('active');
+  const r = document.getElementById('resultsScreen');
+  r.style.display = 'block';
+  const circ = 2 * Math.PI * 80;
+  const offset = circ - (overall / 100) * circ;
+  let breakdownHtml = '';
+  Object.keys(sectionStats).forEach(s => {
+    const st = sectionStats[s];
+    const pct = (st.correct / st.total) * 100;
+    breakdownHtml += '<div class="break-card"><h4>' + SECTION_NAMES[s] + '</h4><div class="break-bar"><div class="break-bar-fill" style="width: ' + pct + '%;"></div></div><div class="break-stats"><span>' + st.correct + ' / ' + st.total + ' صحيحة</span><span>' + pct.toFixed(0) + '%</span></div></div>';
+  });
+  r.innerHTML = '<div class="results"><h2 style="color: var(--primary); margin-bottom: 4px;">🎉 انتهى الاختبار</h2><p style="color: var(--muted);">إليكِ تحليل أدائك المفصل</p><div class="score-circle"><svg width="180" height="180"><circle cx="90" cy="90" r="80" stroke="#e5e7eb" stroke-width="14" fill="none"/><circle cx="90" cy="90" r="80" stroke="url(#grad)" stroke-width="14" fill="none" stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '" stroke-linecap="round"/><defs><linearGradient id="grad"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#f43f5e"/></linearGradient></defs></svg><div class="score-text"><div class="score-num">' + total + ' / 100</div><div class="score-label">' + overall.toFixed(0) + '% • تقدير STEP ≈ ' + stepScore + '</div></div></div><div class="level-badge ' + levelClass + '">' + level + '</div><h3 style="margin: 24px 0 12px; color: var(--primary-dark);">التحليل حسب القسم</h3><div class="breakdown">' + breakdownHtml + '</div><p style="color: var(--muted); margin: 16px 0;">💡 يمكنكِ مراجعة جميع الأسئلة مع الشروحات المفصلة من خلال زر المراجعة أدناه.</p><div style="display:flex; gap: 12px; justify-content: center; flex-wrap: wrap;"><button class="btn" onclick="reviewMode()">📖 مراجعة الأسئلة مع الشرح</button><button class="btn btn-outline" onclick="window.location.reload()">🔄 إعادة الاختبار</button></div></div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function reviewMode() {
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'none';
+  showQuestion(0);
+  document.getElementById('questionGrid').style.display = 'grid';
+  buildGrid();
+}
+</script>
+</body>
+</html>

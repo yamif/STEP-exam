@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>نموذج اختبار STEP رقم 6 - مستوى صعب</title>
+<style>
+  :root { --primary: #ea580c; --primary-dark: #9a3412; --accent: #fbbf24; --bg: #f5f7fa; --card: #fff; --text: #1f2937; --muted: #6b7280; --border: #e5e7eb; --correct: #10b981; --wrong: #ef4444; --warn: #f59e0b; --shadow: 0 4px 20px rgba(0,0,0,0.06); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, 'Cairo', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; min-height: 100vh; }
+  .ltr { direction: ltr; text-align: left; font-family: Georgia, 'Times New Roman', serif; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 20px; }
+  .top-bar { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: #fff; padding: 18px 28px; border-radius: 14px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); margin-bottom: 18px; flex-wrap: wrap; gap: 12px; }
+  .top-bar h1 { font-size: 22px; font-weight: 700; }
+  .top-bar h1 small { font-weight: 400; font-size: 14px; opacity: 0.85; display: block; }
+  .timer-box { background: rgba(255,255,255,0.18); padding: 8px 18px; border-radius: 10px; font-size: 18px; font-weight: 700; letter-spacing: 1px; }
+  .timer-box.warn { background: var(--warn); }
+  .timer-box.danger { background: var(--wrong); animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+  .welcome { background: var(--card); border-radius: 16px; padding: 40px; box-shadow: var(--shadow); text-align: center; }
+  .welcome h2 { color: var(--primary); font-size: 28px; margin-bottom: 14px; }
+  .welcome p { color: var(--muted); margin-bottom: 24px; font-size: 16px; }
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 28px 0; }
+  .info-card { background: #f9fafb; border: 1px solid var(--border); border-radius: 12px; padding: 18px; text-align: center; }
+  .info-card .num { font-size: 28px; font-weight: 700; color: var(--primary); }
+  .info-card .label { color: var(--muted); font-size: 14px; }
+  .instructions { background: #fff7ed; border-right: 4px solid var(--accent); padding: 18px 22px; border-radius: 8px; text-align: right; margin: 24px 0; }
+  .instructions h3 { color: var(--primary-dark); margin-bottom: 8px; }
+  .instructions ul { padding-right: 22px; color: #4b5563; }
+  .instructions li { margin-bottom: 6px; }
+  .btn { background: var(--primary); color: white; border: none; padding: 12px 28px; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+  .btn:hover { background: var(--primary-dark); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-danger { background: var(--wrong); }
+  .btn-danger:hover { background: #dc2626; }
+  .btn-secondary { background: #6b7280; }
+  .btn-secondary:hover { background: #4b5563; }
+  .test-area { display: none; }
+  .test-area.active { display: block; }
+  .progress-bar { background: var(--card); border-radius: 12px; padding: 14px 20px; box-shadow: var(--shadow); margin-bottom: 18px; }
+  .progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: var(--muted); }
+  .progress-track { background: var(--border); height: 8px; border-radius: 4px; overflow: hidden; }
+  .progress-fill { background: linear-gradient(90deg, var(--primary), var(--accent)); height: 100%; transition: width 0.3s; }
+  .question-card { background: var(--card); border-radius: 16px; padding: 30px; box-shadow: var(--shadow); margin-bottom: 20px; }
+  .section-tag { display: inline-block; background: var(--primary); color: white; padding: 4px 14px; border-radius: 999px; font-size: 13px; margin-bottom: 14px; }
+  .question-num { color: var(--muted); font-size: 14px; margin-bottom: 8px; }
+  .passage { background: #f9fafb; border-right: 3px solid var(--primary); padding: 18px 22px; border-radius: 8px; margin-bottom: 20px; font-size: 15px; line-height: 1.85; }
+  .passage p { margin-bottom: 10px; }
+  .question-text { font-size: 17px; margin-bottom: 18px; font-weight: 500; }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option { background: #f9fafb; border: 2px solid var(--border); padding: 14px 18px; border-radius: 10px; cursor: pointer; transition: all 0.15s; display: flex; align-items: flex-start; gap: 10px; }
+  .option:hover { border-color: var(--primary); background: #fff7ed; }
+  .option.selected { border-color: var(--primary); background: #fed7aa; }
+  .option-letter { background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; font-size: 13px; }
+  .option.selected .option-letter { background: var(--primary-dark); }
+  .option.correct { border-color: var(--correct); background: #ecfdf5; }
+  .option.correct .option-letter { background: var(--correct); }
+  .option.wrong { border-color: var(--wrong); background: #fef2f2; }
+  .option.wrong .option-letter { background: var(--wrong); }
+  .explanation { background: #fff7ed; border-right: 4px solid var(--primary); padding: 16px 20px; border-radius: 8px; margin-top: 16px; font-size: 15px; }
+  .explanation strong { color: var(--primary-dark); }
+  .nav-controls { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .question-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 6px; margin-top: 16px; }
+  .grid-btn { background: #f3f4f6; border: 2px solid transparent; width: 40px; height: 40px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; font-family: inherit; }
+  .grid-btn:hover { border-color: var(--primary); }
+  .grid-btn.answered { background: #fed7aa; color: var(--primary-dark); }
+  .grid-btn.current { border-color: var(--primary); background: var(--primary); color: white; }
+  .grid-btn.review-correct { background: #d1fae5; color: var(--correct); }
+  .grid-btn.review-wrong { background: #fee2e2; color: var(--wrong); }
+  .results { background: var(--card); border-radius: 16px; padding: 36px; box-shadow: var(--shadow); text-align: center; }
+  .score-circle { width: 180px; height: 180px; margin: 20px auto; position: relative; }
+  .score-circle svg { transform: rotate(-90deg); }
+  .score-circle .score-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+  .score-circle .score-num { font-size: 44px; font-weight: 700; color: var(--primary); }
+  .score-circle .score-label { font-size: 13px; color: var(--muted); }
+  .breakdown { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 28px 0; }
+  .break-card { background: #f9fafb; border-radius: 12px; padding: 18px; border: 1px solid var(--border); }
+  .break-card h4 { color: var(--primary); margin-bottom: 8px; font-size: 15px; }
+  .break-bar { background: var(--border); height: 8px; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+  .break-bar-fill { background: var(--primary); height: 100%; transition: width 0.6s; }
+  .break-stats { font-size: 13px; color: var(--muted); display: flex; justify-content: space-between; }
+  .level-badge { display: inline-block; padding: 8px 24px; border-radius: 999px; font-weight: 700; margin: 14px 0; }
+  .level-excellent { background: #d1fae5; color: var(--correct); }
+  .level-good { background: #fed7aa; color: var(--primary-dark); }
+  .level-pass { background: #fef3c7; color: #92400e; }
+  .level-low { background: #fee2e2; color: var(--wrong); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 100; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: var(--card); border-radius: 16px; padding: 30px; max-width: 420px; width: 92%; text-align: center; }
+  .modal h3 { margin-bottom: 14px; color: var(--primary); }
+  .modal p { color: var(--muted); margin-bottom: 22px; }
+  .modal-buttons { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  @media (max-width: 640px) { .container { padding: 12px; } .top-bar { padding: 14px 18px; } .top-bar h1 { font-size: 18px; } .question-card { padding: 20px; } .welcome { padding: 24px; } }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="top-bar">
+    <h1>📙 نموذج اختبار STEP - رقم 6 <small>مستوى صعب • النموذج النهائي قبل الاختبار</small></h1>
+    <div id="timerBox" class="timer-box" style="display:none;">⏱ <span id="timer">03:00:00</span></div>
+  </div>
+  <div id="welcomeScreen">
+    <div class="welcome">
+      <h2>النموذج التدريبي السادس (الأصعب)</h2>
+      <p>المرحلة النهائية - اقتصاد سلوكي وعصور حضارية وعلم الشيخوخة 🏆</p>
+      <div class="info-grid">
+        <div class="info-card"><div class="num">100</div><div class="label">سؤال صعب جداً</div></div>
+        <div class="info-card"><div class="num">5</div><div class="label">قطع جديدة</div></div>
+        <div class="info-card"><div class="num">3</div><div class="label">ساعات</div></div>
+        <div class="info-card"><div class="num">🚀</div><div class="label">قمة التدريب</div></div>
+      </div>
+      <div class="instructions">
+        <h3>📋 تعليمات</h3>
+        <ul>
+          <li>القطع: الاقتصاد السلوكي، عصر الإنسان (الأنثروبوسين)، علم الشيخوخة، تكاليف العولمة، تاريخ الرياضيات.</li>
+          <li>هذا النموذج النهائي - عاملي مع الوقت بحرص واتركي وقتاً للمراجعة.</li>
+          <li>المفردات في أقصى مستوياتها لمحاكاة أصعب أسئلة STEP الفعلية.</li>
+        </ul>
+      </div>
+      <button class="btn" onclick="startTest()">🚀 ابدأ الاختبار</button>
+    </div>
+  </div>
+  <div id="testArea" class="test-area">
+    <div class="progress-bar">
+      <div class="progress-info">
+        <span>التقدّم: <strong id="progressText">0 / 100</strong></span>
+        <span id="sectionLabel">القسم: —</span>
+      </div>
+      <div class="progress-track"><div id="progressFill" class="progress-fill" style="width: 0%;"></div></div>
+    </div>
+    <div id="questionContainer" class="question-card"></div>
+    <div class="question-card" style="padding: 18px 24px;">
+      <div class="nav-controls">
+        <button class="btn btn-outline" onclick="prevQuestion()">⬅ السابق</button>
+        <div>
+          <button class="btn btn-secondary" onclick="toggleGrid()">🗂 جميع الأسئلة</button>
+          <button class="btn" onclick="nextQuestion()">التالي ➡</button>
+        </div>
+        <button class="btn btn-danger" onclick="confirmSubmit()">✅ إنهاء وتسليم</button>
+      </div>
+      <div id="questionGrid" class="question-grid" style="display:none;"></div>
+    </div>
+  </div>
+  <div id="resultsScreen" style="display:none;"></div>
+</div>
+<div id="submitModal" class="modal-overlay">
+  <div class="modal">
+    <h3>هل أنتِ متأكدة من تسليم الاختبار؟</h3>
+    <p id="submitMsg">سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-outline" onclick="closeModal()">رجوع</button>
+      <button class="btn btn-danger" onclick="submitTest()">نعم، سلّمي</button>
+    </div>
+  </div>
+</div>
+<script>
+const PASSAGES = {
+  p1: `<p><strong>Passage 1: The Insights of Behavioral Economics</strong></p>
+<p>For most of its history, economics assumed that people make rational decisions based on careful analysis of costs and benefits. Behavioral economics has shattered this assumption. Drawing on insights from psychology, the field documents the countless ways in which human reasoning departs from this idealized model. We are influenced by how choices are framed, by emotional reactions, and by mental shortcuts that often lead us astray.</p>
+<p>One of the most famous findings is loss aversion: people generally feel the pain of losing something far more intensely than the pleasure of gaining an equivalent amount. This asymmetry explains why investors cling to falling stocks longer than they should and why consumers value items they already own more than those they merely consider buying. Another well-documented bias is anchoring—the tendency to rely too heavily on the first piece of information encountered when making a decision.</p>
+<p>These insights have practical implications. Governments now use "nudges"—small changes in how options are presented—to encourage healthier eating, increased savings, and more responsible behavior. Critics, however, warn that such interventions, even when well-intentioned, raise difficult questions about manipulation and autonomy. The challenge is to use behavioral insights responsibly, recognizing that knowledge of human psychology is a double-edged tool.</p>`,
+
+  p2: `<p><strong>Passage 2: The Anthropocene Era</strong></p>
+<p>Geologists divide Earth\'s history into epochs based on profound changes in climate, life, and chemistry recorded in rock layers. For the past 11,000 years, we have lived in what scientists call the Holocene, a remarkably stable interval that allowed civilization to flourish. Many researchers now argue that this era has ended and that we have entered something new: the Anthropocene, an epoch defined by human impact on the planet.</p>
+<p>The evidence is sobering. Human activity has altered the chemistry of the atmosphere, raised global temperatures, and produced layers of plastic and concrete that will be detectable in sediments millions of years from now. Species are disappearing at a rate not seen since the asteroid impact that ended the age of dinosaurs. Even the planet\'s nitrogen and phosphorus cycles—essential for all life—have been profoundly disrupted by industrial agriculture.</p>
+<p>Yet the term remains controversial. Some scientists question whether the changes are dramatic enough to qualify as a new epoch, while others debate when exactly the Anthropocene began—with agriculture, the Industrial Revolution, or atomic testing in the mid-twentieth century. Regardless of the formal designation, the underlying point is clear: humans are now the dominant force shaping Earth\'s systems. How we wield this unprecedented influence will determine not only our future but the trajectory of life on this planet.</p>`,
+
+  p3: `<p><strong>Passage 3: The Science of Aging</strong></p>
+<p>Throughout history, the dream of slowing or reversing aging has fueled myths, religions, and quack remedies. Today, the search for longevity has moved from alchemists\' laboratories to leading research institutions. Biologists now understand aging not as an inevitable mystery but as the cumulative effect of identifiable cellular processes—processes that, in principle, could be modified.</p>
+<p>Among the most promising areas of research is the study of senescent cells, sometimes called "zombie cells." These cells stop dividing but refuse to die, accumulating with age and releasing chemicals that promote inflammation in surrounding tissues. Drugs designed to eliminate them, called senolytics, have extended the healthy lifespan of mice and are beginning human trials. Other lines of research focus on telomeres, mitochondrial decline, and the accumulation of genetic damage over time.</p>
+<p>Ethical questions, however, loom large. Even if dramatic extensions of human lifespan become possible, who will benefit? If only the wealthy can afford such treatments, the inequality already evident in modern healthcare could deepen into something far more profound. Moreover, a world of much longer lives would require fundamental rethinking of pensions, careers, and intergenerational relationships. The science of aging promises remarkable possibilities, but realizing them responsibly will require equally remarkable wisdom.</p>`,
+
+  p4: `<p><strong>Passage 4: The Hidden Costs of Globalization</strong></p>
+<p>Globalization has been celebrated as one of the most powerful forces of the modern era. It has lifted hundreds of millions out of poverty, made consumer goods affordable to the masses, and connected cultures in ways previously unimaginable. Few would deny these achievements. Yet globalization\'s benefits have been distributed unevenly, and its costs—long overlooked—are becoming impossible to dismiss.</p>
+<p>Manufacturing jobs have migrated from wealthy nations to lower-cost regions, often hollowing out communities that relied on factory employment. The disruption has fueled political backlash in many democracies, contributing to the rise of populist movements that promise to restore lost prosperity. Environmental costs have also been substantial. Long supply chains generate enormous emissions, while weak regulations in some producing countries lead to pollution that wealthy consumers rarely see.</p>
+<p>Defenders argue that the answer is not less globalization but better governance: stronger labor protections, environmental standards that apply across borders, and policies that share the gains more broadly. Critics, less convinced, point out that genuine global cooperation has proven elusive even in the best of times. As the world grapples with climate change, technological disruption, and geopolitical rivalry, finding a balance between openness and stability may be the defining challenge of the coming decades.</p>`,
+
+  p5: `<p><strong>Passage 5: The Story of Mathematics</strong></p>
+<p>Mathematics, despite its image as a rigid and unchanging discipline, has a story full of human drama. Ancient civilizations developed remarkable numerical systems independently—the Egyptians for surveying flooded fields, the Babylonians for tracking celestial events, the Mayans for elaborate calendars. The concept of zero, taken for granted today, emerged surprisingly late and faced resistance from cultures suspicious of representing "nothing" as a number.</p>
+<p>Greek mathematicians introduced rigorous proof, transforming mathematics from practical calculation into a deductive discipline. Euclid\'s Elements organized geometry into theorems built upon a small set of axioms, a structure so influential that it shaped Western thought for two millennia. Yet the Greeks also recognized limits to their methods: they discovered irrational numbers, like the square root of two, that did not fit their picture of the universe and reportedly tried to keep the finding secret.</p>
+<p>The medieval Islamic world preserved and extended ancient learning, developing algebra and refining trigonometry. From the Renaissance onward, European mathematicians built on this foundation, producing the calculus of Newton and Leibniz, the abstract structures of modern algebra, and eventually the foundations of computing. Far from being a static body of facts, mathematics has continually evolved, its development inseparable from the broader story of civilization itself.</p>`
+};
+
+const QUESTIONS = [
+  /* Passage 1: Behavioral Economics */
+  { section: 'reading', passage: 'p1', text: 'For most of its history, economics assumed people make:', options: ['Emotional decisions', 'Rational decisions based on careful analysis', 'Random choices', 'Decisions based on tradition'], correct: 1, explanation: 'النص يقول: "economics assumed that people make rational decisions based on careful analysis".'},
+  { section: 'reading', passage: 'p1', text: 'Loss aversion describes the tendency to:', options: ['Avoid all losses', 'Feel losses more intensely than equivalent gains', 'Enjoy losing more than winning', 'Ignore both gains and losses'], correct: 1, explanation: 'النص يحدد: "people generally feel the pain of losing something far more intensely than the pleasure of gaining an equivalent amount".'},
+  { section: 'reading', passage: 'p1', text: 'Anchoring refers to relying heavily on:', options: ['The last piece of information', 'The first piece of information encountered', 'Random information', 'Statistical averages'], correct: 1, explanation: 'النص يحدد: "the tendency to rely too heavily on the first piece of information encountered".'},
+  { section: 'reading', passage: 'p1', text: 'Governments use "nudges" to:', options: ['Force compliance with laws', 'Encourage healthier behavior through small changes', 'Punish bad behavior', 'Eliminate choice'], correct: 1, explanation: 'النص يصف nudges: "small changes in how options are presented—to encourage healthier eating, increased savings".'},
+  { section: 'reading', passage: 'p1', text: 'Critics worry that nudges raise questions about:', options: ['Cost only', 'Manipulation and autonomy', 'Speed of implementation', 'Government efficiency'], correct: 1, explanation: 'النص يقول: "raise difficult questions about manipulation and autonomy".'},
+  { section: 'reading', passage: 'p1', text: 'The word "asymmetry" in paragraph 2 most nearly means:', options: ['Balance', 'Imbalance', 'Equality', 'Distance'], correct: 1, explanation: 'asymmetry = اختلال، عدم توازن. أقرب مرادف imbalance.'},
+  { section: 'reading', passage: 'p1', text: 'Investors cling to falling stocks longer than they should because:', options: ['Stocks always recover', 'Loss aversion makes them avoid the pain of realizing a loss', 'It is a legal requirement', 'They expect dividends'], correct: 1, explanation: 'بسبب نفور الخسارة، يكره المستثمرون تجسيد الخسارة فيبقون متمسكين بأمل التعافي.'},
+  { section: 'reading', passage: 'p1', text: 'The phrase "double-edged tool" suggests that behavioral insights:', options: ['Are always harmful', 'Are always beneficial', 'Can be used for good or harm', 'Have no real effect'], correct: 2, explanation: 'double-edged tool = أداة ذات حدّين، يمكن أن تنفع أو تضر.'},
+
+  /* Passage 2: Anthropocene */
+  { section: 'reading', passage: 'p2', text: 'The Holocene is described as a period that:', options: ['Was geologically unstable', 'Allowed civilization to flourish', 'Lasted only 100 years', 'Caused mass extinctions'], correct: 1, explanation: 'النص يقول: "a remarkably stable interval that allowed civilization to flourish".'},
+  { section: 'reading', passage: 'p2', text: 'The Anthropocene is defined by:', options: ['Volcanic activity', 'Solar radiation', 'Human impact on the planet', 'Asteroid impacts'], correct: 2, explanation: 'النص يحدد: "an epoch defined by human impact on the planet".'},
+  { section: 'reading', passage: 'p2', text: 'Current species extinction rate is compared to:', options: ['Normal background rates', 'The age of dinosaurs ending event', 'Pre-Holocene extinctions', 'Last ice age'], correct: 1, explanation: 'النص يقول: "Species are disappearing at a rate not seen since the asteroid impact that ended the age of dinosaurs".'},
+  { section: 'reading', passage: 'p2', text: 'Which is NOT mentioned as a possible start of the Anthropocene?', options: ['Agriculture', 'Industrial Revolution', 'Atomic testing', 'World War I'], correct: 3, explanation: 'النص ذكر agriculture, Industrial Revolution, atomic testing. الحرب العالمية الأولى لم تُذكر.'},
+  { section: 'reading', passage: 'p2', text: 'The word "sobering" in paragraph 2 most nearly means:', options: ['Drunken', 'Making one think seriously', 'Funny', 'Pleasant'], correct: 1, explanation: 'sobering = جعل المرء يفكر بجدية، مفردة متقدمة.'},
+  { section: 'reading', passage: 'p2', text: 'Nitrogen and phosphorus cycles have been disrupted by:', options: ['Tourism', 'Industrial agriculture', 'Forest fires', 'Animal migration'], correct: 1, explanation: 'النص يحدد: "have been profoundly disrupted by industrial agriculture".'},
+  { section: 'reading', passage: 'p2', text: 'The term Anthropocene is described as:', options: ['Universally accepted', 'Controversial among scientists', 'Used only by activists', 'Centuries-old'], correct: 1, explanation: 'النص يقول: "the term remains controversial".'},
+  { section: 'reading', passage: 'p2', text: 'The author\'s main point is that:', options: ['Anthropocene is officially declared', 'Humans are now the dominant force shaping Earth', 'Geology is irrelevant', 'Nothing has really changed'], correct: 1, explanation: 'النص ينتهي: "humans are now the dominant force shaping Earth\'s systems".'},
+
+  /* Passage 3: Aging */
+  { section: 'reading', passage: 'p3', text: 'Modern biologists understand aging as:', options: ['An inevitable mystery', 'A cumulative effect of cellular processes', 'A divine punishment', 'Purely psychological'], correct: 1, explanation: 'النص يقول: "aging not as an inevitable mystery but as the cumulative effect of identifiable cellular processes".'},
+  { section: 'reading', passage: 'p3', text: '"Zombie cells" refer to:', options: ['Dead cells', 'Cells that stop dividing but refuse to die', 'Cancer cells', 'Stem cells'], correct: 1, explanation: 'النص يحدد: "These cells stop dividing but refuse to die".'},
+  { section: 'reading', passage: 'p3', text: 'Senolytic drugs are designed to:', options: ['Create more cells', 'Eliminate senescent cells', 'Slow brain function', 'Cause inflammation'], correct: 1, explanation: 'النص يحدد: "Drugs designed to eliminate them, called senolytics".'},
+  { section: 'reading', passage: 'p3', text: 'Senolytics have already extended healthy lifespan in:', options: ['Humans', 'Mice', 'Insects', 'Plants'], correct: 1, explanation: 'النص يقول: "have extended the healthy lifespan of mice".'},
+  { section: 'reading', passage: 'p3', text: 'Which is NOT mentioned as an aging research area?', options: ['Telomeres', 'Mitochondrial decline', 'Genetic damage', 'Brain plasticity'], correct: 3, explanation: 'النص ذكر telomeres, mitochondrial decline, genetic damage. لكنه لم يذكر brain plasticity.'},
+  { section: 'reading', passage: 'p3', text: 'The main ethical concern raised is:', options: ['Boredom from long life', 'Inequality if only wealthy benefit', 'Religious objections', 'Tax revenue loss'], correct: 1, explanation: 'النص يقول: "If only the wealthy can afford such treatments, the inequality... could deepen".'},
+  { section: 'reading', passage: 'p3', text: 'A world of longer lives would require rethinking:', options: ['Only medicine', 'Pensions, careers, and intergenerational relationships', 'Only education', 'Just retirement age'], correct: 1, explanation: 'النص يحدد: "fundamental rethinking of pensions, careers, and intergenerational relationships".'},
+  { section: 'reading', passage: 'p3', text: 'The phrase "remarkable possibilities" in the final paragraph indicates:', options: ['Skepticism', 'Wonder about potential', 'Anger', 'Indifference'], correct: 1, explanation: 'remarkable possibilities = إمكانيات ملحوظة/مدهشة. السياق يدل على الإعجاب بالقدرات المحتملة.'},
+
+  /* Passage 4: Globalization */
+  { section: 'reading', passage: 'p4', text: 'According to the passage, globalization has lifted:', options: ['Thousands out of poverty', 'Hundreds of millions out of poverty', 'No one out of poverty', 'Only a few people'], correct: 1, explanation: 'النص يقول: "lifted hundreds of millions out of poverty".'},
+  { section: 'reading', passage: 'p4', text: 'The benefits of globalization have been distributed:', options: ['Equally', 'Unevenly', 'Randomly', 'Perfectly'], correct: 1, explanation: 'النص يقول: "globalization\'s benefits have been distributed unevenly".'},
+  { section: 'reading', passage: 'p4', text: 'Manufacturing job losses have contributed to:', options: ['Higher wages', 'Political backlash and populist movements', 'Increased prosperity', 'Less social tension'], correct: 1, explanation: 'النص يقول: "fueled political backlash... rise of populist movements".'},
+  { section: 'reading', passage: 'p4', text: 'Long supply chains result in:', options: ['Lower prices only', 'Enormous emissions', 'Better quality', 'Faster delivery'], correct: 1, explanation: 'النص يقول: "Long supply chains generate enormous emissions".'},
+  { section: 'reading', passage: 'p4', text: 'Defenders of globalization argue for:', options: ['Less globalization', 'Better governance', 'Complete isolation', 'Eliminating trade'], correct: 1, explanation: 'النص يقول: "the answer is not less globalization but better governance".'},
+  { section: 'reading', passage: 'p4', text: 'Critics of globalization\'s defenders point out that:', options: ['Global cooperation is easy', 'Global cooperation has proven elusive', 'Borders should be eliminated', 'Wealth is unimportant'], correct: 1, explanation: 'النص يقول: "genuine global cooperation has proven elusive".'},
+  { section: 'reading', passage: 'p4', text: 'The word "elusive" in the final paragraph most nearly means:', options: ['Easy to achieve', 'Hard to attain', 'Useless', 'Unnecessary'], correct: 1, explanation: 'elusive = صعب التحقيق أو الإمساك به. مفردة متقدمة.'},
+  { section: 'reading', passage: 'p4', text: 'The author\'s overall stance on globalization is:', options: ['Completely supportive', 'Completely opposed', 'Acknowledging benefits and costs', 'Indifferent'], correct: 2, explanation: 'الكاتب يعترف بالمكاسب الكبيرة لكن يشير للتكاليف الخفية - نهج متوازن.'},
+
+  /* Passage 5: Mathematics */
+  { section: 'reading', passage: 'p5', text: 'Egyptian mathematicians developed numerical systems primarily for:', options: ['Astronomy', 'Surveying flooded fields', 'Music', 'Philosophy'], correct: 1, explanation: 'النص يحدد: "the Egyptians for surveying flooded fields".'},
+  { section: 'reading', passage: 'p5', text: 'The concept of zero:', options: ['Has always been accepted', 'Emerged late and faced resistance', 'Was a Greek invention', 'Is still controversial'], correct: 1, explanation: 'النص يقول: "emerged surprisingly late and faced resistance from cultures suspicious of representing nothing as a number".'},
+  { section: 'reading', passage: 'p5', text: 'Greek mathematicians transformed mathematics into:', options: ['Practical calculation', 'A deductive discipline', 'Religious practice', 'Astronomy'], correct: 1, explanation: 'النص يقول: "transforming mathematics from practical calculation into a deductive discipline".'},
+  { section: 'reading', passage: 'p5', text: 'Euclid\'s Elements organized geometry into:', options: ['Random observations', 'Theorems built on axioms', 'Religious teachings', 'Practical formulas only'], correct: 1, explanation: 'النص يحدد: "organized geometry into theorems built upon a small set of axioms".'},
+  { section: 'reading', passage: 'p5', text: 'Greeks reportedly tried to keep secret the discovery of:', options: ['Pi', 'Irrational numbers', 'Negative numbers', 'Calculus'], correct: 1, explanation: 'النص يقول: "they discovered irrational numbers, like the square root of two... reportedly tried to keep the finding secret".'},
+  { section: 'reading', passage: 'p5', text: 'The medieval Islamic world contributed by:', options: ['Inventing geometry from scratch', 'Developing algebra and refining trigonometry', 'Banning mathematics', 'Translating only Greek texts'], correct: 1, explanation: 'النص يقول: "preserved and extended ancient learning, developing algebra and refining trigonometry".'},
+  { section: 'reading', passage: 'p5', text: 'Calculus is associated with:', options: ['Euclid and Pythagoras', 'Newton and Leibniz', 'Babylonians', 'Egyptians'], correct: 1, explanation: 'النص يحدد: "the calculus of Newton and Leibniz".'},
+  { section: 'reading', passage: 'p5', text: 'The author argues that mathematics is:', options: ['A static body of facts', 'Continually evolving', 'No longer changing', 'Only practical'], correct: 1, explanation: 'النص يقول: "Far from being a static body of facts, mathematics has continually evolved".'},
+
+  /* STRUCTURE (25) */
+  { section: 'structure', text: 'Were the proposal _____ accepted, we would proceed immediately.', options: ['being', 'to be', 'is', 'was'], correct: 1, explanation: '"Were + subject + to + base verb" = شرطية افتراضية رسمية.'},
+  { section: 'structure', text: 'The findings are valid, _____ the methodology was flawed.', options: ['nevertheless', 'because', 'although', 'when'], correct: 2, explanation: 'although + sentence = رغم أن. تعبر عن التباين.'},
+  { section: 'structure', text: 'I demand that he _____ his apology immediately.', options: ['offers', 'offer', 'offered', 'will offer'], correct: 1, explanation: 'بعد demand يأتي subjunctive (مصدر مجرد).'},
+  { section: 'structure', text: 'The committee, _____ recommendations were unanimous, presented its report.', options: ['who', 'whose', 'which', 'that'], correct: 1, explanation: 'whose للملكية (التوصيات تعود للجنة).'},
+  { section: 'structure', text: 'Not until I read the article _____ understand the issue.', options: ['I did', 'did I', 'I had', 'had I'], correct: 1, explanation: 'مع "Not until" في البداية نستخدم القلب: did + subject + base verb.'},
+  { section: 'structure', text: 'Had it not been for your support, I _____ succeeded.', options: ['would not', 'would not have', 'will not', 'do not'], correct: 1, explanation: 'شرطية مع inversion: "Had it not been... would not have + p.p."'},
+  { section: 'structure', text: 'It is high time we _____ this matter.', options: ['address', 'addressed', 'will address', 'are addressing'], correct: 1, explanation: 'بعد "It is high time" نستخدم Past Simple للحاضر.'},
+  { section: 'structure', text: 'There seems to be _____ problems with the system.', options: ['fewer', 'less', 'many', 'much'], correct: 0, explanation: 'مع الجمع المعدود (problems) نستخدم fewer وليس less.'},
+  { section: 'structure', text: 'Few of the candidates _____ accepted.', options: ['was', 'were', 'is', 'has'], correct: 1, explanation: '"Few" جمع، فالفعل "were".'},
+  { section: 'structure', text: 'Hardly _____ to discuss it when she walked in.', options: ['I had begun', 'had I begun', 'I began', 'do I begin'], correct: 1, explanation: 'Hardly + القلب: had + subject + p.p.'},
+  { section: 'structure', text: 'The data _____ that the hypothesis is correct.', options: ['suggest', 'suggests', 'are suggesting', 'is suggest'], correct: 0, explanation: 'data جمع في الأكاديمية الرسمية، فالفعل "suggest".'},
+  { section: 'structure', text: 'He would rather not _____ alone tonight.', options: ['be', 'being', 'to be', 'been'], correct: 0, explanation: 'would rather + base verb (بدون to).'},
+  { section: 'structure', text: 'Such _____ his influence that we all listened.', options: ['is', 'was', 'were', 'are'], correct: 1, explanation: '"Such was + noun + that" = كانت X عظيمة لدرجة أن...'},
+  { section: 'structure', text: 'The meeting, _____ at 3 PM, will discuss the budget.', options: ['scheduled', 'scheduling', 'schedules', 'is scheduled'], correct: 0, explanation: 'صفة participial: scheduled = الذي تم تحديد موعده.'},
+  { section: 'structure', text: 'I wish I _____ a doctor instead of a lawyer.', options: ['become', 'became', 'had become', 'have become'], correct: 2, explanation: 'wish + past perfect = تمني تغيير الماضي.'},
+  { section: 'structure', text: 'No matter how _____ he tried, he could not succeed.', options: ['hard', 'hardly', 'harder', 'most hard'], correct: 0, explanation: 'No matter how + adjective/adverb مجرد. hard هنا ظرف يصف tried.'},
+  { section: 'structure', text: 'Either of the answers _____ acceptable.', options: ['are', 'is', 'were', 'have'], correct: 1, explanation: 'either يعامل كمفرد رسمياً.'},
+  { section: 'structure', text: 'The new technology _____ adopted across many industries.', options: ['is being', 'are being', 'has been being', 'were being'], correct: 0, explanation: 'present continuous passive: is + being + p.p.'},
+  { section: 'structure', text: 'It was the manager _____ made the decision.', options: ['who', 'whom', 'which', 'whose'], correct: 0, explanation: 'في تركيب التركيز "It was... who/that" للعاقل.'},
+  { section: 'structure', text: 'She _____ rather you didn\'t go.', options: ['would', 'will', 'has', 'is'], correct: 0, explanation: '"would rather + subject + past simple" = تفضيل في الحاضر.'},
+  { section: 'structure', text: 'The professor, along with her students, _____ on the project.', options: ['are working', 'is working', 'were working', 'have worked'], correct: 1, explanation: '"along with" لا تغير الفعل. الفاعل الحقيقي مفرد (the professor).'},
+  { section: 'structure', text: 'No fewer than 100 people _____ at the rally.', options: ['was', 'were', 'is', 'has'], correct: 1, explanation: '"No fewer than" يستخدم مع الجمع.'},
+  { section: 'structure', text: 'Many a politician _____ made similar promises.', options: ['have', 'has', 'are', 'were'], correct: 1, explanation: '"Many a + اسم مفرد" يأخذ فعلاً مفرداً.'},
+  { section: 'structure', text: 'The information, although controversial, _____ verified.', options: ['have been', 'has been', 'are', 'were'], correct: 1, explanation: 'information اسم غير معدود ومفرد، فالفعل "has been".'},
+  { section: 'structure', text: 'I look forward to _____ from you.', options: ['hear', 'hearing', 'heard', 'have heard'], correct: 1, explanation: 'look forward to + gerund (to هنا حرف جر).'},
+
+  /* COMPOSITION (15) */
+  { section: 'composition', text: 'Which is the best thesis statement for an argumentative essay?', options: ['Pollution is everywhere.', 'I will discuss pollution.', 'Air pollution causes 7 million premature deaths annually and demands immediate global policy reform.', 'Pollution exists.'], correct: 2, explanation: 'الأطروحة القوية محددة، قابلة للنقاش، ومدعومة بدليل.'},
+  { section: 'composition', text: 'Choose the most effective transition between ideas:', options: ['Furthermore', 'In contrast', 'Additionally', 'Both A and C'], correct: 3, explanation: 'كل من Furthermore و Additionally يستخدمان لإضافة فكرة، فكلاهما صحيح. In contrast للتباين.'},
+  { section: 'composition', text: 'Which sentence is the most concise?', options: ['Owing to the fact that the weather was poor, the event was cancelled.', 'Because of poor weather, the event was cancelled.', 'The event was cancelled by reason of poor weather conditions.', 'Due to weather poorness, the event was a cancelled one.'], correct: 1, explanation: 'الإيجاز قوة. "Because of" أوجز من "Owing to the fact that".'},
+  { section: 'composition', text: 'Identify the parallel construction:', options: ['Reading, to write, and singing', 'Reading, writing, and to sing', 'Reading, writing, and singing', 'Reading, write, and sing'], correct: 2, explanation: 'التوازي يتطلب نفس الصيغة (gerund للجميع).'},
+  { section: 'composition', text: 'Which sentence avoids the passive voice unnecessarily?', options: ['The award was won by Sarah.', 'Sarah won the award.', 'A winning by Sarah of the award occurred.', 'It was Sarah by whom the award was won.'], correct: 1, explanation: 'المبني للمعلوم أوضح وأقوى عند معرفة الفاعل.'},
+  { section: 'composition', text: 'Which has clear pronoun reference?', options: ['Sara told Lisa that her car was ready.', 'Sara told Lisa that Lisa\'s car was ready.', 'She told her about it.', 'They talked about cars.'], correct: 1, explanation: 'الخيار A غامض (سيارة مين؟). الخيار B واضح.'},
+  { section: 'composition', text: 'Identify the run-on sentence:', options: ['I came; I saw; I conquered.', 'I came, I saw, I conquered.', 'I came. I saw. I conquered.', 'When I came, I saw and conquered.'], correct: 1, explanation: 'comma splice - ربط جمل مستقلة بفاصلة فقط.'},
+  { section: 'composition', text: 'Which sentence is most formal for academic writing?', options: ['Kids today don\'t read.', 'Young people aren\'t into reading.', 'Recent surveys indicate that adolescent reading rates have declined significantly.', 'Reading? Not for the youth anymore.'], correct: 2, explanation: 'الأكاديمية تستخدم مفردات دقيقة وتتجنب العامية.'},
+  { section: 'composition', text: 'Choose the strongest verb:', options: ['She walked slowly toward him.', 'She approached him.', 'She came in a slow way to him.', 'She moved slowly toward him.'], correct: 1, explanation: '"approached" فعل دقيق ومركّز. باقي الخيارات تستخدم adverbs غير ضرورية.'},
+  { section: 'composition', text: 'Which is the best concluding sentence?', options: ['That\'s all I have to say.', 'Ultimately, the choice between progress and preservation defines who we are as a society.', 'Hope you enjoyed it.', 'End of essay.'], correct: 1, explanation: 'الخاتمة القوية تترك انطباعاً وتربط بفكرة أكبر.'},
+  { section: 'composition', text: 'Identify the dangling modifier:', options: ['After studying for hours, she felt prepared.', 'After studying for hours, the test seemed easy.', 'Having studied, the student passed.', 'I studied hard and passed.'], correct: 1, explanation: 'في B، "After studying for hours" يبدو وكأنه يعدّل الاختبار، لكن المنطق يقول أن الشخص هو الذي درس.'},
+  { section: 'composition', text: 'Which uses evidence most effectively?', options: ['Many studies show climate change is real.', 'A 2024 IPCC report, synthesizing data from over 90,000 scientific studies, confirms that human activity has warmed the climate by 1.1°C since 1850.', 'Climate change is happening.', 'Experts think it\'s bad.'], correct: 1, explanation: 'الأدلة القوية محددة (مصدر + سنة + عدد + إحصاء).'},
+  { section: 'composition', text: 'Which sentence avoids wordiness?', options: ['It is my opinion that we should proceed.', 'I believe we should proceed.', 'In my personal opinion, I think we should proceed.', 'My view, in this case, would be to proceed.'], correct: 1, explanation: '"I believe" أوجز ومباشر. الباقي حشو.'},
+  { section: 'composition', text: 'Which is the best opening sentence?', options: ['Globalization is important.', 'I will talk about globalization.', 'In a world where a sneeze in Wuhan can shut down factories in Detroit, globalization is no longer abstract—it is intimate.', 'Globalization exists.'], correct: 2, explanation: 'الافتتاحية القوية تستخدم صورة حية ومحددة لجذب القارئ.'},
+  { section: 'composition', text: 'Identify the logical fallacy:', options: ['Studies show vaccines are safe.', 'Doctors recommend vaccines.', 'My friend got sick after vaccination, so vaccines cause illness.', 'Data spans decades of research.'], correct: 2, explanation: 'هذا "post hoc fallacy" - افتراض أن حدث بعد آخر سببه. التزامن لا يعني السببية.'},
+
+  /* VOCABULARY (20) - most advanced */
+  { section: 'vocabulary', text: 'The judge\'s _____ in court was unimpeachable.', options: ['ineptitude', 'probity', 'corruption', 'bias'], correct: 1, explanation: 'probity = نزاهة، استقامة. مفردة قانونية متقدمة جداً.'},
+  { section: 'vocabulary', text: 'His _____ defense of the policy convinced even skeptics.', options: ['feeble', 'cogent', 'tepid', 'half-hearted'], correct: 1, explanation: 'cogent = مقنع، محكم. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'The minister\'s remarks were intentionally _____.', options: ['clear', 'oblique', 'direct', 'blunt'], correct: 1, explanation: 'oblique = غير مباشر، ملتوٍ. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'The novel\'s _____ characters made it captivating.', options: ['shallow', 'multifaceted', 'one-dimensional', 'flat'], correct: 1, explanation: 'multifaceted = متعدد الأوجه، معقد. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'The scientist made _____ contributions to her field.', options: ['negligible', 'momentous', 'trivial', 'inconsequential'], correct: 1, explanation: 'momentous = ذو شأن عظيم.'},
+  { section: 'vocabulary', text: 'His arguments were _____, lacking any solid basis.', options: ['robust', 'specious', 'sound', 'well-founded'], correct: 1, explanation: 'specious = خادع، يبدو صحيحاً لكنه خاطئ. مفردة متقدمة جداً.'},
+  { section: 'vocabulary', text: 'The diplomat displayed remarkable _____ in handling the crisis.', options: ['ineptitude', 'sagacity', 'foolishness', 'recklessness'], correct: 1, explanation: 'sagacity = حكمة، فطنة. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'Her _____ approach to research yielded breakthrough results.', options: ['superficial', 'meticulous', 'careless', 'hasty'], correct: 1, explanation: 'meticulous = دقيق جداً.'},
+  { section: 'vocabulary', text: 'The CEO\'s _____ leadership style stifled creativity.', options: ['inclusive', 'autocratic', 'democratic', 'collaborative'], correct: 1, explanation: 'autocratic = استبدادي. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'The poet\'s style was _____, blending tradition with innovation.', options: ['rigid', 'eclectic', 'monotonous', 'predictable'], correct: 1, explanation: 'eclectic = انتقائي، يجمع عناصر متنوعة.'},
+  { section: 'vocabulary', text: 'The lecture proved _____ - dense yet enlightening.', options: ['vapid', 'edifying', 'tedious', 'shallow'], correct: 1, explanation: 'edifying = مُثقّف، نافع للعقل. مفردة متقدمة.'},
+  { section: 'vocabulary', text: 'His remarks were ill-timed and _____, offending everyone present.', options: ['tactful', 'gauche', 'graceful', 'polite'], correct: 1, explanation: 'gauche = أخرق، فظ. مفردة متقدمة من الفرنسية.'},
+  { section: 'vocabulary', text: 'The reformer\'s _____ vision transformed the nation.', options: ['shortsighted', 'visionary', 'narrow', 'limited'], correct: 1, explanation: 'visionary = ذو رؤية بعيدة، إصلاحي. صفة إيجابية.'},
+  { section: 'vocabulary', text: 'The investigation revealed widespread _____ in the company.', options: ['integrity', 'malfeasance', 'honesty', 'transparency'], correct: 1, explanation: 'malfeasance = سوء سلوك، فساد إداري. مفردة قانونية متقدمة.'},
+  { section: 'vocabulary', text: 'The treaty represented a _____ shift in foreign policy.', options: ['minor', 'seismic', 'trivial', 'modest'], correct: 1, explanation: 'seismic = زلزالي، ضخم. مفردة مجازية متقدمة.'},
+  { section: 'vocabulary', text: 'His _____ for chess was evident from a young age.', options: ['aversion', 'aptitude', 'disinterest', 'apathy'], correct: 1, explanation: 'aptitude = موهبة، استعداد طبيعي.'},
+  { section: 'vocabulary', text: 'The witness\'s testimony was _____, contradicting all other evidence.', options: ['corroborated', 'incongruous', 'consistent', 'supported'], correct: 1, explanation: 'incongruous = متناقض، غير منسجم.'},
+  { section: 'vocabulary', text: 'She offered a _____ apology that satisfied her colleagues.', options: ['insincere', 'sincere', 'reluctant', 'forced'], correct: 1, explanation: 'sincere = صادق. السياق إيجابي (satisfied colleagues).'},
+  { section: 'vocabulary', text: 'The artist\'s work was _____, mocking social pretensions.', options: ['solemn', 'satirical', 'serious', 'reverential'], correct: 1, explanation: 'satirical = ساخر. مفردة متقدمة. السياق (mocking) يحدد المعنى.'},
+  { section: 'vocabulary', text: 'The scholar\'s _____ analysis won her wide acclaim.', options: ['superficial', 'incisive', 'shallow', 'careless'], correct: 1, explanation: 'incisive = نافذ، حاد. صفة إيجابية للتحليل العميق.'}
+];
+
+const SECTION_NAMES = {
+  reading: 'الفهم القرائي - Reading Comprehension',
+  structure: 'القواعد - Sentence Structure',
+  composition: 'تحليل التركيب - Composition Analysis',
+  vocabulary: 'المفردات - Vocabulary'
+};
+
+let currentQ = 0;
+let answers = new Array(QUESTIONS.length).fill(null);
+let timerInterval = null;
+let timeLeft = 180 * 60;
+let testSubmitted = false;
+
+function startTest() {
+  document.getElementById('welcomeScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'inline-block';
+  startTimer();
+  showQuestion(0);
+  buildGrid();
+}
+function startTimer() {
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitTest(); }
+  }, 1000);
+}
+function updateTimerDisplay() {
+  const h = Math.floor(timeLeft / 3600).toString().padStart(2, '0');
+  const m = Math.floor((timeLeft % 3600) / 60).toString().padStart(2, '0');
+  const s = (timeLeft % 60).toString().padStart(2, '0');
+  document.getElementById('timer').textContent = h + ':' + m + ':' + s;
+  const box = document.getElementById('timerBox');
+  box.classList.remove('warn', 'danger');
+  if (timeLeft < 600) box.classList.add('danger');
+  else if (timeLeft < 1800) box.classList.add('warn');
+}
+function showQuestion(idx) {
+  currentQ = idx;
+  const q = QUESTIONS[idx];
+  const container = document.getElementById('questionContainer');
+  const passageHtml = q.passage ? '<div class="passage ltr">' + PASSAGES[q.passage] + '</div>' : '';
+  const letters = ['A', 'B', 'C', 'D'];
+  let optionsHtml = '';
+  q.options.forEach((opt, i) => {
+    let cls = 'option';
+    if (testSubmitted) {
+      if (i === q.correct) cls += ' correct';
+      else if (i === answers[idx] && i !== q.correct) cls += ' wrong';
+    } else if (answers[idx] === i) cls += ' selected';
+    optionsHtml += '<div class="' + cls + '" onclick="selectOption(' + i + ')"><div class="option-letter">' + letters[i] + '</div><div class="ltr" style="flex:1;">' + opt + '</div></div>';
+  });
+  let explainHtml = '';
+  if (testSubmitted) {
+    const userAns = answers[idx];
+    const isCorrect = userAns === q.correct;
+    explainHtml = '<div class="explanation"><strong>' + (isCorrect ? '✅ إجابة صحيحة' : '❌ إجابة خاطئة') + ' • الإجابة الصحيحة: ' + letters[q.correct] + '</strong><br>' + q.explanation + '</div>';
+  }
+  container.innerHTML = '<div class="section-tag">' + SECTION_NAMES[q.section] + '</div><div class="question-num">السؤال ' + (idx + 1) + ' من ' + QUESTIONS.length + '</div>' + passageHtml + '<div class="question-text ltr">' + q.text + '</div><div class="options">' + optionsHtml + '</div>' + explainHtml;
+  updateProgress();
+  document.getElementById('sectionLabel').textContent = 'القسم: ' + SECTION_NAMES[q.section];
+  if (document.getElementById('questionGrid').style.display !== 'none') buildGrid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function selectOption(idx) { if (testSubmitted) return; answers[currentQ] = idx; showQuestion(currentQ); }
+function nextQuestion() { if (currentQ < QUESTIONS.length - 1) showQuestion(currentQ + 1); }
+function prevQuestion() { if (currentQ > 0) showQuestion(currentQ - 1); }
+function updateProgress() {
+  const answered = answers.filter(a => a !== null).length;
+  document.getElementById('progressText').textContent = answered + ' / ' + QUESTIONS.length;
+  document.getElementById('progressFill').style.width = ((answered / QUESTIONS.length) * 100) + '%';
+}
+function buildGrid() {
+  const grid = document.getElementById('questionGrid');
+  grid.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'grid-btn';
+    btn.textContent = i + 1;
+    if (testSubmitted) {
+      if (answers[i] === q.correct) btn.classList.add('review-correct');
+      else btn.classList.add('review-wrong');
+    } else if (answers[i] !== null) btn.classList.add('answered');
+    if (i === currentQ) btn.classList.add('current');
+    btn.onclick = () => showQuestion(i);
+    grid.appendChild(btn);
+  });
+}
+function toggleGrid() {
+  const g = document.getElementById('questionGrid');
+  g.style.display = g.style.display === 'none' ? 'grid' : 'none';
+  if (g.style.display === 'grid') buildGrid();
+}
+function confirmSubmit() {
+  const unanswered = answers.filter(a => a === null).length;
+  document.getElementById('submitMsg').textContent = unanswered > 0 ? 'لديكِ ' + unanswered + ' سؤال بدون إجابة. هل تودين تسليم الاختبار الآن؟' : 'سيتم احتساب درجتك وعرض الشرح المفصل لكل سؤال.';
+  document.getElementById('submitModal').classList.add('active');
+}
+function closeModal() { document.getElementById('submitModal').classList.remove('active'); }
+function submitTest() { testSubmitted = true; clearInterval(timerInterval); closeModal(); showResults(); }
+function showResults() {
+  const sectionStats = {};
+  ['reading', 'structure', 'composition', 'vocabulary'].forEach(s => { sectionStats[s] = { correct: 0, total: 0 }; });
+  let total = 0;
+  QUESTIONS.forEach((q, i) => {
+    sectionStats[q.section].total++;
+    if (answers[i] === q.correct) { sectionStats[q.section].correct++; total++; }
+  });
+  const overall = (total / QUESTIONS.length) * 100;
+  const stepScore = Math.round(36 + (overall / 100) * 64);
+  let level, levelClass;
+  if (overall >= 85) { level = '🌟 ممتاز - مستوى متقدم'; levelClass = 'level-excellent'; }
+  else if (overall >= 70) { level = '👏 جيد جداً - مستوى عالٍ'; levelClass = 'level-good'; }
+  else if (overall >= 50) { level = '👍 جيد - يحتاج تحسين'; levelClass = 'level-pass'; }
+  else { level = '📚 يحتاج مزيداً من المراجعة'; levelClass = 'level-low'; }
+  document.getElementById('testArea').classList.remove('active');
+  const r = document.getElementById('resultsScreen');
+  r.style.display = 'block';
+  const circ = 2 * Math.PI * 80;
+  const offset = circ - (overall / 100) * circ;
+  let breakdownHtml = '';
+  Object.keys(sectionStats).forEach(s => {
+    const st = sectionStats[s];
+    const pct = (st.correct / st.total) * 100;
+    breakdownHtml += '<div class="break-card"><h4>' + SECTION_NAMES[s] + '</h4><div class="break-bar"><div class="break-bar-fill" style="width: ' + pct + '%;"></div></div><div class="break-stats"><span>' + st.correct + ' / ' + st.total + ' صحيحة</span><span>' + pct.toFixed(0) + '%</span></div></div>';
+  });
+  r.innerHTML = '<div class="results"><h2 style="color: var(--primary); margin-bottom: 4px;">🎉 انتهى الاختبار</h2><p style="color: var(--muted);">إليكِ تحليل أدائك المفصل</p><div class="score-circle"><svg width="180" height="180"><circle cx="90" cy="90" r="80" stroke="#e5e7eb" stroke-width="14" fill="none"/><circle cx="90" cy="90" r="80" stroke="url(#grad6)" stroke-width="14" fill="none" stroke-dasharray="' + circ + '" stroke-dashoffset="' + offset + '" stroke-linecap="round"/><defs><linearGradient id="grad6"><stop offset="0%" stop-color="#ea580c"/><stop offset="100%" stop-color="#fbbf24"/></linearGradient></defs></svg><div class="score-text"><div class="score-num">' + total + ' / 100</div><div class="score-label">' + overall.toFixed(0) + '% • تقدير STEP ≈ ' + stepScore + '</div></div></div><div class="level-badge ' + levelClass + '">' + level + '</div><h3 style="margin: 24px 0 12px; color: var(--primary-dark);">التحليل حسب القسم</h3><div class="breakdown">' + breakdownHtml + '</div><p style="color: var(--muted); margin: 16px 0;">💡 يمكنكِ مراجعة جميع الأسئلة مع الشروحات المفصلة من خلال زر المراجعة أدناه.</p><div style="display:flex; gap: 12px; justify-content: center; flex-wrap: wrap;"><button class="btn" onclick="reviewMode()">📖 مراجعة الأسئلة مع الشرح</button><button class="btn btn-outline" onclick="window.location.reload()">🔄 إعادة الاختبار</button></div></div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function reviewMode() {
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('testArea').classList.add('active');
+  document.getElementById('timerBox').style.display = 'none';
+  showQuestion(0);
+  document.getElementById('questionGrid').style.display = 'grid';
+  buildGrid();
+}
+</script>
+</body>
+</html>
